@@ -1,6 +1,8 @@
 package com.example.mumulcom
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -9,35 +11,42 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mumulcom.databinding.ActivitySignupBinding
+import com.kakao.sdk.user.UserApiClient
 import java.util.regex.Pattern
 
-class SignUpActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity(), SignupNicknameView {
     lateinit var binding: ActivitySignupBinding
-    lateinit var group: String
-    lateinit var nickname: TextView
 
-    private var validNickname: Boolean = false   // 유효한 아이디인가
+    private var email: String = ""
+    private var name: String = ""
+    private var group: String = ""
+    private var nickname: String = ""
+
+    private var validCurrentNickname: Boolean = false   // 현재 입력한 아이디가 유효한가
+    private var validNickname: Boolean = false   // 중복이 아닌 아이디인가
     private var validGroup: Boolean = false    // 소속을 선택했는가
 
-    val nicknameValidation = "^[가-힣a-z0-9]{2,8}$"
+    private val nicknameValidation = "^[가-힣a-z0-9]{2,8}$"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 카카오 로그인 이후 사용자 정보 요청
+        getUserInfo()
+
         setupSpinner()
         setupSpinnerHandler()
 
         // 닉네임 바로바로 검사
-        nickname = findViewById(R.id.signup_nickname_et)
-
-        nickname.addTextChangedListener(object: TextWatcher {
+        binding.signupNicknameEt.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 // text가 변경된 후 호출
                 // p0에는 변경 후의 문자열이 담겨있음
@@ -50,24 +59,43 @@ class SignUpActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // text가 바뀔때마다 호출
-                checkNickname()
+                // 텍스트가 바뀌었다는건 다시 중복 검사를 해야함
+                validNickname = false
+                changeButton()
+                checkNickname() // 닉네임 유효성 검사 함수
+                nickname = p0.toString()
+
+                // edittext 배경도 회색으로 다시 변경
+                binding.signupNicknameEt.setBackgroundResource(R.drawable.basic_outline_gray)
             }
         })
 
-
         // 닉네임 중복 검사 (중복확인버튼)
         binding.signupDuplicateCheckBt.setOnClickListener {
-            var needCheckNickname = nickname.text.toString().trim()
-            EnableNickname(needCheckNickname)
+            // 중복 확인
+            getNicknameCheck()
+            // 키보드 사라지기
+            CloseKeyboard()
         }
 
-        // 닉네임 소속 모두 제대로 입력됐는지 검사
-        isValid(validNickname, validGroup)
+        // 화면 배경 누르면 키보드 사라지기
+        binding.signupLy.setOnClickListener {
+            CloseKeyboard()
+        }
+    }
 
-        // 입력 완료 버튼 클릭하면 카테고리 선택 액티비티로 넘어가기
-        binding.signupTypingDoneSelectIv.setOnClickListener {
-            startActivity(Intent(this, SignUpCategoryActivity::class.java))
-            finish()
+    private fun getUserInfo() {
+        // 사용자 정보 요청
+        UserApiClient.instance.me { kakaoUser, error ->
+            if (error != null) {
+                Log.e(TAG, "사용자 정보 요청 실패", error)
+            }
+            else if (kakaoUser != null) {
+                email = kakaoUser.kakaoAccount?.email.toString()
+                name = kakaoUser.kakaoAccount?.profile?.nickname.toString()
+
+                Log.i(TAG, "사용자 정보 요청 성공 - 이메일: $email 이름: $name")
+            }
         }
     }
 
@@ -82,7 +110,7 @@ class SignUpActivity : AppCompatActivity() {
 
     // 스피너에 어레이 어댑터 연결
     private fun setupSpinner() {
-        val groups = resources.getStringArray(R.array.signup_category)
+        val groups = resources.getStringArray(R.array.signup_group)
         val adapter = object : ArrayAdapter<String>(this, R.layout.item_spinner){
             @SuppressLint("CutPasteId")
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -118,58 +146,134 @@ class SignUpActivity : AppCompatActivity() {
         binding.signupGroupSp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (!binding.signupGroupSp.getItemAtPosition(position).equals("클릭하여 소속 찾기")) {
+                    // 소속 선택하면 배경 변경
+                    binding.signupGroupSp.setBackgroundResource(R.drawable.bg_signup_group_selected)
                     // 소속을 선택하면 group 변수에 사용자 소속 저장하기
                     group = binding.signupGroupSp.getItemAtPosition(position).toString()
-                    Log.d("사용자 소속", group)
                     validGroup = true
+                    Log.i(TAG, "소속 확인: $group validGroup: $validGroup")
+                    changeButton()
                 }
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
-
             }
         }
     }
 
     // 닉네임 유효성 검사 함수
     fun checkNickname(): Boolean {
-        var n = nickname.text.toString().trim() // 공백제거
+        var n = binding.signupNicknameEt.text.toString().trim() // 공백제거
         val p = Pattern.matches(nicknameValidation, n) // 패턴 맞는지 확인
         return if (p) {
-            // 닉네임 형태가 정상일 경우
+            // 닉네임 형태가 패턴에 적합할 경우
+            binding.signupNicknameRule1Tv.visibility = View.VISIBLE
+            binding.signupNicknameRule2Tv.visibility = View.VISIBLE
             binding.signupNicknameValidIv.visibility = View.VISIBLE
-            binding.signupNicknameErrorIv.visibility = View.GONE
+
             binding.signupNicknameErrorTv.visibility = View.GONE
+            binding.signupNicknameErrorIv.visibility = View.GONE
+            binding.signupNicknameDuplicateValidTv.visibility = View.GONE
+            binding.signupNicknameDuplicateErrorTv.visibility = View.GONE
+            validCurrentNickname = true
+            changeButton()
             true
         } else {
+            // 닉네임 형태가 패턴에 적합하지 않을 경우
+            binding.signupNicknameErrorTv.visibility = View.VISIBLE
+            binding.signupNicknameErrorIv.visibility = View.VISIBLE
+
             binding.signupNicknameRule1Tv.visibility = View.GONE
             binding.signupNicknameRule2Tv.visibility = View.GONE
             binding.signupNicknameValidIv.visibility = View.GONE
-            binding.signupNicknameErrorIv.visibility = View.VISIBLE
-            binding.signupNicknameErrorTv.visibility = View.VISIBLE
+            binding.signupNicknameDuplicateValidTv.visibility = View.GONE
+            binding.signupNicknameDuplicateErrorTv.visibility = View.GONE
+            validCurrentNickname = false
+            changeButton()
             false
         }
     }
 
-    // 중복확인
-    fun EnableNickname(needCheckNickname: String) {
-        // 저장해서 서버에 보냄
-        // 서버에서 중복확인 후 boolean 값 전송
+    private fun getNicknameCheck() {
+        val signUpNicknameService = SignUpNicknameService()
+        signUpNicknameService.setSignupNicknameView(this)
 
-        // 전송 받은 값 validNickname에 저장
-        validNickname = true
+        signUpNicknameService.getNicknameCheck(this.nickname)
     }
 
-    // 유효한 아이디 & 소속 선택 하면 입력 완료 창 뜨기
-    private fun isValid(validNickname: Boolean, validGroup: Boolean) {
-        if (validNickname && validGroup) {
-            binding.signupTypingDoneSelectIv.visibility = View.VISIBLE
-            binding.signupTypingDoneNoSelectIv.visibility = View.GONE
+    override fun getNicknameCheckLoading() {
+        Log.d("SignUpActivity/NicknameCheck/API","중복 확인 로딩 중...")
+    }
+
+    override fun getNicknameCheckSuccess(result: Boolean) {
+        // result = ture -> 사용하는 사람이 있음
+        // result = false -> 사용 가능
+        if (result) { // 닉네임 사용 불가능
+            validNickname = !result // validNickname = false
+
+            Log.i(TAG, "닉네임 중복")
+
+            // 중복된 닉네임입니다 출력
+            binding.signupNicknameDuplicateErrorTv.visibility = View.VISIBLE
+            binding.signupNicknameErrorIv.visibility = View.VISIBLE
+
+            binding.signupNicknameRule1Tv.visibility = View.GONE
+            binding.signupNicknameRule2Tv.visibility = View.GONE
+            binding.signupNicknameValidIv.visibility = View.GONE
+
+            changeButton()
+
+        } else {    // 닉네임 사용 가능
+            validNickname = !result // validNickname = true
+
+            Log.i(TAG, "닉네임: $nickname validNickname: $validNickname")
+
+            // 사용 가능한 닉네임입니다 출력
+            binding.signupNicknameDuplicateValidTv.visibility = View.VISIBLE
+            binding.signupNicknameValidIv.visibility = View.VISIBLE
+
+            binding.signupNicknameRule1Tv.visibility = View.GONE
+            binding.signupNicknameRule2Tv.visibility = View.GONE
+            binding.signupNicknameErrorIv.visibility = View.GONE
+
+            // edittext 배경 변경
+            binding.signupNicknameEt.setBackgroundResource(R.drawable.basic_outline_black)
+
+            changeButton()
         }
     }
 
-    // 추가 정보 입력 칸이 종료
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun getNicknameCheckFailure(code: Int, message: String) {
+        when(code){
+            400-> Log.d("SignUpActivity/NicknameCheck/API", message)
+        }
     }
 
+    fun changeButton() {
+        if (validCurrentNickname && validNickname && validGroup) {
+            // 버튼 선택 가능
+            binding.signupTypingDoneNoSelectIv.setImageResource(R.drawable.ic_typing_done_select)
+            binding.signupTypingDoneNoSelectIv.setOnClickListener {
+                // intent로 사용자 정보 (email, name, nickname, group) 넘겨주기
+                val intent = Intent(this, SignUpCategoryActivity::class.java)
+                intent.putExtra("email", email)
+                intent.putExtra("name", name)
+                intent.putExtra("nickname", nickname)
+                intent.putExtra("group", group)
+                startActivity(intent)
+                finish()
+            }
+        } else {
+            // 버튼 선택 불가능
+            binding.signupTypingDoneNoSelectIv.setImageResource(R.drawable.ic_typing_done_no_select)
+        }
+    }
+
+    fun CloseKeyboard() {
+        var view = this.currentFocus
+
+        if(view != null) {
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
 }

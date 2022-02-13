@@ -9,9 +9,9 @@
 
     <ImageView
         android:id="@+id/login_title_iv"
-        android:layout_width="317dp"
-        android:layout_height="316dp"
-        android:src="@drawable/mumulcom_title"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:src="@drawable/ic_mumulcom_title"
         android:background="@android:color/transparent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,13 +20,13 @@
 
     <ImageButton
         android:id="@+id/login_kakao_ib"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/kakao_login_medium_wide"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
         android:background="@android:color/transparent"
-        app:layout_constraintTop_toBottomOf="@id/login_title_iv"
-        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/kakao_login_medium_wide"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_title_iv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

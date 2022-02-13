@@ -1,6 +1,5 @@
 package com.example.mumulcom
 
-import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -12,25 +11,17 @@ import com.example.mumulcom.databinding.ActivityLoginBinding
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause.*
 import com.kakao.sdk.user.UserApiClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
+// TODO 회원가입 안하고 넘어가면 -> 다시 앱 실행시켰을때 카카오 로그인 안되게 (메인 화면으로 안넘어가게 하기)
 
 class LoginActivity : AppCompatActivity() {
     lateinit var binding: ActivityLoginBinding
-    private lateinit var loginView: LoginView
 
-    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // 해쉬 값 구하기
-        /*
-        val keyHash = Utility.getKeyHash(this)
-        Log.d("Hash", keyHash)
-        */
 
         // 로그인 정보 확인
         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
@@ -40,12 +31,7 @@ class LoginActivity : AppCompatActivity() {
             }
             else if (tokenInfo != null) {
                 // 서버에 사용자가 이미 존재하면 = 카카오 로그인이 이미 되어있으면
-                Toast.makeText(this, "기존 로그인 유지 성공", Toast.LENGTH_SHORT).show()
-
-                // 서버에 저장되어 있는 사용자 정보 받아오기
-                login(user)
-                //getJwt()
-
+                Log.d(TAG, "기존 로그인 유지 성공")
 
                 // 메인 액티비티로 사용자 정보 전달하기
                 val intent = Intent(this, MainActivity::class.java)
@@ -88,28 +74,12 @@ class LoginActivity : AppCompatActivity() {
             }
             else if (token != null) {
                 // 처음 로그인에 성공하면
-                Toast.makeText(this, "카카오톡 계정 연결 성공", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "카카오톡 계정 연결 성공")
 
-                // 사용자 이메일, 닉네임 저장한 후
                 // 추가 정보 입력 (사인 업 액티비티) 으로 넘어가기
-                //val intent = Intent(this, SignUpActivity::class.java)
-                //startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-
-                startActivity(Intent(this, SignUpActivity::class.java))
+                val intent = Intent(this, SignUpActivity::class.java)
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
                 finish()
-            }
-        }
-
-        // 사용자 정보 요청
-        UserApiClient.instance.me { user, error ->
-            if (error != null) {
-                Log.e(TAG, "사용자 정보 요청 실패", error)
-            }
-            else if (user != null) {
-                Log.i(TAG, "사용자 정보 요청 성공" +
-                        "\n이메일: ${user.kakaoAccount?.email}" +
-                        "\n이름: ${user.kakaoAccount?.name}" +
-                        "\n생년월일: ${user.kakaoAccount?.birthday}")
             }
         }
 
@@ -122,34 +92,5 @@ class LoginActivity : AppCompatActivity() {
                 UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
             }
         }
-    }
-
-    fun login(user: User) {
-        val authService = getRetrofit().create(AuthRetrofitInterface::class.java)
-
-        loginView.onLoginLoading()
-
-        authService.login(user).enqueue(object : Callback<AuthResponse> {
-            @SuppressLint("LongLogTag")
-            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                Log.d("LOGINACT/API-RESPONSE", response.toString())
-
-                if(response.isSuccessful && response.code() == 200) {
-                    val resp = response.body()!!
-                    Log.d("LOGINACT/API-RESPONSE-FLO", resp.toString())
-
-                    when(resp.code) {
-                        1000 -> loginView.onLoginSuccess(resp.result!!)
-                        else -> loginView.onLoginFailure(resp.code, resp.message)
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-                Log.d("LOGINACT/API-ERROR", t.toString())
-
-                loginView.onLoginFailure(400, "네트워크 오류가 발생했습니다.")
-            }
-        })
     }
 }

@@ -2,6 +2,6 @@ package com.example.mumulcom
 
 interface LoginView {
     fun onLoginLoading()
-    fun onLoginSuccess(auth: Auth)
+    fun onLoginSuccess(profile: Profile)
     fun onLoginFailure(code:Int, message:String)
 }

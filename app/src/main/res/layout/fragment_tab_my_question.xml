@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioGroup
+        android:id="@+id/tab_my_question_radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- default 값으로 코딩 질문 설정 -->
+        <RadioButton
+            android:id="@+id/tab_my_question_coding_btn"
+            android:layout_width="120dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/selector_radio_button"
+            android:button="@null"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/tab_my_question_concept_btn"
+            android:layout_width="120dp"
+            android:layout_height="36dp"
+            android:background="@drawable/selector_radio_button2"
+            android:button="@null" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/tab_my_question_reply_ly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tab_my_question_radio_group"
+        app:layout_constraintStart_toStartOf="@id/tab_my_question_radio_group" >
+
+        <ImageView
+            android:id="@+id/tab_my_question_reply_iv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_check_no" />
+
+        <TextView
+            android:id="@+id/tab_my_question_reply_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_gravity="center"
+            android:text="답변 달린 질문만 보기"
+            android:textSize="18sp"
+            android:textColor="@color/home_gray_text_color"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tab_my_question_result_rv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_my_question_reply_ly"
+        tools:listitem="@layout/question_list_item"/>
+
+    <!-- 프로그래스 바 -->
+    <ProgressBar
+        android:id="@+id/tab_my_question_loading_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:indeterminateTint="@color/selected"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tab_my_question_result_rv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

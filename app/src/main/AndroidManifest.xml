@@ -33,20 +33,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-      
-        <activity android:name=".QuestionActivity" android:exported="false" />
-        <activity android:name=".MyQuestionAllActivity" android:exported="false" />
+
         <activity android:name=".QuestionBoardActivity" android:exported="false" />
+        <activity android:name=".QuestionDetailActivity" />
         <activity android:name=".QuestionCategoryActivity"/>
-        <activity android:name=".CameraPermissionActivity"/>
-        <activity android:name=".CameraPermissionAccessActivity"/>
-        <activity android:name=".CameraShootingActivity"/>
-        <activity android:name=".AfterCheckbuttonActivity"/>
-        <activity android:name=".SelectCategoryTopActivity"/>
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".SignUpCategoryActivity" />
+        <activity android:name=".SearchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".AnswerActivity" />
+        <activity android:name=".AnswerCameraShootingActivity" />
+        <activity android:name=".CheckCodingQuestionActivity" />
+        <activity android:name=".CheckConceptQuestionActivity" />
+        <activity android:name=".CodingCameraShootingActivity" />
+        <activity android:name=".ConceptCameraShootingActivity" />
 
         <!--카카오 로그인-->
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity" >
@@ -71,7 +76,7 @@
 
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/filepaths" />
         </provider>
     </application>
 

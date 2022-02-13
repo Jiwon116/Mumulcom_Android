@@ -3,7 +3,7 @@
     <item>
         <layer-list>
             <item>
-                <shape android:shape="rectangle">
+                <shape>
                     <solid android:color="@color/white" />
                     <corners android:radius="10dp" />
                     <padding android:right="12dp" />
@@ -11,10 +11,12 @@
                 </shape>
             </item>
             <item
-                android:drawable="@drawable/arrow_down_button"
+                android:drawable="@drawable/ic_arrow_down_button"
                 android:gravity="center|end"
-                android:width="25dp"
-                android:height="25dp" />
+                android:top="10dp"
+                android:bottom="10dp"
+                android:right="10dp"
+                android:left="10dp" />
         </layer-list>
     </item>
 </selector>

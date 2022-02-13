@@ -1,10 +1,12 @@
 package com.example.mumulcom
 
+import com.google.gson.annotations.SerializedName
+
+// 회원가입
 data class User(
-    val email: String,  // 변경 불가능 (id값이나 마찬가지)
-    val name: String,   // 변경 불가능
-    var birth: String = " ",    // 빈 문자열 처리
-    var nickname: String,   // 변경 가능
-    var group: String,   // 변경 가능
-    var field: ArrayList<String>   // 변경 가능, 스킵 가능
+    @SerializedName("email") var email: String?,  // 유저 이메일
+    @SerializedName("name") var name: String?,   // 유저 이름
+    @SerializedName("nickname") var nickname: String?, // 유저 닉네임
+    @SerializedName("group") var group: String?,   // 유저 소속
+    @SerializedName("myCategories") var myCategories: List<String>?,   // 관심 코딩 분야, null 가능
 )

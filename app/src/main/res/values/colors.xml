@@ -8,10 +8,21 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="primary">#C4C4C4</color>
+
     <color name="home_gray_text_color">#474A57</color>
     <color name="background">#FFFBF6</color>
     <color name="gray">#DAD9D7</color>
     <color name="error">#FF0000</color>
     <color name="selected">#FFBD80</color>
     <color name="checked">#FF8F8F</color>
+    <color name="tab">#00C6AE</color>
+
+    <!-- 캐릭터 배경 색 -->
+    <color name="character1">#FF89BB</color>
+    <color name="character2">#0058FF</color>
+    <color name="character3">#FFBD12</color>
+    <color name="character4">#00C6AE</color>
+    <color name="character5">#F95A2C</color>
+    <color name="character6">#E1E506</color>
 </resources>

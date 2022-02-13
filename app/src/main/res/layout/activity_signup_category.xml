@@ -2,196 +2,317 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/signup_category_ly"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 건너뛰기 버튼 -->
-    <ImageView
-        android:id="@+id/signup_next_step_iv"
-        android:layout_width="80dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="40dp"
-        android:src="@drawable/signup_next_step"
+    <ScrollView
+        android:id="@+id/signup_category_sv"
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <!-- 선택 완료 버튼 -->
-    <ImageView
-        android:id="@+id/signup_select_done_iv"
-        android:layout_width="80dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="40dp"
-        android:src="@drawable/signup_select_done"
-        app:layout_constraintTop_toTopOf="parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/signup_category_content_ly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <!-- 건너뛰기 버튼 -->
+            <ImageView
+                android:id="@+id/signup_next_step_iv"
+                android:layout_width="90dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginEnd="45dp"
+                android:src="@drawable/ic_signup_next_step"
+                app:layout_constraintTop_toTopOf="@id/signup_category_content_ly"
+                app:layout_constraintEnd_toEndOf="@id/signup_category_content_ly" />
+
+            <!-- 선택 완료 버튼 -->
+            <ImageView
+                android:id="@+id/signup_select_done_iv"
+                android:layout_width="90dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginEnd="45dp"
+                android:src="@drawable/ic_select_complete"
+                app:layout_constraintTop_toTopOf="@id/signup_category_content_ly"
+                app:layout_constraintEnd_toEndOf="@id/signup_category_content_ly"
+                android:visibility="gone" />
+
+
+
+
+            <TextView
+                android:id="@+id/signup_select_category_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="130dp"
+                android:layout_marginStart="45dp"
+                android:text="관심있는 코딩 분야를 \n선택해주세요."
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="28sp"
+                app:layout_constraintTop_toTopOf="@id/signup_category_content_ly"
+                app:layout_constraintStart_toStartOf="@id/signup_category_content_ly"/>
+
+            <TextView
+                android:id="@+id/signup_select_category_explain_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="최대 5개까지 선택해주세요!"
+                android:textColor="@color/home_gray_text_color"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/signup_select_category_tv"
+                app:layout_constraintStart_toStartOf="@id/signup_select_category_tv"/>
+
+
+
+
+
+            <!-- 별 아이콘 -->
+            <ImageView
+                android:id="@+id/signup_category_star_1_iv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/ic_signup_category_no_select"
+                app:layout_constraintStart_toStartOf="@id/signup_select_category_tv"
+                app:layout_constraintTop_toBottomOf="@id/signup_select_category_explain_tv"/>
+
+            <ImageView
+                android:id="@+id/signup_category_star_2_iv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_signup_category_no_select"
+                app:layout_constraintStart_toEndOf="@id/signup_category_star_1_iv"
+                app:layout_constraintTop_toTopOf="@id/signup_category_star_1_iv"/>
+
+            <ImageView
+                android:id="@+id/signup_category_star_3_iv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_signup_category_no_select"
+                app:layout_constraintStart_toEndOf="@id/signup_category_star_2_iv"
+                app:layout_constraintTop_toTopOf="@id/signup_category_star_1_iv"/>
+
+            <ImageView
+                android:id="@+id/signup_category_star_4_iv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_signup_category_no_select"
+                app:layout_constraintStart_toEndOf="@id/signup_category_star_3_iv"
+                app:layout_constraintTop_toTopOf="@id/signup_category_star_1_iv"/>
+
+            <ImageView
+                android:id="@+id/signup_category_star_5_iv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_signup_category_no_select"
+                app:layout_constraintStart_toEndOf="@id/signup_category_star_4_iv"
+                app:layout_constraintTop_toTopOf="@id/signup_category_star_1_iv"/>
+
+
+
+
+            <!-- 카테고리 버튼 - 안드로이드, iOS -->
+            <android.widget.Button
+                android:id="@+id/signup_category_android_bt"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="125dp"
+                android:text="Android"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintTop_toBottomOf="@id/signup_select_category_explain_tv"
+                app:layout_constraintStart_toStartOf="@id/signup_select_category_tv" />
+
+            <android.widget.Button
+                android:id="@+id/signup_category_ios_bt"
+                android:layout_width="70dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:text="iOS"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toEndOf="@id/signup_category_android_bt"
+                app:layout_constraintTop_toTopOf="@id/signup_category_android_bt"/>
+
+
+            <!-- 카테고리 버튼 - HTML, CSS, REACT -->
+            <android.widget.Button
+                android:id="@+id/signup_category_html_bt"
+                android:layout_width="80dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="30dp"
+                android:text="HTML"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toStartOf="@id/signup_category_android_bt"
+                app:layout_constraintTop_toBottomOf="@id/signup_category_android_bt"/>
+
+            <android.widget.Button
+                android:id="@+id/signup_category_css_bt"
+                android:layout_width="70dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:text="CSS"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toEndOf="@id/signup_category_html_bt"
+                app:layout_constraintTop_toTopOf="@id/signup_category_html_bt"/>
+
+            <android.widget.Button
+                android:id="@+id/signup_category_react_bt"
+                android:layout_width="80dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:text="React"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toEndOf="@id/signup_category_css_bt"
+                app:layout_constraintTop_toTopOf="@id/signup_category_css_bt"/>
+
+
+            <!-- 카테고리 버튼 - NodeJS, SPRING -->
+            <android.widget.Button
+                android:id="@+id/signup_category_nodejs_bt"
+                android:layout_width="90dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="30dp"
+                android:text="Node.js"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toStartOf="@id/signup_category_android_bt"
+                app:layout_constraintTop_toBottomOf="@id/signup_category_html_bt"/>
+
+            <android.widget.Button
+                android:id="@+id/signup_category_spring_bt"
+                android:layout_width="90dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:text="Spring"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toEndOf="@id/signup_category_nodejs_bt"
+                app:layout_constraintTop_toTopOf="@id/signup_category_nodejs_bt"/>
+
+
+            <!-- 카테고리 버튼 - C, C++, JS -->
+            <android.widget.Button
+                android:id="@+id/signup_category_c_bt"
+                android:layout_width="60dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="30dp"
+                android:text="C"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toStartOf="@id/signup_category_android_bt"
+                app:layout_constraintTop_toBottomOf="@id/signup_category_nodejs_bt"/>
+
+            <android.widget.Button
+                android:id="@+id/signup_category_cpp_bt"
+                android:layout_width="70dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:text="C++"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toEndOf="@id/signup_category_c_bt"
+                app:layout_constraintTop_toTopOf="@id/signup_category_c_bt"/>
+
+            <android.widget.Button
+                android:id="@+id/signup_category_js_bt"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:text="JavaScript"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toEndOf="@id/signup_category_cpp_bt"
+                app:layout_constraintTop_toTopOf="@id/signup_category_cpp_bt"/>
+
+
+
+            <!-- 카테고리 버튼 - JAVA, PYTHON -->
+            <android.widget.Button
+                android:id="@+id/signup_category_java_bt"
+                android:layout_width="80dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="30dp"
+                android:text="Java"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toStartOf="@id/signup_category_android_bt"
+                app:layout_constraintTop_toBottomOf="@id/signup_category_c_bt"/>
+
+            <android.widget.Button
+                android:id="@+id/signup_category_python_bt"
+                android:layout_width="90dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:text="Python"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_signup_category"
+                app:layout_constraintStart_toEndOf="@id/signup_category_java_bt"
+                app:layout_constraintTop_toTopOf="@id/signup_category_java_bt"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <!-- 프로그래스 바 -->
+    <ProgressBar
+        android:id="@+id/signup_loading_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:indeterminateTint="@color/selected"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone" />
 
-
-
-
-    <!-- 별 아이콘 -->
-
-
-
-
-    <TextView
-        android:id="@+id/signup_select_category_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:layout_marginStart="35dp"
-        android:text="관심있는 코딩 분야를 \n선택해주세요. (최대 5개)"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/signup_next_step_iv"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:id="@+id/signup_select_category_explain_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60px"
-        android:text="무물컴이 관심 있는 코딩 분야의 질문을 \n추천해줘요!"
-        android:textColor="@color/home_gary_text_color"
-        android:textStyle="bold"
-        android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/signup_select_category_tv"
-        app:layout_constraintStart_toStartOf="@id/signup_select_category_tv"/>
-
-
-
-
-    <!-- 카테고리 버튼 - 안드로이드, iOS -->
-    <android.widget.Button
-        android:id="@+id/signup_category_android_bt"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="60dp"
-        android:text="ANDROID"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:textAllCaps="false"
-        android:background="@drawable/bg_signup_category"
-        app:layout_constraintTop_toBottomOf="@id/signup_select_category_explain_tv"
-        app:layout_constraintStart_toStartOf="@id/signup_select_category_tv" />
-
-    <android.widget.Button
-        android:id="@+id/signup_category_ios_bt"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:text="iOS"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:textAllCaps="false"
-        android:background="@drawable/bg_signup_category"
-        app:layout_constraintStart_toEndOf="@id/signup_category_android_bt"
-        app:layout_constraintTop_toTopOf="@id/signup_category_android_bt"/>
-
-
-    <!-- 카테고리 버튼 - HTML/CSS/JS, REACT -->
-    <android.widget.Button
-        android:id="@+id/signup_category_html_bt"
-        android:layout_width="130dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="25dp"
-        android:text="HTML/CSS/JS"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:background="@drawable/bg_signup_category"
-        app:layout_constraintStart_toStartOf="@id/signup_category_android_bt"
-        app:layout_constraintTop_toBottomOf="@id/signup_category_android_bt"/>
-
-    <android.widget.Button
-        android:id="@+id/signup_category_react_bt"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:text="REACT"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:background="@drawable/bg_signup_category"
-        app:layout_constraintStart_toEndOf="@id/signup_category_html_bt"
-        app:layout_constraintTop_toTopOf="@id/signup_category_html_bt"/>
-
-
-    <!-- 카테고리 버튼 - NodeJS, SPRING -->
-    <android.widget.Button
-        android:id="@+id/signup_category_nodejs_bt"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="25dp"
-        android:text="NodeJS"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:textAllCaps="false"
-        android:background="@drawable/bg_signup_category"
-        app:layout_constraintStart_toStartOf="@id/signup_category_android_bt"
-        app:layout_constraintTop_toBottomOf="@id/signup_category_html_bt"/>
-
-    <android.widget.Button
-        android:id="@+id/signup_category_spring_bt"
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:text="SPRING"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:background="@drawable/bg_signup_category"
-        app:layout_constraintStart_toEndOf="@id/signup_category_nodejs_bt"
-        app:layout_constraintTop_toTopOf="@id/signup_category_nodejs_bt"/>
-
-
-    <!-- 카테고리 버튼 - C, C++, JAVA, PYTHON -->
-    <android.widget.Button
-        android:id="@+id/signup_category_c_bt"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="25dp"
-        android:text="C"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:background="@drawable/bg_signup_category"
-        app:layout_constraintStart_toStartOf="@id/signup_category_android_bt"
-        app:layout_constraintTop_toBottomOf="@id/signup_category_nodejs_bt"/>
-
-    <android.widget.Button
-        android:id="@+id/signup_category_cpp_bt"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:text="C++"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:background="@drawable/bg_signup_category"
-        app:layout_constraintStart_toEndOf="@id/signup_category_c_bt"
-        app:layout_constraintTop_toTopOf="@id/signup_category_c_bt"/>
-
-    <android.widget.Button
-        android:id="@+id/signup_category_java_bt"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:text="JAVA"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:background="@drawable/bg_signup_category"
-        app:layout_constraintStart_toEndOf="@id/signup_category_cpp_bt"
-        app:layout_constraintTop_toTopOf="@id/signup_category_cpp_bt"/>
-
-    <android.widget.Button
-        android:id="@+id/signup_category_python_bt"
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:text="Python"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:background="@drawable/bg_signup_category"
-        app:layout_constraintStart_toEndOf="@id/signup_category_java_bt"
-        app:layout_constraintTop_toTopOf="@id/signup_category_java_bt"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -72,42 +72,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="10"/>
-
-
-
-
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/itemTagLl"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemLl">
-        <TextView
-            android:id="@+id/itemTag1Tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="#서버"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/home_gray_text_color"/>
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:id="@+id/itemTag2Tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="#SPRING"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/home_gray_text_color"/>
-    </LinearLayout>
+
+
     <TextView
         android:id="@+id/itemTitleTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemTagLl"
+        app:layout_constraintTop_toBottomOf="@+id/itemLl"
         android:layout_marginTop="10dp"
         android:lines="1"
         android:text="함수 호출 부분을 모르겠는데 이게 왜 ㅇㄹㅇㄴㄹ
@@ -116,6 +89,32 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         android:ellipsize="end"/>
+
+    <LinearLayout
+        android:id="@+id/itemTagLl"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemTitleTv">
+        <TextView
+            android:id="@+id/itemBigCategoryTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#서버"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/home_gray_text_color"/>
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:id="@+id/itemSmallCategoryTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#SPRING"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/home_gray_text_color"/>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

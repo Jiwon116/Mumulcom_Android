@@ -3,7 +3,7 @@ package com.example.mumulcom
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val BASE_URL = "https://mumulcom.shop"
+const val BASE_URL = "https://dev.mumulcom.shop"
 
 fun getRetrofit(): Retrofit {
     val retrofit = Retrofit.Builder()

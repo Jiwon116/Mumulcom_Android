@@ -1,7 +1,7 @@
 package com.example.mumulcom
 
 interface SignUpView {
-    fun onLoginLoading()
+    fun onSignUpLoading()
     fun onSignUpSuccess()
     fun onSignUpFailure(code: Int, message: String)
 }
