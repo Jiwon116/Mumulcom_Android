@@ -1,7 +1,6 @@
 package com.example.mumulcom
 
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,10 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.example.mumulcom.RecentQuestionAdapter
+import com.example.mumulcom.Question
 import com.example.mumulcom.databinding.FragmentHomeBinding
+import com.example.mumulcom.QuestionService
+import com.example.mumulcom.RecentQuestionView
 
 
-class HomeFragment : Fragment(),RecentQuestionView {
+class HomeFragment : Fragment(), RecentQuestionView {
     lateinit var binding: FragmentHomeBinding
     private lateinit var recentQuestionAdapter: RecentQuestionAdapter
 
@@ -27,7 +30,8 @@ class HomeFragment : Fragment(),RecentQuestionView {
         initCategoryButton()
 
         binding.searchBtn.setOnClickListener {
-            startActivity(Intent(activity, SearchActivity::class.java))
+            val intent = Intent(requireContext(), SearchActivity::class.java)
+            startActivity(intent)
         }
 
         return binding.root
@@ -62,6 +66,7 @@ class HomeFragment : Fragment(),RecentQuestionView {
         val intent = Intent(requireContext(),QuestionDetailActivity::class.java)
         intent.putExtra("bigCategoryName",question.bigCategoryName) // 상위 카테고리명 넘김
         intent.putExtra("questionIdx",question.questionIdx) // 질문 고유 번호 넘김
+        intent.putExtra("type", question.type)
         startActivity(intent)
 
 
@@ -71,8 +76,8 @@ class HomeFragment : Fragment(),RecentQuestionView {
         val questionService = QuestionService()
         questionService.setRecentQuestionView(this)
 
-        // TODO sharedPreference 에 저장된 userIdx 값으로 바꿔서 넣기
-        questionService.getQuestions(3) // 현재 로그인한 사용자 정보 넣어줌.
+
+        questionService.getQuestions(getUserIdx(requireContext()), getJwt(requireContext())) // 현재 로그인한 사용자 정보 넣어줌.
     }
 
 
@@ -85,29 +90,35 @@ class HomeFragment : Fragment(),RecentQuestionView {
 
 
     override fun onGetQuestionsLoading() {
+        binding.homeProgressbar.visibility = View.VISIBLE
         Log.d("HomeFragment/API","로딩중...")
+
     }
 
-    override fun onGetQuestionsSuccess(result: ArrayList<Question>?) {
-        if (result != null) {
-            recentQuestionAdapter.addQuestions(result)
-            binding.noMyQuestionTv.visibility = View.GONE
-            binding.recentQuestionVp.visibility = View.VISIBLE
-            binding.homeIndicator.visibility = View.VISIBLE
+    override fun onGetQuestionsSuccess(result: ArrayList<Question>) {
+        binding.homeProgressbar.visibility = View.INVISIBLE
 
 
-        }else{ // 내가 한 질문이 없을 경우
+        if(result.isEmpty()){ // 내가 한 질문이 없을 경우  -> []
             // viewPager 지우고 텍스트 대체
             binding.recentQuestionVp.visibility = View.GONE
             binding.homeIndicator.visibility = View.GONE
             binding.noMyQuestionTv.visibility = View.VISIBLE
+        }else{
+            recentQuestionAdapter.addQuestions(result)
+            binding.noMyQuestionTv.visibility = View.GONE
+            binding.recentQuestionVp.visibility = View.VISIBLE
+            binding.homeIndicator.visibility = View.VISIBLE
         }
+
 
         // indicator 연결
         binding.homeIndicator.setViewPager(binding.recentQuestionVp)
     }
 
     override fun onGetQuestionsFailure(code: Int, message: String) {
+        binding.homeProgressbar.visibility = View.INVISIBLE
+        Log.d("HomeFragment/API","실패 ")
         when(code){
             400-> Log.d("HomeFragment/API",message)
         }
@@ -131,7 +142,7 @@ class HomeFragment : Fragment(),RecentQuestionView {
             val intent = Intent(context,QuestionBoardActivity::class.java)
             intent.putExtra("category","앱")
             intent.putExtra("bigCategoryIdx",1)
-            intent.putExtra("smallCategoryIdx",0)
+            //       intent.putExtra("smallCategoryIdx",0)
             startActivity(intent)
         }
         binding.androidTv.setOnClickListener {
@@ -160,7 +171,7 @@ class HomeFragment : Fragment(),RecentQuestionView {
             val intent = Intent(context,QuestionBoardActivity::class.java)
             intent.putExtra("category","웹")
             intent.putExtra("bigCategoryIdx",2)
-            intent.putExtra("smallCategoryIdx",0)
+            //     intent.putExtra("smallCategoryIdx",0)
             startActivity(intent)
         }
         binding.htmlTv.setOnClickListener {
@@ -196,7 +207,7 @@ class HomeFragment : Fragment(),RecentQuestionView {
             val intent = Intent(context,QuestionBoardActivity::class.java)
             intent.putExtra("category","서버")
             intent.putExtra("bigCategoryIdx",3)
-            intent.putExtra("smallCategoryIdx",1)
+            //    intent.putExtra("smallCategoryIdx",1)
             startActivity(intent)
         }
 
@@ -225,7 +236,7 @@ class HomeFragment : Fragment(),RecentQuestionView {
             val intent = Intent(context,QuestionBoardActivity::class.java)
             intent.putExtra("category","프로그래밍 언어")
             intent.putExtra("bigCategoryIdx",4)
-            intent.putExtra("smallCategoryIdx",0)
+            //       intent.putExtra("smallCategoryIdx",0)
             startActivity(intent)
         }
         binding.cTv.setOnClickListener {

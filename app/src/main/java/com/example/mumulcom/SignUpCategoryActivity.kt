@@ -1,5 +1,7 @@
 package com.example.mumulcom
 
+import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -31,7 +33,6 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
         nickname = intent.getStringExtra("nickname").toString()
         group = intent.getStringExtra("group").toString()
 
-
         // 카테고리 클릭 이벤트
         binding.signupCategoryAndroidBt.setOnClickListener(this)
         binding.signupCategoryIosBt.setOnClickListener(this)
@@ -60,61 +61,60 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
     }
 
     // 각 버튼의 클릭 이벤트
-    override fun onClick(view: View?)
-    {
-        when (view!!.id)
-        {
-            R.id.signup_category_android_bt-> {
+    override fun onClick(view: View?) {
+        when (view!!.id) {
+            R.id.signup_category_android_bt -> {
                 categories = "안드로이드"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_ios_bt-> {
+            R.id.signup_category_ios_bt -> {
                 categories = "iOS"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_html_bt-> {
+            R.id.signup_category_html_bt -> {
                 categories = "HTML"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_css_bt-> {
+            R.id.signup_category_css_bt -> {
                 categories = "CSS"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_react_bt-> {
+            R.id.signup_category_react_bt -> {
                 categories = "React"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_nodejs_bt-> {
+            R.id.signup_category_nodejs_bt -> {
                 categories = "Node.js"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_spring_bt-> {
+            R.id.signup_category_spring_bt -> {
                 categories = "Spring"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_c_bt-> {
+            R.id.signup_category_c_bt -> {
                 categories = "C"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_cpp_bt-> {
+            R.id.signup_category_cpp_bt -> {
                 categories = "C++"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_js_bt-> {
+            R.id.signup_category_js_bt -> {
                 categories = "JavaScript"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_java_bt-> {
+            R.id.signup_category_java_bt -> {
                 categories = "Java"
                 selectCategories(view, categories)
             }
-            R.id.signup_category_python_bt-> {
+            R.id.signup_category_python_bt -> {
                 categories = "Python"
                 selectCategories(view, categories)
             }
         }
     }
 
+    // TODO 변수 타입 확인하기..! 에러는 안나는데 경고가 뜸
     private fun selectCategories(view: View, categories: String?) {
 
         if (myCategories.size < 5) {
@@ -122,7 +122,7 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
             // isSelected 값 변경 (클릭 시 state_selected 변경)
             view.isSelected = !view.isSelected
 
-            if(view.isSelected) {   // isSelected = true -> 카테고리 선택함
+            if (view.isSelected) {   // isSelected = true -> 카테고리 선택함
                 myCategories.add(categories.toString()) // 카테고리 리스트에 추가
             } else {
                 myCategories.remove(categories.toString())  // 카테고리 리스트에서 삭제
@@ -139,7 +139,7 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
 
         // 카테고리 리스트 크기에 따라
         // 상단 건너뛰기 버튼 <-> 선택 완료 버튼
-        if(myCategories.size == 0) {
+        if (myCategories.size == 0) {
             binding.signupNextStepIv.visibility = View.VISIBLE
             binding.signupSelectDoneIv.visibility = View.GONE
         } else {
@@ -149,7 +149,7 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
 
         // 카테고리 리스트 크기에 따라서
         // 별 버튼 색상 변경
-        if(myCategories.size == 0) {
+        if (myCategories.size == 0) {
             binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_no_select)
             binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_no_select)
             binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_no_select)
@@ -189,11 +189,13 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
     }
 
     private fun getUser(): User {
-        Log.d("email : ", email)
-        Log.d("name : ", name)
-        Log.d("nickname : ", nickname)
-        Log.d("group : ", group)
-        Log.d("myCategories : ", myCategories.toString())
+        Log.d(
+            TAG, "email : $email " +
+                    "\nname: $name " +
+                    "\nnickname: $nickname " +
+                    "\ngroup: $group " +
+                    "\nmyCategories: $myCategories"
+        )
 
         return User(email, name, nickname, group, myCategories)
     }
@@ -207,15 +209,9 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
         Log.d("SIGNUPACT/ASNYC", "Hello, $name")
     }
 
-    private fun startMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-        finish()
-    }
-
     override fun onSignUpLoading() {
         binding.signupLoadingPb.visibility = View.VISIBLE
-        Log.d("SingUpCategoryActivity/API","회원가입 로딩 중...")
+        Log.d("SingUpCategoryActivity/API", "회원가입 로딩 중...")
     }
 
     override fun onSignUpSuccess() {
@@ -224,16 +220,31 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
         finish()
     }
 
+    private fun startMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        finish()
+    }
+
     override fun onSignUpFailure(code: Int, message: String) {
         binding.signupLoadingPb.visibility = View.GONE
 
-        when(code) {
-            2024 -> {   // DB에 없는 카테고리일 경우
+        when (code) {
+            2021 -> {   // 이미 가입된 이메일입니다
+                Log.d("SingUpCategoryActivity/API", message)
+                dialogPopup()
+            }
+            2024 -> {   // DB에 없는 카테고리일 경우 - 잘못된 카테고리 명입니다
                 Log.d("SingUpCategoryActivity/API", message)
             }
             400 -> {
-                Log.d("SingUpCategoryActivity/API", message)
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun dialogPopup() {
+        val customDialog = CustomDialog(finishApp = { finish() })
+        customDialog.show(supportFragmentManager, "CustomDialog")
     }
 }

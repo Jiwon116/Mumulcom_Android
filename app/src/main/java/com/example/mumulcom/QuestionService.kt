@@ -15,7 +15,7 @@ class QuestionService {
         this.recentQuestionView = recentQuestionView
     }
 
-    fun getQuestions(userIdx:Long, X_ACCESS_TOKEN:String="eyJ0eXBlIjoiand0IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VySWR4IjozLCJpYXQiOjE2NDQwNTg4MTIsImV4cCI6MTY0NTUzMDA0MX0.kQFQtOC6fYVDFVFXhrNE_Jz3EtJwsSrES89_syTCli4") {
+    fun getQuestions(userIdx:Long, X_ACCESS_TOKEN:String) {
         val questionService = getRetrofit().create(QuestionRetrofitInterface::class.java)
         // val callResponse: Call<QuestionResponse> = questionService.getQuestions(userIdx)
 

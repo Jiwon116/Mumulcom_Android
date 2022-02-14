@@ -1,8 +1,10 @@
 package com.example.mumulcom
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.Toast
 import com.example.mumulcom.databinding.ActivityLoginBinding
@@ -29,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
             }
             else if (tokenInfo != null) {
                 // 서버에 사용자가 이미 존재하면 = 카카오 로그인이 이미 되어있으면
-                Toast.makeText(this, "기존 로그인 유지 성공", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "기존 로그인 유지 성공")
 
                 // 메인 액티비티로 사용자 정보 전달하기
                 val intent = Intent(this, MainActivity::class.java)
@@ -72,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
             }
             else if (token != null) {
                 // 처음 로그인에 성공하면
-                Toast.makeText(this, "카카오톡 계정 연결 성공", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "카카오톡 계정 연결 성공")
 
                 // 추가 정보 입력 (사인 업 액티비티) 으로 넘어가기
                 val intent = Intent(this, SignUpActivity::class.java)

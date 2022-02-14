@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="15dp"
-    android:paddingBottom="15dp">
+    android:layout_height="45dp"
+    android:gravity="start"
+    android:orientation="horizontal"
+    android:paddingStart="25dp"
+    android:paddingEnd="25dp" >
 
-    <ImageView
-        android:id="@+id/item_alarm_profile_iv"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/ic_avatar_1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:id="@+id/item_alarm_content_tv"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="15dp"
-        android:text="최지원님이 회원님의 답변을 좋아합니다."
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:ellipsize="end"
-        app:layout_constraintStart_toEndOf="@id/item_alarm_profile_iv"
-        app:layout_constraintTop_toTopOf="@id/item_alarm_profile_iv"/>
+        android:layout_gravity="center">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/item_alarm_icon_iv"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_avatar_1" />
+
+        <TextView
+            android:id="@+id/item_alarm_content_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:text="jiwon님이 회원님의 답변을 좋아합니다:이것은 질문 제목입니다!"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+    </LinearLayout>
+
+</LinearLayout>

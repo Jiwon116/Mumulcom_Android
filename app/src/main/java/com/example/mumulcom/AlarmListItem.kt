@@ -1,7 +1,7 @@
 package com.example.mumulcom
 
 open class AlarmListItem(
-    val type: Int
+    val itemType: Int
 ) {
     companion object {
         const val TYPE_DATE = 0

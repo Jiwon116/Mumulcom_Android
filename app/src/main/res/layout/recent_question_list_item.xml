@@ -5,7 +5,8 @@
     android:background="@drawable/question_list_background"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginEnd="20dp">
     <LinearLayout
         android:id="@+id/itemLl"
         android:layout_width="wrap_content"

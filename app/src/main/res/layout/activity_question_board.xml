@@ -19,18 +19,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFF1E0"
-            android:paddingLeft="68px"
-            android:paddingTop="50px"
-            android:paddingRight="68px"
-            android:paddingBottom="50px"
+            android:paddingStart="20dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="25dp"
+            android:paddingBottom="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/backIv"
-                android:layout_width="28px"
-                android:layout_height="56px"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/ic_back_black" />
 
             <TextView
@@ -40,12 +40,12 @@
                 android:layout_centerInParent="true"
                 android:text="안드로이드"
                 android:textColor="@color/black"
-                android:textSize="41.78px" />
+                android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/searchIv"
-                android:layout_width="71px"
-                android:layout_height="71px"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_search" />
         </RelativeLayout>
@@ -65,24 +65,22 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingStart="68px"
-                    android:paddingEnd="68px">
+                    android:layout_height="match_parent">
 
                     <ImageView
                         android:id="@+id/codingQuestionIv"
-                        android:layout_width="319px"
-                        android:layout_height="89.32px"
-                        android:layout_marginTop="81px"
+                        android:layout_width="120dp"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="25dp"
                         android:src="@drawable/coding_question_img"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/questionBoardRv"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/conceptQuestionIv"
-                        android:layout_width="319px"
-                        android:layout_height="89.32px"
-                        android:layout_marginStart="49.86px"
+                        android:layout_width="120dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="15dp"
                         android:src="@drawable/ic_concept_question_img"
                         app:layout_constraintBottom_toBottomOf="@+id/codingQuestionIv"
                         app:layout_constraintStart_toEndOf="@+id/codingQuestionIv"
@@ -92,10 +90,11 @@
                         android:id="@+id/sortRecentTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="59px"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="25dp"
                         android:text="최신순"
                         android:textColor="#C4C4C4"
-                        android:textSize="41.78px"
+                        android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/codingQuestionIv" />
 
@@ -103,38 +102,48 @@
                         android:id="@+id/sortHotTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="41px"
+                        android:layout_marginStart="15dp"
                         android:text="핫한순"
                         android:textColor="#C4C4C4"
-                        android:textSize="41.78px"
+                        android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="@+id/sortRecentTv"
                         app:layout_constraintStart_toEndOf="@+id/sortRecentTv"
                         app:layout_constraintTop_toTopOf="@+id/sortRecentTv" />
 
-                    <ImageView
-                        android:id="@+id/ifAnswerIsCheckIv"
-                        android:layout_width="50px"
-                        android:layout_height="50px"
-                        android:layout_marginStart="190px"
-                        android:src="@drawable/ic_check_no"
-                        app:layout_constraintBottom_toBottomOf="@+id/sortRecentTv"
-                        app:layout_constraintStart_toEndOf="@+id/sortHotTv"
-                        app:layout_constraintTop_toTopOf="@+id/sortRecentTv" />
-
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/question_board_reply_ly"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="답변 달린 질문만 보기"
-                        android:textColor="#474A57"
-                        android:textSize="41.78px"
-                        app:layout_constraintBottom_toBottomOf="@+id/sortRecentTv"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/sortRecentTv" />
+                        android:layout_marginEnd="25dp"
+                        android:gravity="center"
+                        app:layout_constraintTop_toTopOf="@id/sortHotTv"
+                        app:layout_constraintEnd_toEndOf="parent" >
+
+                        <ImageView
+                            android:id="@+id/ifAnswerIsCheckIv"
+                            android:layout_gravity="center"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_check_no" />
+
+                        <TextView
+                            android:id="@+id/scrap_reply_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_gravity="center"
+                            android:text="답변 달린 질문만 보기"
+                            android:textSize="18sp"
+                            android:textColor="@color/home_gray_text_color"/>
+
+                    </LinearLayout>
 
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/questionBoardRv"
-                        android:layout_marginTop="40px"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
                         tools:listitem="@layout/question_list_item"
                         app:layout_constraintTop_toBottomOf="@+id/sortRecentTv"
                         app:layout_constraintStart_toStartOf="parent"

@@ -107,6 +107,14 @@
                         app:layout_constraintBottom_toBottomOf="@+id/createdAtTv"
                         app:layout_constraintStart_toEndOf="@+id/createdAtTv"
                         app:layout_constraintTop_toTopOf="@+id/createdAtTv" />
+                    <ImageView
+                        android:id="@+id/clickLikeIv"
+                        android:src="@drawable/ic_like"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/questionIv"
+                        app:layout_constraintBottom_toBottomOf="@+id/questionIv"/>
 
                     <TextView
                         android:id="@+id/titleTv"
@@ -156,9 +164,10 @@
                         app:layout_constraintTop_toBottomOf="@+id/bigCategoryTv">
 
                         <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/viewPager"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
-                            android:background="#3F2F2F" />
+                            />
 
                         <me.relex.circleindicator.CircleIndicator3
                             app:ci_drawable="@drawable/indicator_background"
@@ -180,7 +189,7 @@
                         android:textColor="@color/black"/>
                     <LinearLayout
                         android:id="@+id/codingSkillLinearLayout"
-                        android:layout_marginTop="25dp"
+                        android:layout_marginTop="35dp"
                         app:layout_constraintTop_toBottomOf="@+id/currentErrorTv"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -193,7 +202,7 @@
                             android:id="@+id/codingSkillConstraintLayout"
                             android:layout_marginBottom="20dp"
                             android:padding="10dp"
-                            android:background="@drawable/button_customnext"
+                            android:background="@drawable/basic_outline_black"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <TextView
@@ -247,9 +256,19 @@
                         android:src="@drawable/ic_answer_face"
                         android:layout_marginTop="14dp"/>
 
+                    <TextView
+                        android:layout_marginStart="10dp"
+                        app:layout_constraintTop_toTopOf="@id/smileTv"
+                        app:layout_constraintBottom_toBottomOf="@+id/smileTv"
+                        app:layout_constraintStart_toEndOf="@+id/smileTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="답변"/>
+
                     <androidx.recyclerview.widget.RecyclerView
-                        tools:listitem="@layout/qusetion_answer_item"
-                        android:layout_marginTop="13dp"
+                        android:id="@+id/recyclerView"
+                        tools:listitem="@layout/question_answer_item"
+                        android:layout_marginTop="15dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/smileTv"
                         android:layout_width="match_parent"
@@ -268,7 +287,7 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/questionFloatingButton"
-        android:text="답변한기"
+        android:text="답변하기"
         android:layout_gravity="bottom|center"
         android:textColor="@color/white"
         android:backgroundTint="#FFBD80"

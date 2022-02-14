@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import com.example.mumulcom.databinding.FragmentQuestionBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
-// TODO tablayout에 아이콘 추가
 class QuestionFragment : Fragment() {
 
     lateinit var binding: FragmentQuestionBinding

@@ -9,16 +9,16 @@ import retrofit2.Response
 class LoginService {
     private lateinit var loginView: LoginView
 
-    fun setLoginView(loginView: MainActivity) {
+    fun setLoginView(loginView: SplashActivity) {
         this.loginView = loginView
     }
 
     fun login(email: Login) {
-        val authService = getRetrofit().create(LoginRetrofitInterface::class.java)
+        val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
         loginView.onLoginLoading()
 
-        authService.login(email).enqueue(object : Callback<LoginResponse>{
+        loginService.login(email).enqueue(object : Callback<LoginResponse>{
             @SuppressLint("LongLogTag")
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 Log.d("LOGIN/API-RESPONSE", response.toString())

@@ -19,7 +19,7 @@
         <RadioButton
             android:id="@+id/scrap_coding_btn"
             android:layout_width="120dp"
-            android:layout_height="35dp"
+            android:layout_height="36dp"
             android:layout_marginEnd="15dp"
             android:background="@drawable/selector_radio_button"
             android:button="@null"
@@ -28,7 +28,7 @@
         <RadioButton
             android:id="@+id/scrap_concept_btn"
             android:layout_width="120dp"
-            android:layout_height="35dp"
+            android:layout_height="36dp"
             android:background="@drawable/selector_radio_button2"
             android:button="@null" />
 

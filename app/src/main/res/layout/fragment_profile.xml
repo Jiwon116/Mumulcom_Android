@@ -1,17 +1,411 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:scrollbars="none"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="프로필 프래그먼트"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- 프로필 -->
+        <LinearLayout
+            android:id="@+id/profile_background_ly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg_dialog_outline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_ly"
+                android:layout_width="match_parent"
+                android:layout_height="110dp" >
+
+                <ImageView
+                    android:id="@+id/profile_profile_iv"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="30dp"
+                    android:src="@drawable/ic_avatar_1"
+                    app:layout_constraintTop_toTopOf="@id/profile_ly"
+                    app:layout_constraintStart_toStartOf="@id/profile_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_ly"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:gravity="start"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toEndOf="@id/profile_profile_iv"
+                    app:layout_constraintTop_toTopOf="@id/profile_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_ly" >
+
+                    <TextView
+                        android:id="@+id/profile_nickname_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="jiwon"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/profile_group_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="대학생"
+                        android:textSize="16sp"
+                        android:textColor="@color/home_gray_text_color"/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:src="@drawable/ic_profile_setting"
+                    app:layout_constraintEnd_toEndOf="@id/profile_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_ly"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
+
+
+
+        <!-- 로그아웃 & 회원 탈퇴 -->
+        <LinearLayout
+            android:id="@+id/profile_logout_background_ly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_dialog_outline"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/profile_background_ly"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_logout_ly"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp" >
+
+                <ImageView
+                    android:id="@+id/profile_logout_iv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:src="@drawable/ic_profile_logout"
+                    app:layout_constraintStart_toStartOf="@id/profile_logout_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_logout_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_logout_ly"/>
+
+                <TextView
+                    android:id="@+id/profile_logout_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="로그아웃"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/profile_logout_iv"
+                    app:layout_constraintTop_toTopOf="@id/profile_logout_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_logout_ly" />
+
+                <ImageView
+                    android:id="@+id/profile_logout_arrow_iv"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="25dp"
+                    android:src="@drawable/ic_arrow_next"
+                    app:layout_constraintEnd_toEndOf="@id/profile_logout_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_logout_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_logout_ly"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_withdraw_ly"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="20dp" >
+
+                <ImageView
+                    android:id="@+id/profile_withdraw_iv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:src="@drawable/ic_profile_withdraw"
+                    app:layout_constraintStart_toStartOf="@id/profile_withdraw_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_withdraw_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_withdraw_ly"/>
+
+                <TextView
+                    android:id="@+id/profile_withdraw_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="회원탈퇴"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/profile_withdraw_iv"
+                    app:layout_constraintTop_toTopOf="@id/profile_withdraw_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_withdraw_ly"/>
+
+                <ImageView
+                    android:id="@+id/profile_withdraw_arrow_iv"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="25dp"
+                    android:src="@drawable/ic_arrow_next"
+                    app:layout_constraintEnd_toEndOf="@id/profile_withdraw_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_withdraw_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_withdraw_ly"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
+
+
+        <!-- 설정 -->
+        <LinearLayout
+            android:id="@+id/profile_setting_background_ly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_dialog_outline"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/profile_logout_background_ly"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_setting_1_ly"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp" >
+
+                <ImageView
+                    android:id="@+id/profile_setting_1_iv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:src="@drawable/ic_profile_notice"
+                    app:layout_constraintStart_toStartOf="@id/profile_setting_1_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_1_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_1_ly"/>
+
+                <TextView
+                    android:id="@+id/profile_setting_1_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="공지사항"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/profile_setting_1_iv"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_1_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_1_ly"/>
+
+                <ImageView
+                    android:id="@+id/profile_setting_1_arrow_iv"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="25dp"
+                    android:src="@drawable/ic_arrow_next"
+                    app:layout_constraintEnd_toEndOf="@id/profile_setting_1_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_1_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_1_ly"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_setting_2_ly"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" >
+
+                <ImageView
+                    android:id="@+id/profile_setting_2_iv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:src="@drawable/ic_profile_notice"
+                    app:layout_constraintStart_toStartOf="@id/profile_setting_2_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_2_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_2_ly"/>
+
+                <TextView
+                    android:id="@+id/profile_setting_2_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="개인정보 정책"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/profile_setting_2_iv"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_2_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_2_ly"/>
+
+                <ImageView
+                    android:id="@+id/profile_setting_2_arrow_iv"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="25dp"
+                    android:src="@drawable/ic_arrow_next"
+                    app:layout_constraintEnd_toEndOf="@id/profile_setting_2_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_2_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_2_ly"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_setting_3_ly"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" >
+
+                <ImageView
+                    android:id="@+id/profile_setting_3_iv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:src="@drawable/ic_profile_notice"
+                    app:layout_constraintStart_toStartOf="@id/profile_setting_3_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_3_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_3_ly"/>
+
+                <TextView
+                    android:id="@+id/profile_setting_3_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="이용약관"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/profile_setting_3_iv"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_3_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_3_ly"/>
+
+                <ImageView
+                    android:id="@+id/profile_setting_3_arrow_iv"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="25dp"
+                    android:src="@drawable/ic_arrow_next"
+                    app:layout_constraintEnd_toEndOf="@id/profile_setting_3_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_3_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_3_ly"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_setting_4_ly"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" >
+
+                <ImageView
+                    android:id="@+id/profile_setting_4_iv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:src="@drawable/ic_profile_notice"
+                    app:layout_constraintStart_toStartOf="@id/profile_setting_4_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_4_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_4_ly"/>
+
+                <TextView
+                    android:id="@+id/profile_setting_4_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="문의하기"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/profile_setting_4_iv"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_4_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_4_ly"/>
+
+                <ImageView
+                    android:id="@+id/profile_setting_4_arrow_iv"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="25dp"
+                    android:src="@drawable/ic_arrow_next"
+                    app:layout_constraintEnd_toEndOf="@id/profile_setting_4_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_4_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_4_ly"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_setting_5_ly"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="20dp" >
+
+                <ImageView
+                    android:id="@+id/profile_setting_5_iv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:src="@drawable/ic_profile_notice"
+                    app:layout_constraintStart_toStartOf="@id/profile_setting_5_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_5_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_5_ly"/>
+
+                <TextView
+                    android:id="@+id/profile_setting_5_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="버전안내"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/profile_setting_5_iv"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_5_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_5_ly"/>
+
+                <ImageView
+                    android:id="@+id/profile_setting_5_arrow_iv"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="25dp"
+                    android:src="@drawable/ic_arrow_next"
+                    app:layout_constraintEnd_toEndOf="@id/profile_setting_5_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_setting_5_ly"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_setting_5_ly"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

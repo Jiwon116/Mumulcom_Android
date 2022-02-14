@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.mumulcom.QuestionAdapter
+import com.example.mumulcom.Question
 import com.example.mumulcom.databinding.ActivityQuestionBoardBinding
+import com.example.mumulcom.CategoryQuestionService
+import com.example.mumulcom.CategoryQuestionView
 
-
-class QuestionBoardActivity : AppCompatActivity(),CategoryQuestionView {
+// 카테고리별 질문 목록
+class QuestionBoardActivity : AppCompatActivity(), CategoryQuestionView {
     private lateinit var binding : ActivityQuestionBoardBinding
     private var codingQuestionCheck : Boolean = true // default 값 (코딩 질문)
     private var conceptQuestionCheck : Boolean = false // default 값 (개념 질문)
@@ -24,6 +27,7 @@ class QuestionBoardActivity : AppCompatActivity(),CategoryQuestionView {
     private lateinit var title : String
     private var bigCategoryIdx : Int =0
     private var smallCategoryIdx : Int? = null
+    private var smallCategoryIdx_ : Int?=null
 
     private lateinit var questionAdapter : QuestionAdapter
 
@@ -35,10 +39,16 @@ class QuestionBoardActivity : AppCompatActivity(),CategoryQuestionView {
         val intent = intent
         title = intent.getStringExtra("category")!!
         binding.categoryNameTv.text = title
-        bigCategoryIdx = intent.getIntExtra("categoryIdx",0) // 상위 카테고리 값 받음
-        smallCategoryIdx = intent.getIntExtra("smallCategoryIdx",0) // 하위 카테고리 값 받음
-//        Log.d("QuestionBoard:bigCategory",bigCategoryIdx.toString())
-//        Log.d("QuestionBoard:smallCategoryIdx",smallCategoryIdx.toString())
+        bigCategoryIdx = intent.getIntExtra("bigCategoryIdx",0) // 상위 카테고리 값 받음
+        smallCategoryIdx = intent.getIntExtra("smallCategoryIdx",-1) // 하위 카테고리 값 받음
+
+        if(smallCategoryIdx!==-1){
+            smallCategoryIdx_ = smallCategoryIdx
+        }
+
+        Log.d("QuestionBoard:bigCategoryIdx",bigCategoryIdx.toString())
+        Log.d("QuestionBoard:smallCategoryIdx",smallCategoryIdx.toString())
+        Log.d("QuestionBoard:smallCategoryIdx_",smallCategoryIdx_.toString())
 
 
         initView()  // view 초기화
@@ -46,8 +56,8 @@ class QuestionBoardActivity : AppCompatActivity(),CategoryQuestionView {
         initRecentOrHotQuestionTextButton() // 최신순 & 핫한순 버튼 초기화
         initCheckCommentButton() // 답변 달린 글만 보기 버튼 초기화
 
-        getCategoryQuestions()
-        initRecyclerView()
+//        getCategoryQuestions()
+//        initRecyclerView()
 
 
 
@@ -55,17 +65,54 @@ class QuestionBoardActivity : AppCompatActivity(),CategoryQuestionView {
         binding.refreshLayout.setOnRefreshListener {
             // todo 서버에서 데이터 reload
 
+            getCategoryQuestions()
+            initRecyclerView()
 
             binding.refreshLayout.isRefreshing = false
         }
 
 
+        Log.d("lifecycle","QuestionBoardActivity onCreate")
+
+
+        binding.searchIv.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
+
     }// end of onCreate
 
     override fun onStart() {
         super.onStart()
+        //     Log.d("lifecycle","QuestionBoardActivity onStart")
+
+        getCategoryQuestions()
+        initRecyclerView()
 
     }
+
+
+//    override fun onResume() {
+//        super.onResume()
+//        Log.d("lifecycle","QuestionBoardActivity onResume")
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        Log.d("lifecycle","QuestionBoardActivity onPause")
+//
+//    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        Log.d("lifecycle","QuestionBoardActivity onStop")
+//
+//    }
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        Log.d("lifecycle","QuestionBoardActivity onDestroy")
+//
+//    }
 
     private fun initRecyclerView(){
         // recyclerView <-> adapter 연결
@@ -84,6 +131,7 @@ class QuestionBoardActivity : AppCompatActivity(),CategoryQuestionView {
         val intent = Intent(this,QuestionDetailActivity::class.java)
         intent.putExtra("bigCategoryName",question.bigCategoryName) // 상위 카테고리명 넘김
         intent.putExtra("questionIdx",question.questionIdx) // 질문 고유 번호 넘김
+        intent.putExtra("type",type) // 코딩질문 or 개념질문
         startActivity(intent)
 
 
@@ -95,7 +143,12 @@ class QuestionBoardActivity : AppCompatActivity(),CategoryQuestionView {
         val categoryQuestionService = CategoryQuestionService()
         categoryQuestionService.setCategoryQuestionService(this)
 
-        categoryQuestionService.getCategoryQuestions(type,sort,bigCategoryIdx,smallCategoryIdx,isReplied,0,10)
+        Log.d("value","type "+type.toString())
+        Log.d("value","sort "+sort.toString())
+        Log.d("value","bigCategoryIdx "+bigCategoryIdx.toString())
+        Log.d("value","smallCategoryIdx "+smallCategoryIdx_.toString())
+        Log.d("value","isReplied "+isReplied.toString())
+        categoryQuestionService.getCategoryQuestions(type,sort,bigCategoryIdx,smallCategoryIdx_,isReplied,0,10)
     }
 
 
@@ -105,6 +158,7 @@ class QuestionBoardActivity : AppCompatActivity(),CategoryQuestionView {
     }
 
     override fun onGetQuestionsSuccess(result: ArrayList<Question>?) {
+        Log.d("QuestionBoardActivity/API","데이터 받아옴")
         if (result != null) { // 해당 카테고리에 대한 질문이 있을때 어댑터에 추가
             questionAdapter.addQuestions(result)
         }
@@ -178,11 +232,13 @@ class QuestionBoardActivity : AppCompatActivity(),CategoryQuestionView {
 
 
         // 답변 단글만 보기
-        binding.ifAnswerIsCheckIv.setOnClickListener {
+        binding.questionBoardReplyLy.setOnClickListener {
             isReplied = !isReplied
             initCheckCommentButton()
             getCategoryQuestions()
             initRecyclerView()
+
+
         }
 
         binding.questionFloatingButton.setOnClickListener {
@@ -234,17 +290,12 @@ class QuestionBoardActivity : AppCompatActivity(),CategoryQuestionView {
 
     }
 
-
-
     private fun initCheckCommentButton(){
         if(isReplied){ // 답변 달린 댓글만 보기
             binding.ifAnswerIsCheckIv.setImageResource(R.drawable.ic_check_ok)
-            // todo 답변 달린 댓글만 가져오기
-
 
         }else{
             binding.ifAnswerIsCheckIv.setImageResource(R.drawable.ic_check_no)
-            // todo 답변 달린 댓글만 가져오기
         }
     }
 

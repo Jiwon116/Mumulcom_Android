@@ -1,28 +1,33 @@
 package com.example.mumulcom
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
+import com.example.mumulcom.databinding.ItemSliderBinding
 
 
-//class ViewPagerAdapter(sliderlist: ArrayList<Int>):RecyclerView.Adapter<ViewPagerAdapter.PagerViewHolder>(){
-//
-//    var image = sliderlist
-//
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = PagerViewHolder((parent))
-//
-//    override fun getItemCount(): Int = image.size
-//
-//    override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
-//        holder.slider.setImageResource(image[position])
-//    }
-//
-//    inner class PagerViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder
-//        (LayoutInflater.from(parent.context).inflate(R.layout.item_slider, parent, false)){
-//
-//        val slider = itemView.imageslider!!
-//    }
-//}
+class ViewPagerAdapter(private val albumList:ArrayList<Album>):RecyclerView.Adapter<ViewPagerAdapter.PagerViewHolder>() {
+
+    inner class PagerViewHolder(val binding: ItemSliderBinding):RecyclerView.ViewHolder(binding.root){
+
+        fun bind(album: Album){
+            binding.imageSlider.setImageResource(album.albumImg!!)
+        }
+
+    }
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewPagerAdapter.PagerViewHolder {
+        val binding: ItemSliderBinding = ItemSliderBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return PagerViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewPagerAdapter.PagerViewHolder, position: Int) {
+        holder.bind(albumList[position])
+    }
+
+    override fun getItemCount(): Int {
+        return albumList.size
+    }
+}
