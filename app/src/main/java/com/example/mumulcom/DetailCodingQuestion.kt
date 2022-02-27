@@ -20,6 +20,8 @@ data class DetailCodingQuestion( // 13개
     @SerializedName("likeCount") var likeCount: Int,    // 질문 좋아요 개수
     @SerializedName("replyCount") var replyCount: Int,  // 질문 답변 개수
     @SerializedName("isLiked") var isLiked: String,  // 좋아요 여부
+    @SerializedName("isScraped") var isScraped: String,  // 스크랩 여부
+    @SerializedName("isAdopted") var isAdopted: String,  // 이 질문에 답변에 채택이 됬는지 여부
 
 
 )

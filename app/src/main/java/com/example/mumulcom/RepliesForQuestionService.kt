@@ -1,7 +1,8 @@
 package com.example.mumulcom
 
-
 import android.util.Log
+import com.example.mumulcom.getRetrofit
+import com.example.mumulcom.QuestionRetrofitInterface
 import retrofit2.Call
 import retrofit2.Response
 
@@ -11,7 +12,7 @@ class RepliesForQuestionService {
     private lateinit var repliesForQuestionView: RepliesForQuestionView
 
     // 외부 접근
-    fun setRepliesForQuestionService(repliesForQuestionView: RepliesForQuestionView){
+    fun setRepliesForQuestionView(repliesForQuestionView: RepliesForQuestionView){
         this.repliesForQuestionView = repliesForQuestionView
     }
 

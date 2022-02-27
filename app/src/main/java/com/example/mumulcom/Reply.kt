@@ -15,4 +15,5 @@ data class Reply(
     @SerializedName("likeCount") val likeCount:Int, // 좋아요 수
     @SerializedName("reReplyCount") val reReplyCount:Int, // 대댓글
     @SerializedName("status") val status:String, // 채택 여부 (Y/N)
+    @SerializedName("isLiked") val isLiked:String, // 답변에 대한 좋아요 여부
 )

@@ -8,16 +8,16 @@ import retrofit2.Response
 class CheckConceptQuestionService{
     private lateinit var checkConceptQuestionView: CheckConceptQuestionView
 
-    fun setcheckconceptquestionView(checkConceptQuestionView: CheckConceptQuestionView){
+    fun setcheckconceptquestionView(checkConceptQuestionView: CheckConceptQuestionActivity){
         this.checkConceptQuestionView=checkConceptQuestionView
     }
 
-    fun checkConceptQuestion(checkConcept: CheckConcept){
-        val checkConceptQuestionService= getRetrofit().create(CheckConceptRetrofitInterface::class.java)
+    fun checkConceptQuestion(jwt: String, checkConcept: CheckConcept){
+        val checkConceptQuestionService= getRetrofit().create(CheckConceptQuestionRetrofitInterface::class.java)
 
         checkConceptQuestionView.onCheckConceptQuestionLoading()
 
-        checkConceptQuestionService.checkConceptQuestion(checkConcept).enqueue(object : Callback<CheckConceptQuestionResponse>{
+        checkConceptQuestionService.checkConceptQuestion(jwt, checkConcept).enqueue(object : Callback<CheckConceptQuestionResponse>{
             override fun onResponse(
                 call: Call<CheckConceptQuestionResponse>,
                 response: Response<CheckConceptQuestionResponse>
@@ -26,7 +26,7 @@ class CheckConceptQuestionService{
 
                 if (response.isSuccessful&&response.code()==200){
                     val resp=response.body()!!
-                    Log.d("CHECKCONCEPT/API", resp.toString())
+                    Log.d("CHECKCONCEPT/API-SUCCESS-mumulcom", resp.toString())
 
                     when(resp.code){
                         1000->checkConceptQuestionView.onCheckConceptQuestionSuccess(resp.result)

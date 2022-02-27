@@ -20,6 +20,7 @@ class SplashActivity : AppCompatActivity(), LoginView {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         // 카카오에서 사용자 email 받아오기
         //getUserInfo()
         // 사용자 정보 요청

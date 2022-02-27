@@ -2,64 +2,77 @@ package com.example.mumulcom
 
 import android.animation.ValueAnimator
 import android.app.Activity
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.mumulcom.databinding.ActivityConceptcamerashootingBinding
+import com.bumptech.glide.Glide
 import java.text.SimpleDateFormat
-import android.graphics.Matrix
-import android.media.ExifInterface
 import com.example.mumulcom.databinding.ActivityCodingcamerashootingBinding
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.io.IOException
+import java.util.*
 
 
 class CodingCameraShootingActivity: AppCompatActivity() {
 
     lateinit var binding: ActivityCodingcamerashootingBinding
 
-    private lateinit var getResultText: ActivityResultLauncher<Intent>
-    private var realUri:Uri?=null
+    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>//이동(카메라,앨범)
 
-    //Manifest 에서 설정한 권한을 가지고 온다.
-    val CAMERA_PERMISSION = arrayOf(android.Manifest.permission.CAMERA)
+    //파이어스토리지
+    val IMAGE_PICK=1111
+    var selectImage:Uri?=null
+    lateinit var storage:FirebaseStorage
+    lateinit var firestore:FirebaseFirestore
+
+    //권한
+    val FLAG_PERM_STORAGE = 99
     val STORAGE_PERMISSION = arrayOf(
         android.Manifest.permission.READ_EXTERNAL_STORAGE,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-    //권한 플래그값 정의
-    val FLAG_PERM_CAMERA = 98
-    val FLAG_PERM_STORAGE = 99
-
-    //카메라와 갤러리를 호출하는 플래그
-    val FLAG_REQ_CAMERA = 101
-    val FLAG_REA_GALLERY = 102
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCodingcamerashootingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        //이미지 선택 안하고 싶을 수 있으니
         binding.camerashootingBackIb.setOnClickListener {
-            startActivity(Intent(this, QuestionCategoryActivity::class.java))
+            onBackPressed()
         }
 
 
-        // 화면이 만들어 지면서 정장소 권한을 체크 합니다.
-        // 권한이 승인되어 있으면 카메라를 호출하는 메소드를 실행합니다.
+        //삭제버튼+이미지 삭제하고 체크 버튼 누르면 토스트 메세지 띄우기
+        binding.camerashootingturnIb.setOnClickListener {
+            binding.ivPre.visibility=View.INVISIBLE
+            binding.camerashootingCheckIb.onThrottleClick {
+                Toast.makeText(this, "이미지를 삽입해주세요.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+        storage = FirebaseStorage.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
+// 화면이 만들어 지면서 정장소 권한을 체크
+        // 권한이 승인되어 있으면 카메라를 호출하는 메소드를 실행
         if (checkPermission(STORAGE_PERMISSION, FLAG_PERM_STORAGE)) {
             setViews()
             val imageView=binding.ivPre
@@ -93,76 +106,159 @@ class CodingCameraShootingActivity: AppCompatActivity() {
                     }
                 }.start()
             }
+
         }
+
 
     }
 
-    private fun setViews() {
+    private fun setViews(){
         //카메라 버튼 클릭
-        binding.camerashootingCameraIv.setOnClickListener {
-            //카메라 호출 메소드
-            openCamera()
-        }
+//        binding.camerashootingCameraIv.setOnClickListener {
+//            //카메라 호출 메소드
+//            openCamera()
+//        }
 
         //갤러리 버튼 클릭
         binding.camerashootingGalleryIv.setOnClickListener {
-            //카메라 호출 메소드
-            openGallery()
-        }
-    }
+            var intent = Intent(Intent.ACTION_PICK) //선택하면 무언가를 띄움. 묵시적 호출
+            intent.type = "image/*"
+            startActivityForResult(intent, IMAGE_PICK)
+            binding.camerashootingCheckIb.visibility=View.VISIBLE
+            binding.camerashootingturnIb.visibility=View.VISIBLE
+            binding.camerashootingBnv.visibility=View.VISIBLE
+            //체크버튼 누르면 이미지 전송(파이어베이스)
+            binding.camerashootingCheckIb.onThrottleClick {
+                if (selectImage != null) {
+                    var fileName =
+                        SimpleDateFormat("yyyyMMddHHmmss").format(Date()) // 파일명이 겹치면 안되기 떄문에 시년월일분초 지정
+                    storage.getReference().child("image").child(fileName)
+                        .putFile(selectImage!!)//어디에 업로드할지 지정
+                        .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
+                            taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
+                                var imageUrl = it.toString()
+                                var photo = Photo(imageUrl)
+                                firestore.collection("coding-images")
+                                    .document().set(photo)
+                                    .addOnSuccessListener {
+                                        finish()
+                                    }
+                                Log.d("PHOTO/imageUrl", imageUrl)
+                                Log.d("PHOTO/photo", photo.toString())
+                                val intent = Intent(
+                                    this,
+                                    CheckCodingQuestionActivity()::class.java
+                                )//이미지 넘겨주기
+                                intent.putExtra("PHOTO/PUT/imageUrl", imageUrl)
+                                Log.d(
+                                    "PHOTO/PUT/imageUrl",
+                                    intent.putExtra("PHOTO/PUT/imageUrl", imageUrl).toString()
+                                )
+                                setResult(RESULT_OK, intent);
+                                finish()//전 액티비티로 전달
+                            }
+                        }
 
-    fun openGallery(){
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type=MediaStore.Images.Media.CONTENT_TYPE
-        startActivityForResult(intent, FLAG_REA_GALLERY)
-    }
-
-
-    private fun openCamera() {
-        //카메라 권한이 있는지 확인
-        if(checkPermission(CAMERA_PERMISSION,FLAG_PERM_CAMERA)) {
-//            //권한이 있으면 카메라를 실행시킵니다.
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
-            createImageUri(newFileName(), "image/jpg")?.let { uri ->
-                realUri = uri
-                // MediaStore.EXTRA_OUTPUT을 Key로 하여 Uri를 넘겨주면
-                // 일반적인 Camera App은 이를 받아 내가 지정한 경로에 사진을 찍어서 저장시킨다.
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-                startActivityForResult(intent, FLAG_REQ_CAMERA)
+                }
             }
         }
+
     }
-    //사진 각도 반환 함수
-    fun exifOrientationToDegrees(exifOrientation: Int): Int {
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
-            return 90
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
-            return 180
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
-            return 270
+
+
+    //미리보기 이미지
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == IMAGE_PICK && resultCode == Activity.RESULT_OK) {
+            selectImage = data?.data
+            if (selectImage != null) {
+                // 사진 가져오기
+                val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(selectImage!!))
+                // 사진의 회전 정보 가져오기
+                val orientation = getOrientationOfImage(selectImage!!).toFloat()
+                // 이미지 회전하기
+                val newBitmap = getRotatedBitmap(bitmap, orientation)
+                // 회전된 이미지로 imaView 설정
+                binding.ivPre.setImageBitmap(newBitmap)
+                binding.ivPre.visibility=View.VISIBLE
+            }
+            else
+                binding.ivPre.setImageURI(selectImage)
+            binding.ivPre.visibility=View.VISIBLE
         }
-        return 0
     }
 
-    // 이미지 회전 함수
-    private fun rotate(bitmap: Bitmap, degree: Int) : Bitmap {
-        val matrix = Matrix()
-        matrix.postRotate(degree.toFloat())
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix,true)
+    //checkPermission() 에서 ActivityCompat.requestPermissions 을 호출한 다음 사용자가 권한 허용여부를 선택하면 해당 메소드로 값이 전달
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when(requestCode){
+            FLAG_PERM_STORAGE ->{
+                for(grant in grantResults){
+                    if(grant != PackageManager.PERMISSION_GRANTED){
+                        //권한이 승인되지 않았다면 return 을 사용하여 메소드를 종료시켜 줍니다
+                        Toast.makeText(this,"저장소 권한을 승인해야지만 앱을 사용할 수 있습니다..",Toast.LENGTH_SHORT).show()
+                        finish()
+                        return
+                    }
+                }
+                //카메라 호출 메소드
+                setViews()
+            }
+//            FLAG_PERM_CAMERA ->{
+//                for(grant in grantResults){
+//                    if(grant != PackageManager.PERMISSION_GRANTED){
+//                        Toast.makeText(this,"카메라 권한을 승인해야지만 카메라를 사용할 수 있습니다.",Toast.LENGTH_SHORT).show()
+//                        return
+//                    }
+//                }
+//                openCamera()
+//            }
+        }
     }
 
-    private fun newFileName(): String {
-        val sdf = SimpleDateFormat("yyyyMMdd_HHmmss")
-        val filename = sdf.format(System.currentTimeMillis())
-        return "$filename.jpg"
+    // 중복클릭
+    fun View.onThrottleClick(action: (v: View) -> Unit) {
+        val listener = View.OnClickListener { action(it) }
+        val interval: Long = 1000//1분
+        setOnClickListener(OnThrottleClickListener(listener, interval))
     }
 
-    private fun createImageUri(filename: String, mimeType: String): Uri? {
-        var values = ContentValues()
-        values.put(MediaStore.Images.Media.DISPLAY_NAME, filename)
-        values.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
-        return this.contentResolver.insert(EXTERNAL_CONTENT_URI, values)
+    // 이미지 회전 정보 가져오기
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun getOrientationOfImage(uri: Uri): Int {
+        // uri -> inputStream
+        val inputStream = contentResolver.openInputStream(uri)
+        val exif: ExifInterface? = try {
+            ExifInterface(inputStream!!)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return -1
+        }
+        inputStream.close()
+
+        // 회전된 각도 알아내기
+        val orientation = exif?.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+        if (orientation != -1) {
+            when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> return 90
+                ExifInterface.ORIENTATION_ROTATE_180 -> return 180
+                ExifInterface.ORIENTATION_ROTATE_270 -> return 270
+            }
+        }
+        return -90
+    }
+
+    // 이미지 회전하기
+    @Throws(Exception::class)
+    private fun getRotatedBitmap(bitmap: Bitmap?, degrees: Float): Bitmap? {
+        if (bitmap == null) return null
+        if (degrees == 90F) return bitmap
+        val m = Matrix()
+        m.setRotate(degrees, bitmap.width.toFloat() /2, bitmap.height.toFloat() /2)
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, m, true)
+        Log.d("bitmap", return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, m, true))
     }
 
 
@@ -180,91 +276,4 @@ class CodingCameraShootingActivity: AppCompatActivity() {
         }
         return true
     }
-
-    //checkPermission() 에서 ActivityCompat.requestPermissions 을 호출한 다음 사용자가 권한 허용여부를 선택하면 해당 메소드로 값이 전달 됩니다.
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        when(requestCode){
-            FLAG_PERM_STORAGE ->{
-                for(grant in grantResults){
-                    if(grant != PackageManager.PERMISSION_GRANTED){
-                        //권한이 승인되지 않았다면 return 을 사용하여 메소드를 종료시켜 줍니다
-                        Toast.makeText(this,"저장소 권한을 승인해야지만 앱을 사용할 수 있습니다..",Toast.LENGTH_SHORT).show()
-                        finish()
-                        return
-                    }
-                }
-                //카메라 호출 메소드
-                setViews()
-            }
-            FLAG_PERM_CAMERA ->{
-                for(grant in grantResults){
-                    if(grant != PackageManager.PERMISSION_GRANTED){
-                        Toast.makeText(this,"카메라 권한을 승인해야지만 카메라를 사용할 수 있습니다.",Toast.LENGTH_SHORT).show()
-                        return
-                    }
-                }
-                openCamera()
-            }
-        }
-    }
-
-//    var realUri: Uri? = null
-//    var data: Uri?=null
-
-    //startActivityForResult 을 사용한 다음 돌아오는 결과값을 해당 메소드로 호출합니다.
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                FLAG_REQ_CAMERA -> {
-                    if (resultCode == RESULT_OK) {
-                        realUri?.let { uri ->
-                            binding.ivPre.setImageURI(uri)
-                            binding.ivPre.visibility = View.VISIBLE
-
-                            intent.putExtra("uri", uri.toString())
-                            binding.camerashootingturnIb.setOnClickListener {
-                                binding.ivPre.visibility = View.GONE
-                            }
-                            Log.d("u1", uri.toString())
-                            //체크버튼
-                            binding.camerashootingCheckIb.setOnClickListener {
-                                val intent=Intent(this, CheckCodingQuestionActivity::class.java)
-                                intent.putExtra("uri", uri)
-                                startActivity(intent)
-                                finish()
-                                Log.d("u3", uri.toString())
-                            }
-                        }
-
-                    }
-                }
-//                data?.data?
-                FLAG_REA_GALLERY -> {
-                    data?.data?.let { uri ->
-                        binding.ivPre.setImageURI(uri)
-                        binding.ivPre.visibility = View.VISIBLE
-                        intent.putExtra("uri", uri.toString())
-                        binding.camerashootingturnIb.setOnClickListener {
-                            binding.ivPre.visibility = View.GONE
-                        }
-                        Log.d("u2", uri.toString())
-                        //체크버튼
-                        binding.camerashootingCheckIb.setOnClickListener {
-                            val intent=Intent(this, CheckCodingQuestionActivity::class.java)
-                            intent.putExtra("realUri", uri)
-                            startActivity(intent)
-                            finish()
-                            Log.d("u3", uri.toString())
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-
 }

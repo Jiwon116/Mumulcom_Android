@@ -3,6 +3,7 @@ package com.example.mumulcom
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -77,6 +78,8 @@ class RecentQuestionAdapter(val context: Context):RecyclerView.Adapter<RecentQue
 
             if(question.smallCategoryName!=null){
                 binding.itemSmallCategoryTv.text = "#"+question.smallCategoryName
+            } else {
+                binding.itemSmallCategoryTv.visibility = View.GONE
             }
 
 

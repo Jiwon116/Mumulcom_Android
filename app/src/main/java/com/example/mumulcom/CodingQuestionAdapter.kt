@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import android.content.Context
+import android.view.View
 import com.example.mumulcom.databinding.QuestionSearchListItemBinding
 
 class CodingQuestionAdapter(var context: Context)
@@ -60,14 +61,16 @@ class CodingQuestionAdapter(var context: Context)
             binding.searchItemDateTv.text = codingQuestion.createdAt
             binding.searchItemTitleTv.text = codingQuestion.title
             binding.searchItemContentTv.text = codingQuestion.currentError
-            if(codingQuestion.bigCategoryName!=null){
-                binding.searchItemTag1Tv.text = "#"+codingQuestion.bigCategoryName
-            }
-            if(codingQuestion.smallCategoryName!=null){
-                binding.searchItemTag2Tv.text = "#"+codingQuestion.smallCategoryName
-            }
+
             binding.searchItemCommentTv.text = codingQuestion.replyCount.toString()
             binding.searchItemLikeTv.text = codingQuestion.likeCount.toString()
+
+            binding.searchItemTag1Tv.text = "#"+codingQuestion.bigCategoryName
+            if(codingQuestion.smallCategoryName!=null){
+                binding.searchItemTag2Tv.text = "#"+codingQuestion.smallCategoryName
+            } else {
+                binding.searchItemTag2Tv.visibility = View.GONE
+            }
         }
 
     }

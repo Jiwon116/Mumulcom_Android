@@ -3,6 +3,7 @@ package com.example.mumulcom
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -58,14 +59,16 @@ class TabQuestionAdapter(var context: Context?)
             binding.itemNameTv.text = question.nickname
             binding.itemDateTv.text = question.createdAt
             binding.itemTitleTv.text = question.title
-            if(question.bigCategoryName!=null){
-                binding.itemBigCategoryTv.text = "#" + question.bigCategoryName
-            }
-            if(question.smallCategoryName!=null){
-                binding.itemSmallCategoryTv.text = "#" + question.smallCategoryName
-            }
+
             binding.itemCommentTv.text = question.replyCount.toString()
             binding.itemLikeTv.text = question.likeCount.toString()
+
+            binding.itemBigCategoryTv.text = "#" + question.bigCategoryName
+            if(question.smallCategoryName!=null){
+                binding.itemSmallCategoryTv.text = "#" + question.smallCategoryName
+            } else {
+                binding.itemSmallCategoryTv.visibility = View.GONE
+            }
         }
 
     }

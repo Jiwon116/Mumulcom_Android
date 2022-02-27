@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="45dp"
+    android:layout_height="55dp"
     android:gravity="start"
     android:orientation="horizontal"
     android:paddingStart="25dp"
@@ -17,7 +18,7 @@
             android:id="@+id/item_alarm_icon_iv"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/ic_avatar_1" />
+            tools:src="@drawable/ic_avatar_1" />
 
         <TextView
             android:id="@+id/item_alarm_content_tv"
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
-            android:text="jiwon님이 회원님의 답변을 좋아합니다:이것은 질문 제목입니다!"
+            tools:text="jiwon님이 회원님의 답변을 좋아합니다:이것은 질문 제목입니다!"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:singleLine="true"

@@ -3,6 +3,7 @@ package com.example.mumulcom
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -52,6 +53,7 @@ class QuestionAdapter(val context: Context):RecyclerView.Adapter<QuestionAdapter
     }
 
     inner class ViewHolder(val binding:QuestionListItemBinding):RecyclerView.ViewHolder(binding.root){
+        @SuppressLint("SetTextI18n")
         fun bind(question:Question){
 
             Glide.with(context).load(question.profileImgUrl).into(binding.itemIconIv)  // 프로필 이미지
@@ -68,6 +70,8 @@ class QuestionAdapter(val context: Context):RecyclerView.Adapter<QuestionAdapter
 
             if(question.smallCategoryName!=null){
                 binding.itemSmallCategoryTv.text = "#"+question.smallCategoryName
+            } else {
+                binding.itemSmallCategoryTv.visibility = View.GONE
             }
         }
     }

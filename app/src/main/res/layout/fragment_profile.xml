@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:scrollbars="none"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,8 +19,8 @@
             android:layout_marginTop="45dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:orientation="vertical"
-            android:background="@drawable/bg_dialog_outline"
+            android:orientation="horizontal"
+            android:background="@drawable/ic_profile_bg_1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" >
@@ -27,55 +28,49 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/profile_ly"
                 android:layout_width="match_parent"
-                android:layout_height="110dp" >
-
-                <ImageView
-                    android:id="@+id/profile_profile_iv"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="30dp"
-                    android:src="@drawable/ic_avatar_1"
-                    app:layout_constraintTop_toTopOf="@id/profile_ly"
-                    app:layout_constraintStart_toStartOf="@id/profile_ly"
-                    app:layout_constraintBottom_toBottomOf="@id/profile_ly"/>
+                android:layout_height="match_parent" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginStart="30dp"
                     android:gravity="start"
                     android:orientation="vertical"
-                    app:layout_constraintStart_toEndOf="@id/profile_profile_iv"
-                    app:layout_constraintTop_toTopOf="@id/profile_ly"
-                    app:layout_constraintBottom_toBottomOf="@id/profile_ly" >
+                    app:layout_constraintStart_toStartOf="@id/profile_ly"
+                    app:layout_constraintTop_toTopOf="@id/profile_ly" >
 
                     <TextView
                         android:id="@+id/profile_nickname_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="jiwon"
-                        android:textSize="20sp"
+                        tools:text="Nickname"
+                        android:textSize="24sp"
                         android:textStyle="bold"
                         android:textColor="@color/black"/>
 
                     <TextView
-                        android:id="@+id/profile_group_tv"
+                        android:id="@+id/profile_email_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:text="대학생"
-                        android:textSize="16sp"
-                        android:textColor="@color/home_gray_text_color"/>
+                        tools:text="user@email.com"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:maxWidth="200dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
 
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/profile_setting_iv"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginStart="30dp"
                     android:src="@drawable/ic_profile_setting"
-                    app:layout_constraintEnd_toEndOf="@id/profile_ly"
-                    app:layout_constraintTop_toTopOf="@id/profile_ly"
+                    app:layout_constraintStart_toStartOf="@id/profile_ly"
                     app:layout_constraintBottom_toBottomOf="@id/profile_ly"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -110,7 +105,7 @@
                     android:id="@+id/profile_logout_iv"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
+                    android:layout_marginStart="30dp"
                     android:src="@drawable/ic_profile_logout"
                     app:layout_constraintStart_toStartOf="@id/profile_logout_ly"
                     app:layout_constraintTop_toTopOf="@id/profile_logout_ly"
@@ -151,7 +146,7 @@
                     android:id="@+id/profile_withdraw_iv"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
+                    android:layout_marginStart="30dp"
                     android:src="@drawable/ic_profile_withdraw"
                     app:layout_constraintStart_toStartOf="@id/profile_withdraw_ly"
                     app:layout_constraintTop_toTopOf="@id/profile_withdraw_ly"
@@ -211,7 +206,7 @@
                     android:id="@+id/profile_setting_1_iv"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
+                    android:layout_marginStart="30dp"
                     android:src="@drawable/ic_profile_notice"
                     app:layout_constraintStart_toStartOf="@id/profile_setting_1_ly"
                     app:layout_constraintTop_toTopOf="@id/profile_setting_1_ly"
@@ -251,7 +246,7 @@
                     android:id="@+id/profile_setting_2_iv"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
+                    android:layout_marginStart="30dp"
                     android:src="@drawable/ic_profile_notice"
                     app:layout_constraintStart_toStartOf="@id/profile_setting_2_ly"
                     app:layout_constraintTop_toTopOf="@id/profile_setting_2_ly"
@@ -291,7 +286,7 @@
                     android:id="@+id/profile_setting_3_iv"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
+                    android:layout_marginStart="30dp"
                     android:src="@drawable/ic_profile_notice"
                     app:layout_constraintStart_toStartOf="@id/profile_setting_3_ly"
                     app:layout_constraintTop_toTopOf="@id/profile_setting_3_ly"
@@ -331,7 +326,7 @@
                     android:id="@+id/profile_setting_4_iv"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
+                    android:layout_marginStart="30dp"
                     android:src="@drawable/ic_profile_notice"
                     app:layout_constraintStart_toStartOf="@id/profile_setting_4_ly"
                     app:layout_constraintTop_toTopOf="@id/profile_setting_4_ly"
@@ -372,7 +367,7 @@
                     android:id="@+id/profile_setting_5_iv"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
+                    android:layout_marginStart="30dp"
                     android:src="@drawable/ic_profile_notice"
                     app:layout_constraintStart_toStartOf="@id/profile_setting_5_ly"
                     app:layout_constraintTop_toTopOf="@id/profile_setting_5_ly"

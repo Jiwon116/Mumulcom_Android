@@ -2,18 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.mumulcom">
-  
-    <!--인터넷 사용 권한 설정-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--  카메라 권한  -->
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <!--  파일 쓰기 권한  -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <!--  파일 저장 권한  -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!--  카메라 기능 사용  -->
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
-  
+    <!-- 인터넷 사용 권한 설정 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 카메라 권한 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 파일 쓰기 권한 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 파일 저장 권한 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 카메라 기능 사용 -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:name=".GlobalApplication"
         android:allowBackup="true"
@@ -21,11 +18,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.BottomNaviTemplate">
-
-        <!--스플래쉬 화면-->
-        <activity android:name="com.example.mumulcom.SplashActivity"
+        android:theme="@style/Theme.BottomNaviTemplate"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ImageActivity"
+            android:exported="false" />
+        <!-- 스플래쉬 화면 -->
+        <activity
+            android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,10 +33,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".QuestionBoardActivity" android:exported="false" />
+        <activity
+            android:name=".QuestionBoardActivity"
+            android:exported="false" />
         <activity android:name=".QuestionDetailActivity" />
-        <activity android:name=".QuestionCategoryActivity"/>
+        <activity android:name=".QuestionCategoryActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".SignUpActivity" />
@@ -51,12 +52,11 @@
         <activity android:name=".CheckCodingQuestionActivity" />
         <activity android:name=".CheckConceptQuestionActivity" />
         <activity android:name=".CodingCameraShootingActivity" />
-        <activity android:name=".ConceptCameraShootingActivity" />
-
-        <!--카카오 로그인-->
-        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity" >
+        <activity android:name=".ConceptCameraShootingActivity" /> <!-- 카카오 로그인 -->
+        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -65,15 +65,12 @@
                     android:host="oauth"
                     android:scheme="kakao0b9d6f7c3471d52a8c2d761dda556e34" />
             </intent-filter>
-        </activity>
-
-        <!--갤러리 이미지 주고받기-->
+        </activity> <!-- 갤러리 이미지 주고받기 -->
         <provider
-            android:authorities="com.example.mumulcom"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.mumulcom"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />

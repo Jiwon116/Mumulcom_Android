@@ -14,7 +14,7 @@
         android:id="@+id/questionFragment"
         android:icon="@drawable/main_btm_question_selector"
         app:showAsAction="always"
-        android:title="내 질문" />
+        android:title="내 활동" />
     <item
         android:id="@+id/scrapFragment"
         android:icon="@drawable/main_btm_scrap_selector"

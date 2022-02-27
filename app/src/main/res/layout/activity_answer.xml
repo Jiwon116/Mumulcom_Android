@@ -12,13 +12,11 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="30dp"
-            >
+            android:paddingBottom="30dp">
 
             <ImageView
                 android:id="@+id/answer_Back_Iv"
@@ -91,41 +89,42 @@
                 app:layout_constraintStart_toStartOf="@id/answer_image_vp"
                 app:layout_constraintTop_toBottomOf="@id/answer_Question_Tv"/>
 
-            <!--    <TextView-->
-            <!--        android:id="@+id/answer_AnswerCode_Tv"-->
-            <!--        android:layout_width="wrap_content"-->
-            <!--        android:layout_height="wrap_content"-->
-            <!--        app:layout_constraintTop_toBottomOf="@id/answer_CodingLevel_Tv"-->
-            <!--        android:text="답변 참고 코드 첨부"-->
-            <!--        android:textStyle="bold"-->
-            <!--        android:textSize="14.18dp"-->
-            <!--        android:layout_marginTop="30dp"-->
-            <!--        app:layout_constraintStart_toStartOf="@id/answer_Image_Iv"/>-->
+            <TextView
+                android:id="@+id/answer_AnswerCode_Tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/answer_CodingLevel_Tv"
+                android:text="답변 참고 코드 첨부"
+                android:textStyle="bold"
+                android:textSize="14.18dp"
+                android:layout_marginTop="30dp"
+                app:layout_constraintStart_toStartOf="@id/answer_CodingLevel_Tv"/>
 
-            <!--    <EditText-->
-            <!--        android:id="@+id/answer_AnswerCode_Et"-->
-            <!--        android:layout_width="330dp"-->
-            <!--        android:layout_height="33.52dp"-->
-            <!--        app:layout_constraintTop_toBottomOf="@id/answer_AnswerCode_Tv"-->
-            <!--        app:layout_constraintStart_toStartOf="@id/answer_AnswerCode_Tv"-->
-            <!--        android:layout_marginTop="6.55dp"-->
-            <!--        android:paddingStart="10dp"-->
-            <!--        android:inputType="textMultiLine"-->
-            <!--        android:lines="8"-->
-            <!--        android:textSize="10dp"-->
-            <!--        android:hint="참고한 사이트 링크나 깃허브 링크를 올려주세요."-->
-            <!--        android:textColorHint="#474A57"-->
-            <!--        android:maxLines="10"-->
-            <!--        android:scrollbars="vertical"-->
-            <!--        android:background="@drawable/button_customnext"/>-->
+            <EditText
+                android:id="@+id/answer_AnswerCode_Et"
+                android:layout_width="320dp"
+                android:layout_height="40dp"
+                app:layout_constraintTop_toBottomOf="@id/answer_AnswerCode_Tv"
+                app:layout_constraintStart_toStartOf="@id/answer_AnswerCode_Tv"
+                android:layout_marginTop="6.55dp"
+                android:paddingStart="10dp"
+                app:layout_constraintEnd_toEndOf="@id/answer_Explanation_Et"
+                android:inputType="textMultiLine"
+                android:lines="8"
+                android:textSize="10dp"
+                android:hint="참고한 사이트 링크나 깃허브 링크를 올려주세요."
+                android:textColorHint="#474A57"
+                android:maxLines="10"
+                android:scrollbars="vertical"
+                android:background="@drawable/basic_outline_black"/>
 
             <TextView
                 android:id="@+id/answer_Explanation_Tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/answer_image_vp"
+                app:layout_constraintTop_toBottomOf="@id/answer_AnswerCode_Et"
                 app:layout_constraintStart_toStartOf="@id/answer_image_vp"
-                android:layout_marginTop="110dp"
+                android:layout_marginTop="30dp"
                 android:textSize="14.84dp"
                 android:text="설명"
                 android:textStyle="bold"
@@ -161,100 +160,34 @@
                 app:layout_constraintTop_toTopOf="@id/answer_Explanation_Tv"
                 android:layout_marginTop="3dp"/>
 
-            <ImageView
-                android:id="@+id/answer_Image_Reference_Iv"
-                android:layout_width="59.73dp"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/answer_Image_Reference_Vp"
+                android:layout_width="match_parent"
                 android:layout_height="59.73dp"
                 android:layout_marginTop="16dp"
+                android:orientation="horizontal"
                 android:src="@drawable/ic_image_plus"
-                android:background="#C4C4C4"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="10dp"
-                app:layout_constraintTop_toBottomOf="@id/answer_Explanation_Et" />
-
-            <ImageView
-                android:id="@+id/answer_Image_Reference2_Iv"
-                android:layout_width="59.73dp"
-                android:layout_height="59.73dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toEndOf="@id/answer_Image_Reference_Iv"
+                app:layout_constraintStart_toStartOf="@id/answer_Explanation_Tv"
+                android:layout_marginStart="20dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_photo"
                 app:layout_constraintTop_toBottomOf="@id/answer_Explanation_Et"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_image_more"
-                android:background="#C4C4C4" />
-
-            <ImageView
-                android:id="@+id/answer_Image_Reference22_Iv"
-                android:layout_width="59.73dp"
-                android:layout_height="59.73dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/ic_image_plus"
-                android:background="#C4C4C4"
-                android:layout_marginStart="10dp"
-                app:layout_constraintStart_toEndOf="@id/answer_Image_Reference_Iv"
-                app:layout_constraintTop_toBottomOf="@id/answer_Explanation_Et"
-                android:visibility="invisible"/>
-
-            <ImageView
-                android:id="@+id/answer_Image_Reference3_Iv"
-                android:layout_width="59.73dp"
-                android:layout_height="59.73dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toEndOf="@id/answer_Image_Reference2_Iv"
-                app:layout_constraintTop_toBottomOf="@id/answer_Explanation_Et"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_image_more"
-                android:background="#C4C4C4"
-                android:visibility="invisible"/>
-
-            <ImageView
-                android:id="@+id/answer_Image_Reference33_Iv"
-                android:layout_width="59.73dp"
-                android:layout_height="59.73dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/ic_image_plus"
-                android:background="#C4C4C4"
-                android:layout_marginStart="10dp"
-                app:layout_constraintStart_toEndOf="@id/answer_Image_Reference2_Iv"
-                app:layout_constraintTop_toBottomOf="@id/answer_Explanation_Et"
-                android:visibility="invisible"/>
-
-            <ImageView
-                android:id="@+id/answer_Image_Reference4_Iv"
-                android:layout_width="59.73dp"
-                android:layout_height="59.73dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toEndOf="@id/answer_Image_Reference3_Iv"
-                app:layout_constraintTop_toBottomOf="@id/answer_Explanation_Et"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_image_more"
-                android:background="#C4C4C4"
-                android:visibility="invisible"
                 />
 
-            <ImageView
-                android:id="@+id/answer_Image_Reference44_Iv"
+
+            <ImageButton
+                android:id="@+id/answer_Image_plus_Iv"
                 android:layout_width="59.73dp"
                 android:layout_height="59.73dp"
                 android:layout_marginTop="16dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/ic_image_plus"
                 android:background="#C4C4C4"
-                android:layout_marginStart="10dp"
-                app:layout_constraintStart_toEndOf="@id/answer_Image_Reference3_Iv"
-                app:layout_constraintTop_toBottomOf="@id/answer_Explanation_Et"
-                android:visibility="invisible"/>
-
-            <ImageView
-                android:id="@+id/answer_Image_Reference5_Iv"
-                android:layout_width="59.73dp"
-                android:layout_height="59.73dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toEndOf="@id/answer_Image_Reference4_Iv"
-                app:layout_constraintTop_toBottomOf="@id/answer_Explanation_Et"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_image_more"
-                android:background="#C4C4C4"
-                android:visibility="invisible"/>
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="35dp"
+                android:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@id/answer_Explanation_Et" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

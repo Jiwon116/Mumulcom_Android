@@ -40,9 +40,9 @@
 
     <string-array name="small_category_programing">
         <item>C</item>
-        <item>C++</item>
-        <item>JavaScript</item>
         <item>Java</item>
+        <item>JavaScript</item>
         <item>Python</item>
+        <item>C++</item>
     </string-array>
 </resources>
