@@ -62,25 +62,25 @@ class SplashActivity : AppCompatActivity(), LoginView {
         Log.d("Login/API","로그인 로딩 중...")
     }
 
-    override fun onLoginSuccess(profile: Profile) {
-        if (profile != null) {
-            saveJwt(this, profile.jwt)
-            saveUserIdx(this, profile.userIdx)
-            saveEmail(this, profile.email)
-            saveName(this, profile.name)
-            saveNickname(this, profile.nickname)
-            saveGroup(this, profile.group)
-            profile.myCategories?.let { saveCategories(this, it) }
-            saveProfileImgUrl(this, profile.profileImgUrl)
+    override fun onLoginSuccess(user: User) {
+        if (user != null) {
+            user.jwt?.let { saveJwt(this, it) }
+            user.userIdx?.let { saveUserIdx(this, it) }
+            saveEmail(this, user.email)
+            saveName(this, user.name)
+            saveNickname(this, user.nickname)
+            saveGroup(this, user.group)
+            user.myCategories?.let { saveCategories(this, it) }
+            saveProfileImgUrl(this, user.profileImgUrl)
 
-            Log.d("jwt", profile.jwt)
-            Log.d("userIdx", profile.userIdx.toString())
-            Log.d("email", profile.email)
-            Log.d("name", profile.name)
-            Log.d("nickname", profile.nickname)
-            Log.d("group", profile.group)
-            Log.d("myCategories", profile.myCategories.toString())
-            Log.d("profileImgUrl", profile.profileImgUrl)
+            user.jwt?.let { Log.d("jwt", it) }
+            Log.d("userIdx", user.userIdx.toString())
+            Log.d("email", user.email)
+            Log.d("name", user.name)
+            Log.d("nickname", user.nickname)
+            Log.d("group", user.group)
+            Log.d("myCategories", user.myCategories.toString())
+            Log.d("profileImgUrl", user.profileImgUrl)
         }
     }
 

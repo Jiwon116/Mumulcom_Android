@@ -8,5 +8,5 @@ import retrofit2.http.Query
 
 interface SignUpRetrofitInterface {
     @POST("/users")  // 회원 가입
-    fun signUp(@Body user: User): Call<SignUpResponse>
+    fun signUp(@Body user: SignUp): Call<SignUpResponse>
 }

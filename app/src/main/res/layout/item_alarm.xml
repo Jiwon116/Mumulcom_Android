@@ -18,7 +18,7 @@
             android:id="@+id/item_alarm_icon_iv"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            tools:src="@drawable/ic_avatar_1" />
+            tools:src="@drawable/ic_alarm_like" />
 
         <TextView
             android:id="@+id/item_alarm_content_tv"

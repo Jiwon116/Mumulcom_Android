@@ -1,5 +1,6 @@
 package com.example.mumulcom
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,22 +31,22 @@ class ProfileFragment : Fragment(), ProfileView {
         // SharedPreference에 저장한 정보 불러오기
         jwt = context?.let { getJwt(it) }.toString()
         userIdx = context?.let { getUserIdx(it) }!!
-        email = context?.let { getEmail(it) }.toString()
-        nickname = context?.let { getNickname(it) }.toString()
-        profileImgUrl = context?.let { getProfileImgUrl(it) }.toString()
-        // name = context?.let { getName(it) }.toString()
-        // group = context?.let { getGroup(it) }.toString()
-        // myCategories = context?.let { getCategories(it) }!!
 
-        initView()
+        getProfile()
+
+        binding.profileSettingIv.setOnClickListener {
+            startActivity(Intent(requireContext(), ProfileModifyActivity::class.java))
+        }
 
         return binding.root
     }
 
     private fun initView() {
+        // 유저 닉네임 & 이메일
         binding.profileNicknameTv.text = nickname
         binding.profileEmailTv.text = email
 
+        // 유저 프로필 이미지
         when {
             profileImgUrl.contains("1.png") -> {
                 binding.profileBackgroundLy.setBackgroundResource(R.drawable.ic_profile_bg_1)
@@ -68,7 +69,7 @@ class ProfileFragment : Fragment(), ProfileView {
         }
     }
 
-    private fun getProfile(jwt: String, userIdx: Long){
+    private fun getProfile(){
         val profileService = ProfileService()
         profileService.setProfileService(this)
 
@@ -76,17 +77,27 @@ class ProfileFragment : Fragment(), ProfileView {
     }
 
     override fun onGetProfileLoading() {
+        binding.profileRv.visibility = View.GONE
+        binding.profileLoadingPb.visibility = View.VISIBLE
         Log.d("Profile/API","로딩중...")
     }
 
-    override fun onGetProfileSuccess(result: Profile) {
-        Log.d("Profile/API","성공")
-        if (result != null) {   // 회원 정보가 있으면
-            //initView()
+    override fun onGetProfileSuccess(profile: Profile) {
+        binding.profileRv.visibility = View.VISIBLE
+        binding.profileLoadingPb.visibility = View.GONE
+        if (profile != null) {   // 회원 정보가 있으면
+            email = context?.let { getEmail(it) }.toString()
+            nickname = context?.let { getNickname(it) }.toString()
+            profileImgUrl = context?.let { getProfileImgUrl(it) }.toString()
+
+            initView()
+            Log.d("Profile/API","성공")
         }
     }
 
     override fun onGetProfileFailure(code: Int, message: String) {
+        binding.profileRv.visibility = View.VISIBLE
+        binding.profileLoadingPb.visibility = View.GONE
         when (code) {
             400 -> Log.d("Profile/API", message)
         }

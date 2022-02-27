@@ -6,7 +6,7 @@
     android:background="#E5E5E5">
 
     <FrameLayout
-        android:id="@+id/main_frm"
+        android:id="@+id/coding_camera_shooting_fy"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/camerashooting_bnv"

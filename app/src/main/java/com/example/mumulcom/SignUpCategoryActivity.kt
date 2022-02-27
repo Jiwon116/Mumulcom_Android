@@ -188,7 +188,7 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
         }
     }
 
-    private fun getUser(): User {
+    private fun getUser(): SignUp {
         Log.d(
             TAG, "email : $email " +
                     "\nname: $name " +
@@ -197,7 +197,7 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
                     "\nmyCategories: $myCategories"
         )
 
-        return User(email, name, nickname, group, myCategories)
+        return SignUp(email, name, nickname, group, myCategories)
     }
 
     private fun signUp() {

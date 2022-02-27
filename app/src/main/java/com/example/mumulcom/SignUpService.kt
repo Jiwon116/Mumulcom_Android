@@ -13,12 +13,12 @@ class SignUpService {
         this.signUpView = signUpView
     }
 
-    fun signUp(user: User) {
+    fun signUp(signup: SignUp) {
         val authService = getRetrofit().create(SignUpRetrofitInterface::class.java)
 
         signUpView.onSignUpLoading()
 
-        authService.signUp(user).enqueue(object : Callback<SignUpResponse> {
+        authService.signUp(signup).enqueue(object : Callback<SignUpResponse> {
             @SuppressLint("LongLogTag")
             override fun onResponse(call: Call<SignUpResponse>, response: Response<SignUpResponse>) {
                 Log.d("SIGNUP/API-RESPONSE", response.toString())

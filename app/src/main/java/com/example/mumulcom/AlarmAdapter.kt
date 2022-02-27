@@ -80,7 +80,7 @@ class AlarmAdapter(private val items: List<AlarmListItem>, var context: Context?
             }
             // 2 -> 내가 한 질문을 좋아요 / 5 -> 내가 한 답변을 좋아요
             else if (alarmItem.noticeCategoryIdx == 2 || alarmItem.noticeCategoryIdx == 5) {
-                binding.itemAlarmIconIv.setImageResource(R.drawable.ic_liked)
+                binding.itemAlarmIconIv.setImageResource(R.drawable.ic_alarm_like)
             }
             // 6 -> 답변 채택
             else {
