@@ -2,7 +2,7 @@ package com.example.mumulcom
 
 import com.google.gson.annotations.SerializedName
 
-// 회원 조회
+// 변경된 유저 정보
 data class ProfileModify(
     @SerializedName("userIdx") var userIdx: Long,  // 유저 식별 번호
     @SerializedName("nickname") var nickname: String, // 유저 닉네임

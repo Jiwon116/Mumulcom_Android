@@ -2,7 +2,7 @@ package com.example.mumulcom
 
 import com.google.gson.annotations.SerializedName
 
-// 회원가입
+// 회원가입 시 서버에 보내는 유저 정보
 data class SignUp(
     @SerializedName("email") var email: String?,  // 유저 이메일
     @SerializedName("name") var name: String?,   // 유저 이름

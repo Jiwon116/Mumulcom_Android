@@ -19,4 +19,11 @@ interface ProfileRetrofitInterface {
         @Path("userIdx") userIdx: Long,    //유저 식별자
         @Body profileModify: ProfileModify, // 변경한 유저 정보
     ):Call<ProfileResponse>
+
+    // 회원 탈퇴
+    @PATCH("/users/deletion/{userIdx}")
+    fun withdraw(
+        @Header("X-ACCESS-TOKEN") jwt : String, // jwt
+        @Path("userIdx") userIdx: Long,    //유저 식별자
+    ):Call<ProfileResponse>
 }

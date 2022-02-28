@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mumulcom</string>
+    <string name="app_name">무물컴</string>
 
     <string-array name="signup_group">
         <item>청소년</item>

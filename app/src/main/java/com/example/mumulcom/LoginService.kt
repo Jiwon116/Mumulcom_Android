@@ -13,34 +13,29 @@ class LoginService {
         this.loginView = loginView
     }
 
-    fun login(email: Login) {
+    fun login(email: Login){
         val loginService = getRetrofit().create(LoginRetrofitInterface::class.java)
 
         loginView.onLoginLoading()
 
-        loginService.login(email).enqueue(object : Callback<LoginResponse>{
-            @SuppressLint("LongLogTag")
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                Log.d("LOGIN/API-RESPONSE", response.toString())
+        loginService.login(email)
+            .enqueue(object : Callback<LoginResponse> {
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
 
-                if(response.isSuccessful && response.code() == 200) {
-                    val resp = response.body()!!
-                    Log.d("LOGIN/API-RESPONSE", resp.toString())
+                    if(response.isSuccessful) {
+                        val resp = response.body()!!
 
-                    when(resp.code) {
-                        1000 -> {
-                            resp.result?.let { loginView.onLoginSuccess(it) }
-                            Log.d("LOGIN","성공")
+                        when(resp.code){
+                            1000-> resp.result?.let { loginView.onLoginSuccess(it) }
+                            else-> loginView.onLoginFailure(resp.code,resp.message)
                         }
-                        else -> loginView.onLoginFailure(resp.code, resp.message)
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                Log.d("LOGIN/API-ERROR", t.toString())
-                loginView.onLoginFailure(400, "네트워크 오류가 발생했습니다.")
-            }
-        })
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    loginView.onLoginFailure(400,"네트워크 오류가 발생했습니다.")
+                }
+
+            })
     }
 }

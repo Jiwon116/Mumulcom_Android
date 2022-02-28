@@ -21,7 +21,7 @@ class TabQuestionFragment : Fragment(), TabCodingQuestionView, TabConceptQuestio
     private var isReplied : Boolean = false //(답변달린 질문만 보기 체크)
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTabMyQuestionBinding.inflate(inflater, container, false)
 
         jwt = context?.let { getJwt(it) }.toString()

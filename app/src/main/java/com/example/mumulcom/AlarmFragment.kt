@@ -20,7 +20,7 @@ class AlarmFragment : Fragment(), AlarmView {
     private val consolidatedList = mutableListOf<AlarmListItem>()
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAlarmBinding.inflate(inflater, container, false)
 
         jwt = context?.let { getJwt(it) }.toString()

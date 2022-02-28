@@ -8,6 +8,7 @@ import retrofit2.Response
 class ProfileService {
     private lateinit var profileView: ProfileView
     private lateinit var profileModifyView: ProfileModifyView
+    private lateinit var withdrawView: WithdrawView
 
     fun setProfileService(profileView: ProfileFragment) {
         this.profileView = profileView
@@ -66,6 +67,38 @@ class ProfileService {
 
                 override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
                     profileModifyView.onSetProfileFailure(400,"네트워크 오류가 발생했습니다.")
+                }
+
+            })
+    }
+
+
+    fun setWithdrawService(withdrawView: WithdrawView) {
+        this.withdrawView = withdrawView
+    }
+
+    // 회원탈퇴
+    fun withdraw(jwt: String, userIdx: Long){
+        val withdrawService = getRetrofit().create(ProfileRetrofitInterface::class.java)
+
+        withdrawView.onWithdrawLoading()
+
+        withdrawService.withdraw(jwt, userIdx)
+            .enqueue(object : Callback<ProfileResponse> {
+                override fun onResponse(call: Call<ProfileResponse>, response: Response<ProfileResponse>) {
+
+                    if(response.isSuccessful) {
+                        val resp = response.body()!!
+
+                        when(resp.code){
+                            1000-> resp.result?.let { withdrawView.onWithdrawSuccess(it) }
+                            else-> withdrawView.onWithdrawFailure(resp.code,resp.message)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
+                    withdrawView.onWithdrawFailure(400,"네트워크 오류가 발생했습니다.")
                 }
 
             })

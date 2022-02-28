@@ -79,10 +79,14 @@ class ProfileModifyActivity : AppCompatActivity(), View.OnClickListener, SignupN
 
         // 닉네임 중복 검사 (중복확인버튼)
         binding.profileModifyDuplicateCheckBt.setOnClickListener {
-            // 중복 확인
-            getNicknameCheck()
-            // 키보드 사라지기
-            closeKeyboard()
+            if (validCurrentNickname) { // 닉네임 유효할때만 중복 검사
+                // 중복 확인
+                getNicknameCheck()
+                // 키보드 사라지기
+                closeKeyboard()
+            } else {
+                Toast.makeText(this, "닉네임을 확인해주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // 카테고리 클릭 이벤트

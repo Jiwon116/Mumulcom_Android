@@ -1,6 +1,5 @@
 package com.example.mumulcom
 
-import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
@@ -13,13 +12,12 @@ import com.example.mumulcom.databinding.ActivitySignupCategoryBinding
 class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUpView {
     lateinit var binding: ActivitySignupCategoryBinding
 
-    private lateinit var email: String
-    private lateinit var name: String
-    private lateinit var nickname: String
-    private lateinit var group: String
+    private var email: String = ""
+    private var name: String = ""
+    private var nickname: String = ""
+    private var group: String = ""
 
     private var categories: String? = null
-
     private var myCategories: MutableList<String> = mutableListOf()   // defalut값은 null, 건너뛰기 가능
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,46 +147,66 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
 
         // 카테고리 리스트 크기에 따라서
         // 별 버튼 색상 변경
-        if (myCategories.size == 0) {
-            binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-            binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-            binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-            binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-            binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-        } else if (myCategories.size == 1) {
-            binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-            binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-            binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-            binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-        } else if (myCategories.size == 2) {
-            binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-            binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-            binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-        } else if (myCategories.size == 3) {
-            binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-            binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-        } else if (myCategories.size == 4) {
-            binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_no_select)
-        } else if (myCategories.size == 5) {
-            binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_select)
-            binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_select)
+        when (myCategories.size) {
+            0 -> {
+                binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+                binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+                binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+                binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+                binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+            }
+            1 -> {
+                binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+                binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+                binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+                binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+            }
+            2 -> {
+                binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+                binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+                binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+            }
+            3 -> {
+                binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+                binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+            }
+            4 -> {
+                binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_no_select)
+            }
+            5 -> {
+                binding.signupCategoryStar1Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar2Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar3Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar4Iv.setImageResource(R.drawable.ic_signup_category_select)
+                binding.signupCategoryStar5Iv.setImageResource(R.drawable.ic_signup_category_select)
+            }
         }
     }
 
-    private fun getUser(): SignUp {
+    private fun signUp() {
+        val signUpService = SignUpService()
+        signUpService.setSignUpView(this)
+
+        signUpService.signUp(SignUp(email, name, nickname, group, myCategories))
+    }
+
+    override fun onSignUpLoading() {
+        binding.signupLoadingPb.visibility = View.VISIBLE
+        Log.d("SingUpCategoryActivity/API", "회원가입 로딩 중...")
+    }
+
+    override fun onSignUpSuccess(user: User) {
+        binding.signupLoadingPb.visibility = View.GONE
         Log.d(
             TAG, "email : $email " +
                     "\nname: $name " +
@@ -197,25 +215,24 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
                     "\nmyCategories: $myCategories"
         )
 
-        return SignUp(email, name, nickname, group, myCategories)
-    }
+        saveJwt(this, user.jwt)
+        saveUserIdx(this, user.userIdx)
+        saveEmail(this, user.email)
+        saveName(this, user.name)
+        saveNickname(this, user.nickname)
+        saveGroup(this, user.group)
+        user.myCategories?.let { saveCategories(this, it) }
+        saveProfileImgUrl(this, user.profileImgUrl)
 
-    private fun signUp() {
-        val signUpService = SignUpService()
-        signUpService.setSignUpView(this)
+        Log.d("jwt", user.jwt)
+        Log.d("userIdx", user.userIdx.toString())
+        Log.d("email", user.email)
+        Log.d("name", user.name)
+        Log.d("nickname", user.nickname)
+        Log.d("group", user.group)
+        Log.d("myCategories", user.myCategories.toString())
+        Log.d("profileImgUrl", user.profileImgUrl)
 
-        signUpService.signUp(getUser())
-
-        Log.d("SIGNUPACT/ASNYC", "Hello, $name")
-    }
-
-    override fun onSignUpLoading() {
-        binding.signupLoadingPb.visibility = View.VISIBLE
-        Log.d("SingUpCategoryActivity/API", "회원가입 로딩 중...")
-    }
-
-    override fun onSignUpSuccess() {
-        binding.signupLoadingPb.visibility = View.GONE
         startMainActivity()
         finish()
     }
@@ -232,7 +249,6 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
         when (code) {
             2021 -> {   // 이미 가입된 이메일입니다
                 Log.d("SingUpCategoryActivity/API", message)
-                dialogPopup()
             }
             2024 -> {   // DB에 없는 카테고리일 경우 - 잘못된 카테고리 명입니다
                 Log.d("SingUpCategoryActivity/API", message)
@@ -241,10 +257,5 @@ class SignUpCategoryActivity : AppCompatActivity(), View.OnClickListener, SignUp
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun dialogPopup() {
-        val customDialog = CustomDialog(finishApp = { finish() })
-        customDialog.show(supportFragmentManager, "CustomDialog")
     }
 }

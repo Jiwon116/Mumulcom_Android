@@ -29,47 +29,40 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/profile_ly"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                android:paddingTop="30dp"
+                android:paddingBottom="30dp"
+                android:paddingStart="30dp">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/profile_nickname_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginStart="30dp"
-                    android:gravity="start"
-                    android:orientation="vertical"
+                    tools:text="Nickname"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="@id/profile_ly"
-                    app:layout_constraintTop_toTopOf="@id/profile_ly" >
+                    app:layout_constraintTop_toTopOf="@id/profile_ly"/>
 
-                    <TextView
-                        android:id="@+id/profile_nickname_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Nickname"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"/>
-
-                    <TextView
-                        android:id="@+id/profile_email_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        tools:text="user@email.com"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:maxWidth="200dp"
-                        android:maxLines="1"
-                        android:ellipsize="end"/>
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/profile_email_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    tools:text="user@email.com"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:maxWidth="200dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toBottomOf="@id/profile_nickname_tv"
+                    app:layout_constraintStart_toStartOf="@id/profile_nickname_tv"/>
 
                 <ImageView
                     android:id="@+id/profile_setting_iv"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginBottom="30dp"
-                    android:layout_marginStart="30dp"
                     android:src="@drawable/ic_profile_setting"
                     app:layout_constraintStart_toStartOf="@id/profile_ly"
                     app:layout_constraintBottom_toBottomOf="@id/profile_ly"/>
