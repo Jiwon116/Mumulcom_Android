@@ -13,17 +13,6 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <!--    <ImageView-->
-    <!--        android:id="@+id/iv_pre"-->
-    <!--        android:layout_width="314dp"-->
-    <!--        android:layout_height="189.44dp"-->
-    <!--        app:layout_constraintStart_toStartOf="@id/camerashootingFrame1Iv"-->
-    <!--        app:layout_constraintEnd_toEndOf="@id/camerashootingFrame2Iv"-->
-    <!--        android:background="#F1F1F1"-->
-    <!--        app:layout_constraintTop_toTopOf="@id/camerashootingFrame1Iv"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@id/camerashootingFrame4Iv"-->
-
-    <!--        />-->
 
     <ImageView
         android:id="@+id/iv_pre"
@@ -31,9 +20,10 @@
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/camerashootingGalleryIv"
         app:layout_constraintTop_toBottomOf="@id/camerashootingBackIb"
+        app:layout_constraintBottom_toTopOf="@id/camerashootingCameraIv"
         android:layout_marginBottom="10dp"
+        android:visibility="visible"
         android:background="#E5E5E5"/>
 
     <!--    <ImageView-->
@@ -49,29 +39,18 @@
 
     <!--수정함-->
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/camerashootingCameraIv"-->
-<!--        android:layout_width="195px"-->
-<!--        android:layout_height="195px"-->
-<!--        android:src="@drawable/ic_cameraa"-->
-<!--        android:scaleType="fitXY"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/camerashooting_bnv"-->
-<!--        android:layout_marginBottom="20dp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        android:layout_marginStart="70dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        android:background="#E5E5E5"/>-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/camerashootingGalleryIv"-->
-<!--        android:layout_width="175px"-->
-<!--        android:layout_height="175px"-->
-<!--        android:src="@drawable/ic_gallery"-->
-<!--        android:scaleType="fitXY"-->
-<!--        app:layout_constraintTop_toTopOf="@id/camerashootingCameraIv"-->
-<!--        app:layout_constraintEnd_toStartOf="@id/camerashootingCameraIv"-->
-<!--        android:layout_marginEnd="30dp"-->
-<!--        android:background="#E5E5E5"/>-->
+    <ImageButton
+        android:id="@+id/camerashootingCameraIv"
+        android:layout_width="195px"
+        android:layout_height="195px"
+        android:src="@drawable/ic_cameraa"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@id/camerashooting_bnv"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#E5E5E5"/>
 
     <ImageButton
         android:id="@+id/camerashootingGalleryIv"
@@ -79,11 +58,11 @@
         android:layout_height="175px"
         android:src="@drawable/ic_gallery"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toTopOf="@id/camerashooting_bnv"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/camerashootingCameraIv"
+        app:layout_constraintEnd_toStartOf="@id/camerashootingCameraIv"
+        android:layout_marginEnd="30dp"
         android:background="#E5E5E5"/>
+
 
     <ImageButton
         android:id="@+id/camerashootingBackIb"

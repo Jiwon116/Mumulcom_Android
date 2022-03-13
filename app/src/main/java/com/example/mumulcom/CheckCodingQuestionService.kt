@@ -29,7 +29,8 @@ class CheckCodingQuestionService{
                     Log.d("CHECKCODING/API-SUCCESS-mumulcom", resp.toString())
 
                     when(resp.code){
-                        1000->checkCodingQuestionView.onCheckCodingQuestionSuccess(resp.result)
+                           1000-> checkCodingQuestionView.onCheckCodingQuestionSuccess(resp.result)
+
                         else->checkCodingQuestionView.onCheckCodingQuestionFailure(resp.code, resp.message)
                     }
                 }
@@ -43,4 +44,5 @@ class CheckCodingQuestionService{
         })
         Log.d("CHECKCODING/API","Hello")
     }
+
 }

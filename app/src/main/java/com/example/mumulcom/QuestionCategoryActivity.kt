@@ -47,6 +47,7 @@ class QuestionCategoryActivity : AppCompatActivity() {
             setSelectCompletion()
             binding.questioncategorySelectCompletionIv.setOnClickListener {
                 startActivity(Intent(this, CheckCodingQuestionActivity::class.java))
+                finish()
             }
         }
 
@@ -60,6 +61,7 @@ class QuestionCategoryActivity : AppCompatActivity() {
             setSelectCompletion()
             binding.questioncategorySelectCompletionIv.setOnClickListener {
                 startActivity(Intent(this, CheckConceptQuestionActivity::class.java))
+                finish()
             }
         }
 

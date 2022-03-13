@@ -13,6 +13,7 @@ data class DetailCodingQuestion( // 13개
     @SerializedName("createdAt") var createdAt: String, // 질문 작성 일자
     @SerializedName("title") var title: String, // 질문 제목
     @SerializedName("questionImgUrl") var questionImgUrls: ArrayList<String>, // 질문 이미지들 url (null ~ 여러개 가능)
+    @SerializedName("codeQuestionUrl") var codeQuestionUrl: String?, // 오류 코드 첨부 (null 가능)
     @SerializedName("currentError") var currentError: String, // 개념 질문 내용
     @SerializedName("myCodingSkill") var myCodingSkill: String?, // 현재 내 코딩 스킬 (null 가능)
     @SerializedName("bigCategoryName") var bigCategoryName: String?, // 상위 카테고리, null 가능

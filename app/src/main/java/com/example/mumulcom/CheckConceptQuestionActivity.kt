@@ -4,25 +4,29 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.icu.text.SimpleDateFormat
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.viewpager2.widget.ViewPager2
 import com.example.mumulcom.databinding.ActivityCheckconceptquestionBinding
 import com.example.test.ViewPagerAdapter
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import java.util.*
 
 
 // CheckConcetpuestionView
@@ -37,7 +41,7 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
     private lateinit var title: String
     private lateinit var content: String
     private var bigCategoryIdx: Long = 0
-    private var smallCategoryIdx: Long = 0
+    private var smallCategoryIdx: Long? = null
 
     private var bigCategory: String? = null    // 선택한 상위 카테고리
     private var smallCategory: String? = null  // 선택한 하위 카테고리
@@ -59,12 +63,8 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
         binding = ActivityCheckconceptquestionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // jwt = getJwt(this)
-        // userIdx = getUserIdx(this)
-        jwt =
-            "eyJ0eXBlIjoiand0IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VySWR4IjoxMywiaWF0IjoxNjQ1MDM1NDU1LCJleHAiOjE2NDY1MDY2ODR9.GVcX6bK1dpM_x7BD1jEU2-R5LogJ3oG4ulm4yQ-e7jg"
-        userIdx = 13
-        Log.d("jwt", jwt)
+         jwt = getJwt(this)
+         userIdx = getUserIdx(this)
 
         storage = FirebaseStorage.getInstance()
         firestore = FirebaseFirestore.getInstance()
@@ -82,12 +82,15 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             }
 
-// 뷰페이저 어댑터 생성
-        viewPagerAdapter = ViewPagerAdapter(this, photoList)
-        binding.checkconceptquestionVp.adapter = viewPagerAdapter
-        binding.checkconceptquestionVp.orientation = ViewPager2.ORIENTATION_HORIZONTAL // 방향을 가로로
-        binding.checkconceptIndicator.setViewPager(binding.checkconceptquestionVp)
-        binding.checkconceptIndicator.createIndicators(5, 0)
+
+        //편집버튼 누르면 이미지 편집
+//        binding.checkconceptquestionEditIv.setOnClickListener {
+//            val intent =
+//                Intent(this, ConceptCameraShootingActivity::class.java)
+//            activityResultLauncher.launch(intent)
+//            finish()
+//        }
+
 
         //이미지 5개 이하일대만 이동가능
         if (count<5){
@@ -99,42 +102,13 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
             }
         }
         //리스트에 추가
-//        //5개이하까지만 이미지 삽입?
-        firestore.collection("concept-images").addSnapshotListener {
-                querySnapshot, FirebaseFIrestoreException ->
-            if(querySnapshot!=null){
-                for(dc in querySnapshot.documentChanges){
-                    if(dc.type== DocumentChange.Type.ADDED){
-                        var photo=dc.document.toObject(Photo::class.java)
-                        photoList.add(photo)
-                        images.add(photo.imageUrl)
-                        count++
-                        Log.d("count", count.toString())
-                        if (count>=5){
-                            //추가버튼
-                            binding.checkconceptquestionPlusIv.setOnClickListener {
-                                Toast.makeText(this, "이미지는 최대 5개까지 담을 수 있습니다", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
-                viewPagerAdapter.notifyDataSetChanged()
-            }
-//            images= listOf(images.toString())
-//            Log.d("PHOTO/images-list=cc", images.toString())
-        }
 
         binding.checkconceptquestionBackIv.setOnClickListener {
             startActivity(Intent(this, QuestionCategoryActivity::class.java))
             finish()
         }
 
-        binding.checkconceptquestionQuestionIv.setOnClickListener {
-            checkConceptQuestion()
-            finish()
-        }
     }
-
 
     private fun getConcept(): CheckConcept {  // view에서 받은 값들
 
@@ -149,6 +123,16 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
         Log.d("bigCategoryIdx : ", bigCategoryIdx.toString())
         Log.d("smallCategoryIdx :", smallCategoryIdx.toString())
         return CheckConcept(images, userIdx, bigCategoryIdx, smallCategoryIdx, title, content)
+    }
+
+    //qpi 서버
+    private fun checkconceptif(){
+        val checkConceptQuestionService=CheckConceptQuestionService()
+
+        checkConceptQuestionService.setcheckconceptquestionView(this)
+
+        checkConceptQuestionService.checkConceptQuestion(getJwt(this), getConcept())
+        Log.d("CHECKCONCEPT/API","Hello")
     }
 
 
@@ -172,12 +156,29 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
             return
         }
         binding.checkconceptquestionQuestionIv.setImageResource(R.drawable.ic_click_question)
-        val checkConceptQuestionService=CheckConceptQuestionService()
 
-        checkConceptQuestionService.setcheckconceptquestionView(this)
+        val builder = AlertDialog.Builder(this).create()
+        val dialogView = layoutInflater.inflate(R.layout.dialog_question, null)
 
-        checkConceptQuestionService.checkConceptQuestion(jwt, getConcept())
-        Log.d("CHECKCONCEPT/API","Hello")
+        builder?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        builder?.setCancelable(false)
+        builder?.setCanceledOnTouchOutside(false)
+
+        //승인 버튼 눌러야 api전송
+        val approve = dialogView.findViewById<Button>(R.id.dialog_approve_btn)
+        approve.setOnClickListener {
+            checkconceptif()
+            builder.dismiss()
+        }
+
+        val cancle = dialogView.findViewById<Button>(R.id.dialog_cancel_btn)
+        cancle.setOnClickListener {
+            builder.dismiss()
+        }
+
+        builder.setView(dialogView)
+        builder.show()
+
     }
 
     // 키보드 사라지는 함수
@@ -192,7 +193,72 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
     }
 
 
+    //카메라 앨범 이미지 가져오기
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
+        if (resultCode == RESULT_OK) {
+            var imagePath = data?.getStringExtra("path")!!
+
+            photoList.apply {
+                add(Photo(imagePath))
+                Log.d("SEND/path", imagePath)
+                count++
+                Log.d("path/count", count.toString())
+                images.add(imagePath)
+            }
+            Log.d("GETGET", photoList.toString())
+            //이미지가 5개부터는 추가 불
+            if (count>=5){
+                //추가버튼
+                binding.checkconceptquestionPlusIv.setOnClickListener {
+                    Toast.makeText(this, "이미지는 최대 5개까지 넣을 수 있습니다", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            binding.checkconceptquestionQuestionIv.setOnClickListener {
+                checkConceptQuestion()
+                //set되는 부분
+                if (imagePath != null) {
+                    var fileName =
+                        SimpleDateFormat("yyyyMMddHHmmss").format(Date()) // 파일명이 겹치면 안되기 떄문에 시년월일분초 지정
+                    storage.getReference().child("image").child(fileName)
+                        .putFile(imagePath.toUri())//어디에 업로드할지 지정
+                        .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
+                            taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
+                                var imageUrl = it.toString()
+                                var photo = Photo(imageUrl)
+                                firestore.collection("coding-images")
+                                    .document().set(photo)
+                                    .addOnSuccessListener {
+                                    }
+                                Log.d("gege/imageUrl", imageUrl)
+                                Log.d("gege/photo", photo.toString())
+                                images.add(imageUrl)
+
+                            }
+                        }
+
+                }
+            }
+
+            //이미지가 5개부터는 추가 불
+            if (count>=5){
+                //추가버튼
+                binding.checkconceptquestionPlusIv.setOnClickListener {
+                    Toast.makeText(this, "이미지는 최대 5개까지 넣을 수 있습니다", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            // 뷰페이저 어댑터 생성
+            viewPagerAdapter = ViewPagerAdapter(this, photoList)
+            binding.checkconceptquestionVp.adapter = viewPagerAdapter
+            binding.checkconceptquestionVp.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            binding.checkconceptIndicator.setViewPager(binding.checkconceptquestionVp)
+        }
+
+    }
 
 
 
@@ -363,29 +429,56 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
                     // SmallCategory 변수에 하위 카테고리 저장하기
                     smallCategory = binding.checkconceptquestionSmallCategorySp.getItemAtPosition(position).toString()
                     Log.i(ContentValues.TAG, "하위 카테고리 확인: $smallCategory")
+                    smallCategoryIdx = null
                     if (bigCategory=="앱") {
                         smallCategoryIdx =
                             binding.checkconceptquestionSmallCategorySp.selectedItemPosition.toLong() + 1
-                        Log.i(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
+                        Log.d(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
+
                     }
+                    smallCategoryIdx = null
                     if (bigCategory=="웹") {
                         smallCategoryIdx =
                             binding.checkconceptquestionSmallCategorySp.selectedItemPosition.toLong() + 3
-                        Log.i(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
+                        Log.d(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
                     }
+                    smallCategoryIdx = null
                     if (bigCategory=="서버") {
                         smallCategoryIdx =
                             binding.checkconceptquestionSmallCategorySp.selectedItemPosition.toLong() + 6
-                        Log.i(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
+                        Log.d(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
                     }
+                    smallCategoryIdx = null
                     if (bigCategory=="프로그래밍 언어") {
                         smallCategoryIdx =
                             binding.checkconceptquestionSmallCategorySp.selectedItemPosition.toLong() + 8
-                        Log.i(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
+                        Log.d(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
                     }
-                    if (bigCategory=="기타") {
-                        smallCategoryIdx =binding.checkconceptquestionSmallCategorySp.selectedItemPosition.toLong()
-                        Log.i(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
+                    else{//기타, 클릭
+                        smallCategoryIdx = null
+                        if (bigCategory=="앱") {
+                            smallCategoryIdx =
+                                binding.checkconceptquestionSmallCategorySp.selectedItemPosition.toLong() + 1
+                            Log.d(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
+                        }
+                        smallCategoryIdx = null
+                        if (bigCategory=="웹") {
+                            smallCategoryIdx =
+                                binding.checkconceptquestionSmallCategorySp.selectedItemPosition.toLong() + 3
+                            Log.d(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
+                        }
+                        smallCategoryIdx = null
+                        if (bigCategory=="서버") {
+                            smallCategoryIdx =
+                                binding.checkconceptquestionSmallCategorySp.selectedItemPosition.toLong() + 6
+                            Log.d(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
+                        }
+                        smallCategoryIdx = null
+                        if (bigCategory=="프로그래밍 언어") {
+                            smallCategoryIdx =
+                                binding.checkconceptquestionSmallCategorySp.selectedItemPosition.toLong() + 8
+                            Log.d(ContentValues.TAG, "하위 카테고리 넘버 확인: $smallCategoryIdx")
+                        }
                     }
                 } else {
                     smallCategory = null

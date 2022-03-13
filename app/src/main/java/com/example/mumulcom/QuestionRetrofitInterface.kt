@@ -1,5 +1,7 @@
 package com.example.mumulcom
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -65,12 +67,12 @@ interface QuestionRetrofitInterface {
         @Path("replyIdx") replyIdx : Long
     ):Call<CommentsForReplyResponse>
 
-
-    @POST("/replies/reply") // 답변에 댓글달때 호출
-    fun getUploadComment(
-        @Header("X-ACCESS-TOKEN")  X_ACCESS_TOKEN : String,
-        @Body commentSend : CommentSend
-    ):Call<UploadCommentResponse>
+//
+//    @POST("/replies/reply") // 답변에 댓글달때 호출
+//    fun getUploadComment(
+//        @Header("X-ACCESS-TOKEN")  X_ACCESS_TOKEN : String,
+//        @Body commentSend : CommentSend
+//    ):Call<UploadCommentResponse>
 
     @PATCH("/replies/adoption/{userIdx}/{replyIdx}") // 답변을 채택할때 호출
     fun getAdoptReply(
@@ -94,4 +96,16 @@ interface QuestionRetrofitInterface {
 //     @Part title : MultipartBody.Part,
 //     @Part codeQuestionUrl : MultipartBody.Part?,
 //    ):Call<MadeConceptQuestionResponse>
+
+
+    @Multipart
+    @POST("/replies/reply") // 답변에 댓글달때 호출
+    fun getUploadComment(
+        @Header("X-ACCESS-TOKEN")  X_ACCESS_TOKEN : String,
+        @Part data : HashMap<String,RequestBody>, // 나머지 정보
+        @Part images : MultipartBody.Part? // 이미지
+    ):Call<UploadCommentResponse>
+
+
+
 }

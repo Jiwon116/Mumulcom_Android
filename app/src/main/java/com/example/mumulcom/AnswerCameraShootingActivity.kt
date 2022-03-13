@@ -1,17 +1,18 @@
 package com.example.mumulcom
 
-import android.animation.ValueAnimator
-import android.app.Activity
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.media.ExifInterface
+import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -19,14 +20,15 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.example.mumulcom.databinding.ActivityAnswercamerashootingBinding
-import java.text.SimpleDateFormat
-import com.example.mumulcom.databinding.ActivityCodingcamerashootingBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.util.*
 
 
@@ -36,233 +38,164 @@ class AnswerCameraShootingActivity: AppCompatActivity() {
 
     lateinit var activityResultLauncher: ActivityResultLauncher<Intent>//이동(카메라,앨범)
 
-    //파이어스토리지
-    val IMAGE_PICK=1111
-    var selectImage:Uri?=null
-    lateinit var storage:FirebaseStorage
-    lateinit var firestore:FirebaseFirestore
+    //이미지 전송
+    val CAMERA: Int = 100
+    val GALLERY: Int = 101 // 갤러리 선택 시 인텐트로 보내는 값
+    var imagePath = ""
+    @RequiresApi(Build.VERSION_CODES.N)
+    @SuppressLint("SimpleDateFormat")
+    var imageDate: SimpleDateFormat = SimpleDateFormat("yyyyMMdd_HHmmss")
+    lateinit var photoAdapter:PhotoAdapter//리사이클러뷰
 
-    //권한
-    val FLAG_PERM_STORAGE = 99
-    val STORAGE_PERMISSION = arrayOf(
-        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-        android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAnswercamerashootingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //백버튼 다시 질문 유형 선택으로
         binding.answercameraCamerashootingBackIb.setOnClickListener {
-            startActivity(Intent(this, AnswerActivity::class.java))
+            onBackPressed()
+            finish()
         }
 
-        //삭제버튼+이미지 삭제하고 체크 버튼 누르면 토스트 메세지 띄우기
-        binding.answercameraCamerashootingturnIb.setOnClickListener {
-            binding.ivPre.visibility=View.INVISIBLE
-            binding.answercameraCamerashootingCheckIb.onThrottleClick {
-                Toast.makeText(this, "이미지를 삽입해주세요.", Toast.LENGTH_SHORT).show()
-            }
-        }
 
-        storage = FirebaseStorage.getInstance()
-        firestore = FirebaseFirestore.getInstance()
+        //        권한 체크
+        val hasCamPerm =
+            checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        val hasWritePerm =
+            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        if (!hasCamPerm || !hasWritePerm) // 권한 없을 시  권한설정 요청
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1
+            )
 
-
-        // 화면이 만들어 지면서 정장소 권한을 체크
-        // 권한이 승인되어 있으면 카메라를 호출하는 메소드를 실행
-        if (checkPermission(STORAGE_PERMISSION, FLAG_PERM_STORAGE)) {
-            setViews()
-            val imageView=binding.ivPre
-            val currentRotation=imageView.rotation
-            val currentImageViewHeight = imageView.height
-            val displayMetrics = DisplayMetrics()
-            val deviceWidth=displayMetrics.widthPixels
-            val deviceHeight=displayMetrics.heightPixels
-
-
-
-            val  heightGap= if (currentImageViewHeight>deviceWidth){
-                deviceWidth-currentImageViewHeight
-            }else{
-                deviceHeight - currentImageViewHeight
-            }
-
-            if (currentRotation%90==0.toFloat()){
-
-                ValueAnimator.ofFloat(0f, 1f).apply {
-                    duration=500
-                    addUpdateListener {
-                        val animatedValue = it.animatedValue as Float
-                        imageView.run{
-                            layoutParams.height=
-                                currentImageViewHeight+(heightGap * animatedValue)
-                                    .toInt()
-                            rotation=currentRotation+90*animatedValue
-                            requestLayout()
-                        }
-                    }
-                }.start()
-            }
-
-        }
+        onClick()
 
     }
 
 
-    private fun setViews(){
-        //갤러리버튼
-        binding.answercameraCamerashootingGalleryIv.setOnClickListener {
-            var intent = Intent(Intent.ACTION_PICK) //선택하면 무언가를 띄움. 묵시적 호출
-            intent.type = "image/*"
-            startActivityForResult(intent, IMAGE_PICK)
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    @SuppressLint("NonConstantResourceId", "QueryPermissionsNeeded")
+    fun onClick() {
+
+        binding.answercameraCamerashootingCameraIv.setOnClickListener {
+            intent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+
+            if (intent.resolveActivity(packageManager) != null) {
+                var imageFile: File? = null
+                try {
+                    imageFile = createImageFile()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+                if (imageFile != null) {
+                    val imageUri = FileProvider.getUriForFile(
+                        applicationContext,
+                        "com.example.mumulcom.fileprovider",
+                        imageFile
+                    )
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                    startActivityForResult(intent, CAMERA) // final int CAMERA = 100;
+                }
+            }
             binding.answercameraCamerashootingCheckIb.visibility=View.VISIBLE
             binding.answercameraCamerashootingturnIb.visibility=View.VISIBLE
             binding.answercameraCamerashootingBnv.visibility=View.VISIBLE
-            //체크버튼 누르면 이미지 전송(파이어베이스)
-            binding.answercameraCamerashootingCheckIb.onThrottleClick{
-                if (selectImage != null) {
-                    var fileName =
-                        SimpleDateFormat("yyyyMMddHHmmss").format(Date()) // 파일명이 겹치면 안되기 떄문에 시년월일분초 지정
-                    storage.getReference().child("image").child(fileName)
-                        .putFile(selectImage!!)//어디에 업로드할지 지정
-                        .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
-                            taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
-                                var imageUrl = it.toString()
-                                var photo = Photo(imageUrl)
-                                firestore.collection("answer-images")
-                                    .document().set(photo)
-                                    .addOnSuccessListener {
-                                        finish()
-                                    }
-                                Log.d("PHOTO/imageUrl", imageUrl)
-                                Log.d("PHOTO/photo", photo.toString())
-                                val intent = Intent(
-                                    this,
-                                    AnswerActivity()::class.java
-                                )//이미지 넘겨주기
-                                intent.putExtra("PHOTO/PUT/imageUrl", imageUrl)
-                                Log.d(
-                                    "PHOTO/PUT/imageUrl",
-                                    intent.putExtra("PHOTO/PUT/imageUrl", imageUrl).toString()
-                                )
-                                setResult(RESULT_OK, intent);
-                                finish()//전 액티비티로 전달
-                            }
-                        }
+        }
 
-                }
+        binding.answercameraCamerashootingGalleryIv.setOnClickListener {
+            intent = Intent(Intent.ACTION_PICK)
+            intent.type = MediaStore.Images.Media.CONTENT_TYPE
+            intent.type = "image/*"
+            startActivityForResult(intent, GALLERY)
+            binding.answercameraCamerashootingCheckIb.visibility=View.VISIBLE
+            binding.answercameraCamerashootingturnIb.visibility=View.VISIBLE
+            binding.answercameraCamerashootingBnv.visibility=View.VISIBLE
+        }
 
+        //이미지가 null값일때 체크버튼을 누르지 못함
+        if (imagePath=="") {
+            binding.answercameraCamerashootingCheckIb.setOnClickListener {
+                Toast.makeText(this, "이미지를 넣어주세요", Toast.LENGTH_SHORT).show()
             }
         }
+
     }
-    //미리보기 이미지
-    @RequiresApi(Build.VERSION_CODES.N)
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMAGE_PICK && resultCode == Activity.RESULT_OK) {
-            selectImage = data?.data
-            if (selectImage != null) {
-                // 사진 가져오기
-                val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(selectImage!!))
-                // 사진의 회전 정보 가져오기
-                val orientation = getOrientationOfImage(selectImage!!).toFloat()
-                // 이미지 회전하기
-                val newBitmap = getRotatedBitmap(bitmap, orientation)
-                // 회전된 이미지로 imaView 설정
-                binding.ivPre.setImageBitmap(newBitmap)
-                binding.ivPre.visibility=View.VISIBLE
-            }
-            else binding.ivPre.setImageURI(selectImage)
-            binding.ivPre.visibility=View.VISIBLE
-        }
-    }
+        if (resultCode == RESULT_OK) { // 결과가 있을 경우
+            var bitmap: Bitmap? = null
+            when (requestCode) {
+                GALLERY -> {
+                    if (requestCode == GALLERY) { // 갤러리 선택한 경우
+//				1) data의 주소 사용하는 방법
+                        imagePath = data?.dataString!! // "content://media/external/images/media/7215"
 
-    // 중복클릭
-    fun View.onThrottleClick(action: (v: View) -> Unit) {
-        val listener = View.OnClickListener { action(it) }
-        val interval: Long = 1000//1분
-        setOnClickListener(OnThrottleClickListener(listener, interval))
-    }
-
-    // 이미지 회전 정보 가져오기
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun getOrientationOfImage(uri: Uri): Int {
-        // uri -> inputStream
-        val inputStream = contentResolver.openInputStream(uri)
-        val exif: ExifInterface? = try {
-            ExifInterface(inputStream!!)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return -1
-        }
-        inputStream.close()
-
-        // 회전된 각도 알아내기
-        val orientation = exif?.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-        if (orientation != -1) {
-            when (orientation) {
-                ExifInterface.ORIENTATION_ROTATE_90 -> return 90
-                ExifInterface.ORIENTATION_ROTATE_180 -> return 180
-                ExifInterface.ORIENTATION_ROTATE_270 -> return 270
-            }
-        }
-        return -90
-    }
-
-    // 이미지 회전하기
-    @Throws(Exception::class)
-    private fun getRotatedBitmap(bitmap: Bitmap?, degrees: Float): Bitmap? {
-        if (bitmap == null) return null
-        if (degrees == 90F) return bitmap
-        val m = Matrix()
-        m.setRotate(degrees, bitmap.width.toFloat() / 2, bitmap.height.toFloat() / 2)
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, m, true)
-    }
-
-    //checkPermission() 에서 ActivityCompat.requestPermissions 을 호출한 다음 사용자가 권한 허용여부를 선택하면 해당 메소드로 값이 전달
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        when(requestCode){
-            FLAG_PERM_STORAGE ->{
-                for(grant in grantResults){
-                    if(grant != PackageManager.PERMISSION_GRANTED){
-                        //권한이 승인되지 않았다면 return 을 사용하여 메소드를 종료시켜 줍니다
-                        Toast.makeText(this,"저장소 권한을 승인해야지만 앱을 사용할 수 있습니다..",Toast.LENGTH_SHORT).show()
-                        finish()
-                        return
+                    }
+                    if (imagePath.length > 0) {
+                        Glide.with(this)
+                            .load(imagePath)
+                            .into(binding.ivPre)
+                        binding.ivPre.visibility=View.VISIBLE
                     }
                 }
-                //카메라 호출 메소드
-                setViews()
+                CAMERA -> {
+                    val options = BitmapFactory.Options()
+                    options.inSampleSize = 2 // 이미지 축소 정도. 원 크기에서 1/inSampleSize 로 축소됨
+                    bitmap = BitmapFactory.decodeFile(imagePath, options)
+                    binding.ivPre.visibility = View.VISIBLE
+                }
             }
-//            FLAG_PERM_CAMERA ->{
-//                for(grant in grantResults){
-//                    if(grant != PackageManager.PERMISSION_GRANTED){
-//                        Toast.makeText(this,"카메라 권한을 승인해야지만 카메라를 사용할 수 있습니다.",Toast.LENGTH_SHORT).show()
-//                        return
-//                    }
-//                }
-//                openCamera()
-//            }
-        }
-    }
+//            binding.ivPre.setImageBitmap(bitmap)
+            Glide.with(this)
+                .load(imagePath)
+                .into(binding.ivPre)//글라이드 사용하면 이미지 회전을 막을 수 있음
+            Log.d("pathpath", imagePath)
 
-    //권한이 있는지 체크하는 메소드
-    fun checkPermission(permissions:Array<out String>,flag:Int):Boolean{
-        //안드로이드 버전이 마쉬멜로우 이상일때
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            for(permission in permissions){
-                //만약 권한이 승인되어 있지 않다면 권한승인 요청을 사용에 화면에 호출합니다.
-                if(ContextCompat.checkSelfPermission(this,permission) != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(this,permissions,flag)
-                    return false
+
+            //삭제버튼
+            binding.answercameraCamerashootingturnIb.setOnClickListener {
+                imagePath=""
+                binding.ivPre.visibility=View.INVISIBLE
+                binding.answercameraCamerashootingCheckIb.setOnClickListener {
+                    Toast.makeText(this, "이미지를 넣어주세요", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            //이미지가 null값이 아니어야 체크버튼 클릭 가능
+            if(imagePath!="") {
+                binding.ivPre.visibility = View.VISIBLE
+                binding.answercameraCamerashootingCheckIb.setOnClickListener {
+                    intent.putExtra("path", imagePath)
+                    setResult(RESULT_OK, intent);
+                    finish()
+                    Log.d("PUT/path", imagePath)
                 }
             }
         }
-        return true
     }
-
+        @RequiresApi(Build.VERSION_CODES.N)
+        @SuppressLint("SimpleDateFormat")
+        @Throws(IOException::class)
+        fun createImageFile(): File? {
+//	이미지 파일 생성
+//	SimpleDateFormat imageDate = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            val timeStamp = imageDate.format(Date()) // 파일명 중복을 피하기 위한 "yyyyMMdd_HHmmss"꼴의 timeStamp
+            val fileName = "IMAGE_$timeStamp" // 이미지 파일 명
+            val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            val file = File.createTempFile(fileName, ".jpg", storageDir) // 이미지 파일 생성
+            imagePath = file.absolutePath // 파일 절대경로 저장하기, String
+            imagePath=file.path
+            Log.d("file//",file.path)
+            imagePath= file.toUri().toString()
+            Log.d("file//",file.toUri().toString())
+            imagePath= file.toURI().toString()
+            Log.d("file//",file.toURI().toString())
+            return file
+        }
 }

@@ -184,7 +184,47 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
 
+                    <!-- 오류코드 첨부 null 가능 -->
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:visibility="gone"
+                        android:id="@+id/myErrorCodeLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="25dp"
+                        android:layout_marginTop="25dp"
+                        android:padding="10dp"
+                        android:background="@drawable/basic_outline_black"
+                        app:layout_constraintTop_toBottomOf="@id/currentErrorTv"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <TextView
+                            android:id="@+id/errorTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="오류코드"
+                            android:textColor="@color/home_gray_text_color"
+                            android:textSize="16sp"
+                           app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/myErrorCodeTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            tools:text="저는 자바로 프로그래밍은 해봤지만.. 스프링 부트는 처음이에요.."
+                            android:textColor="@color/home_gray_text_color"
+                            android:textSize="16sp"
+                            app:layout_constraintTop_toBottomOf="@+id/errorTv"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <!-- 현재 코딩실력 : 필수 -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/codingSkillConstraintLayout"
                         android:layout_width="match_parent"
@@ -193,7 +233,7 @@
                         android:layout_marginTop="25dp"
                         android:padding="10dp"
                         android:background="@drawable/basic_outline_black"
-                        app:layout_constraintTop_toBottomOf="@id/currentErrorTv"
+                        app:layout_constraintTop_toBottomOf="@id/myErrorCodeLayout"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent">
 
@@ -296,7 +336,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="7dp"
-                            tools:text="31"
                             android:textSize="16sp"
                             android:textColor="@color/black"/>
 
@@ -350,8 +389,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginEnd="25dp"
                         tools:listitem="@layout/question_answer_item"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

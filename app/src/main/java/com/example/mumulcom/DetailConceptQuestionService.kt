@@ -44,5 +44,34 @@ class DetailConceptQuestionService {
     }
 
 
+    fun getLikeCountConceptQuestion(questionIdx:Long,userIdx:Long){
+        val detailConceptQuestionService = getRetrofit().create(QuestionRetrofitInterface::class.java)
+
+        detailConceptQuestionView.onGetDetailConceptQuestionsLoading() // 호출전
+
+        detailConceptQuestionService.getDetailConceptQuestion(questionIdx,userIdx)
+            .enqueue(object : retrofit2.Callback<DetailConceptQuestionResponse>{
+                override fun onResponse(call: Call<DetailConceptQuestionResponse>, response: Response<DetailConceptQuestionResponse>) {
+                    // 호출 성공
+                    Log.d("DetailConceptQuestionService/API","호출")
+                    val resp = response.body()!!
+                    when(resp.code){
+                        1000->{
+                            detailConceptQuestionView.onGetLikeCountConceptQuestion(resp.result!!)
+                            Log.d("DetailConceptQuestionService/API","성공")
+                        }else->
+                        detailConceptQuestionView.onGetDetailConceptQuestionsFailure(resp.code,resp.message)
+                    }
+
+                }
+
+                override fun onFailure(call: Call<DetailConceptQuestionResponse>, t: Throwable) {
+                    // 호출 실패
+                    detailConceptQuestionView.onGetDetailConceptQuestionsFailure(400,"네트워크 오류가 발생했습니다.")
+
+                }
+
+            })
+    }
 
 }

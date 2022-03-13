@@ -1,47 +1,60 @@
-package com.example.test //패키지명
+package com.example.mumulcom
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mumulcom.Album
-import com.example.mumulcom.Photo
-import com.example.mumulcom.R
+import com.example.mumulcom.databinding.ItemSliderBinding
 
-//코딩질문 개념질문 답변하기 작성자 어댑터
-class AnswerQuestionVPAdater(var context: Context, var answerList: ArrayList<Album>) : RecyclerView.Adapter<AnswerQuestionVPAdater.ViewHolder>(){
+// 답변하기 페이지에서 질문쪽 이미지들 보여줄때 사용하는 adapter
+class AnswerQuestionVPAdater(val context: Context):RecyclerView.Adapter<AnswerQuestionVPAdater.PagerViewHolder>() {
 
-    var onItemClickListener:OnItemClickListener?=null
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var imageIv: ImageView =itemView.findViewById(R.id.imageSlider)
+    private val imgUrlList = ArrayList<String>()
 
-        fun bind(album: Album){
-            Glide.with(context).load(album.imageUrl).into(imageIv)
-            imageIv.setOnClickListener {
-                if(onItemClickListener!=null)
-                    onItemClickListener?.onItemClick(album)
-            }
+
+    inner class PagerViewHolder(val binding: ItemSliderBinding): RecyclerView.ViewHolder(binding.root){
+
+        fun bind(url: String){
+            Glide.with(context).load(url).into(binding.imageSlider)
+        }
+
+    }
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): PagerViewHolder {
+        val binding: ItemSliderBinding = ItemSliderBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return PagerViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
+        Log.d("answer/이미지test","어댑터로 이미지 들어옴 "+imgUrlList[position])
+        holder.bind(imgUrlList[position])
+
+        holder.binding.imageSlider.setOnClickListener {
+            // 각 이미지를 클릭했을때  해당 이미지를 새 창에 띄워서 확대/축소 기능
+            val intent = Intent(context,ImageActivity::class.java)
+            intent.putExtra("imgUrl",imgUrlList[position])
+            context.startActivity(intent)
+
         }
     }
 
-    interface OnItemClickListener{
-        fun onItemClick(album: Album)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnswerQuestionVPAdater.ViewHolder {
-        var view=LayoutInflater.from(context).inflate(R.layout.item_slider,parent,false)
-        return ViewHolder(view)
-    }
-
     override fun getItemCount(): Int {
-        return answerList.size
+        return imgUrlList.size
     }
-    override fun onBindViewHolder(holder: AnswerQuestionVPAdater.ViewHolder, position: Int) {
-        var album= answerList.get(position)
-        holder.bind(album)
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun addQuestions(imgUrl:ArrayList<String>){
+        this.imgUrlList.clear()
+        this.imgUrlList.addAll(imgUrl)
+
+        notifyDataSetChanged()
     }
 }

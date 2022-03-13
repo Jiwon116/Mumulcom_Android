@@ -2,19 +2,35 @@ package com.example.mumulcom
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.media.DrmInitData
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 import com.example.mumulcom.databinding.QuestionAnswerItemBinding
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.ByteArrayOutputStream
+
+import java.io.File
 
 
 class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer:Boolean):RecyclerView.Adapter<RepliesForQuestionAdapter.ViewHolder>(),
@@ -35,6 +51,8 @@ class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer
     private lateinit var commentsForReplyAdapter: CommentsForReplyAdapter
     private lateinit var comment : String // 댓글 작성 내용 저장할 변수
 
+   // private var imgUrl : String? = null
+
 
 
 
@@ -44,6 +62,8 @@ class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer
     interface RepliesItemClickListener{
         fun onRemoveAnswerButton(isClicked:Boolean)
         //   fun onClickAdoptButton(isClicked:Boolean)
+        fun onAccessAlbum()
+        fun getImageFile(): Bitmap
     }
 
 
@@ -55,7 +75,7 @@ class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer
     }
 
 
-
+     fun String?.toPlainRequestBody() = requireNotNull(this).toRequestBody("text/plain".toMediaTypeOrNull())
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -70,8 +90,29 @@ class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer
         Log.d("adopt",isAdopted)
         Log.d("writer",isWriter.toString())
 
+        binding.addPhotoIv.setOnClickListener { // 사진 추가 버튼 클릭.
+             repliesItemClickListener.onAccessAlbum()
+        }
+
         binding.uploadCommentTv.setOnClickListener { // 게시 버튼 누름.
             Log.d("umc","게시를 누름.")
+
+           val bitmap =repliesItemClickListener.getImageFile()
+           val uploadbitmap = Bitmap.createScaledBitmap(bitmap,300,300,true)
+            val stream = ByteArrayOutputStream()
+            uploadbitmap.compress(Bitmap.CompressFormat.PNG,100,stream)
+            val byteArray = stream.toByteArray()
+            val sendimage = byteArray.toRequestBody("image/*".toMediaTypeOrNull())
+            val multibody : MultipartBody.Part =
+                MultipartBody.Part.createFormData("images","image",sendimage)
+
+
+            val replyIdxRequestBody : RequestBody = replyIdx.toString().toPlainRequestBody()
+            val textHashMap = hashMapOf<String,RequestBody>()
+//            textHashMap["replyIdx"] =
+//            textHashMap["userIdx"] =
+//            textHashMap["content"] =
+
 
             comment =binding.commentEditText.text.toString() // 입력한 댓글을 가져옴
             if(comment==""){
@@ -80,8 +121,7 @@ class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer
             }else{
                 //  api 에 연결해서 넘겨줌.
 
-
-                uploadCommentService.getUploadComment(getJwt(context), CommentSend(replyIdx, getUserIdx(context),comment,null))
+             //   uploadCommentService.getUploadComment(getJwt(context), ReplyRequest(replyIdx, getUserIdx(context),comment),)
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     getCommentsForReply() // 댓글 가져오는 api 호출
@@ -98,14 +138,18 @@ class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer
 
 
         }
+
+
+
+
         return ViewHolder(binding)
     }
 
+
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(replyList[position])
-        holder.binding.viewPager.setOnClickListener {
-            // todo 이미지 확대
-        }
+
         // 좋아요 처리
         holder.binding.itemLikeIv.setOnClickListener {
             isLike = !isLike
@@ -113,9 +157,18 @@ class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer
                 holder.binding.itemLikeIv.setImageResource(R.drawable.ic_liked)
                 setLikeReply() // 답변에 대한 좋아요 처리
 
+                Handler(Looper.getMainLooper()).postDelayed({
+
+                },500)
+
             }else{
                 holder.binding.itemLikeIv.setImageResource(R.drawable.ic_like)
                 setLikeReply() // 답변에 대한 좋아요 처리
+
+                Handler(Looper.getMainLooper()).postDelayed({
+
+
+                },500)
 
             }
         }
@@ -199,12 +252,9 @@ class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer
             binding.createdAtTv.text = reply.createdAt // 작성 날짜
 
 
-
-
-
             if(reply.replyUrl==null){
-//                binding.replyUrl.visibility = View.GONE
-                binding.replyUrl.text = "참고 링크 : 없음."// 참고 링크
+                binding.replyUrl.visibility = View.GONE
+   //             binding.replyUrl.text = "참고 링크 : 없음."// 참고 링크
             }else{
                 binding.replyUrl.text = "참고 링크 : "+reply.replyUrl // 참고 링크
             }

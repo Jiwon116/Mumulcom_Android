@@ -21,6 +21,7 @@
             android:paddingEnd="20dp"
             android:paddingBottom="25dp">
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/checkcodingquestion_top_ly"
                 android:layout_width="match_parent"
@@ -50,6 +51,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+
             <LinearLayout
                 android:id="@+id/checkcodingquestion_picture_ly"
                 android:layout_width="match_parent"
@@ -75,14 +77,31 @@
                         app:layout_constraintEnd_toEndOf="parent"/>
 
                     <ImageView
-                        android:id="@+id/checkcodingquestion_PlusIv"
+                        android:id="@+id/checkcodingquestion_Plus_Iv"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:background="@null"
+                        android:scaleType="fitXY"
                         android:src="@drawable/ic_image_plus"
-                        app:layout_constraintBottom_toBottomOf="@+id/checkcodingquestion_Vp"
-                        app:layout_constraintEnd_toEndOf="@+id/checkcodingquestion_Vp"
+                        app:layout_constraintEnd_toEndOf="@id/checkcodingquestion_Vp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
+                        app:layout_constraintBottom_toBottomOf="@id/checkcodingquestion_Vp"
+                        android:visibility="visible"
+                        />
+
+                    <ImageView
+                        android:id="@+id/checkcodingquestion_Edit_Iv"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@null"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_edit"
+                        app:layout_constraintTop_toTopOf="@id/checkcodingquestion_Vp"
+                        app:layout_constraintEnd_toEndOf="@id/checkcodingquestion_Vp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="invisible"
                         />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -93,6 +112,7 @@
                     android:layout_height="30dp" />
 
             </LinearLayout>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/checkcodingquestion_category_ly"
@@ -131,7 +151,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             <LinearLayout
                 android:id="@+id/checkcodingquestion_spinner_ly"
                 android:layout_width="wrap_content"
@@ -159,6 +178,7 @@
                     tools:listitem="@layout/item_small_category"/>
 
             </LinearLayout>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/checkcodingquestion_title_ly"

@@ -26,18 +26,18 @@
 
     <!--수정함-->
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/answercamera_camerashootingCameraIv"-->
-<!--        android:layout_width="195px"-->
-<!--        android:layout_height="195px"-->
-<!--        android:src="@drawable/ic_cameraa"-->
-<!--        android:scaleType="fitXY"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/answercamera_camerashooting_bnv"-->
-<!--        android:layout_marginBottom="20dp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        android:layout_marginStart="70dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        android:background="#E5E5E5"/>-->
+    <ImageButton
+        android:id="@+id/answercamera_camerashootingCameraIv"
+        android:layout_width="195px"
+        android:layout_height="195px"
+        android:src="@drawable/ic_cameraa"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@id/answercamera_camerashooting_bnv"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#E5E5E5"/>
 
     <ImageButton
         android:id="@+id/answercamera_camerashootingGalleryIv"
@@ -45,10 +45,9 @@
         android:layout_height="175px"
         android:src="@drawable/ic_gallery"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toTopOf="@id/answercamera_camerashooting_bnv"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/answercamera_camerashootingCameraIv"
+        app:layout_constraintEnd_toStartOf="@id/answercamera_camerashootingCameraIv"
+        android:layout_marginEnd="30dp"
         android:background="#E5E5E5"/>
 
 <!--    app:layout_constraintTop_toTopOf="@id/answercamera_camerashootingCameraIv"-->
