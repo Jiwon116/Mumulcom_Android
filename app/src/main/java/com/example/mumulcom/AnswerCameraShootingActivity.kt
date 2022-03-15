@@ -1,14 +1,14 @@
 package com.example.mumulcom
 
 import android.Manifest
+import android.R.attr
 import android.annotation.SuppressLint
+import android.content.ClipData
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.icu.text.SimpleDateFormat
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -22,14 +22,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.mumulcom.databinding.ActivityAnswercamerashootingBinding
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 import java.io.IOException
-import java.io.InputStream
+import java.lang.String
 import java.util.*
+import kotlin.Exception
+import kotlin.Int
+import kotlin.Throws
+import kotlin.arrayOf
 
 
 class AnswerCameraShootingActivity: AppCompatActivity() {
@@ -109,8 +112,12 @@ class AnswerCameraShootingActivity: AppCompatActivity() {
         binding.answercameraCamerashootingGalleryIv.setOnClickListener {
             intent = Intent(Intent.ACTION_PICK)
             intent.type = MediaStore.Images.Media.CONTENT_TYPE
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             intent.type = "image/*"
             startActivityForResult(intent, GALLERY)
+
+
             binding.answercameraCamerashootingCheckIb.visibility=View.VISIBLE
             binding.answercameraCamerashootingturnIb.visibility=View.VISIBLE
             binding.answercameraCamerashootingBnv.visibility=View.VISIBLE
@@ -133,6 +140,7 @@ class AnswerCameraShootingActivity: AppCompatActivity() {
             when (requestCode) {
                 GALLERY -> {
                     if (requestCode == GALLERY) { // 갤러리 선택한 경우
+
 //				1) data의 주소 사용하는 방법
                         imagePath = data?.dataString!! // "content://media/external/images/media/7215"
 

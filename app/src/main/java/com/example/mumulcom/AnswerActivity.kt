@@ -5,9 +5,11 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.icu.text.SimpleDateFormat
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -82,6 +84,21 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
             }
         }
 
+        //자동으로 완료버튼 채워지기
+        binding.answerExplanationEt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun afterTextChanged(editable: Editable) {
+                if (editable.length > 0) {
+                    binding.answerAnswerIv.setClickable(true)
+                    binding.answerAnswerIv.setImageResource(R.drawable.ic_click_answer)
+                } else {
+                    binding.answerAnswerIv.setClickable(false)
+                    binding.answerAnswerIv.setImageResource(R.drawable.ic_answer_answer)
+                }
+            }
+        })
+
         //질문하기 세팅
         getquestion()
 
@@ -108,11 +125,20 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
             finish()
         }
 
+        if (qimage.toString().length>2) {
+            Handler().postDelayed(Runnable {
+                //필수 부분 작성되면 답변하기 누르기
+                binding.answerAnswerIv.setOnClickListener {
+                    required()
+                }
+
+            }, 6000) // 6초 정도 딜레이를 준 후 시작
+        }
+
         //필수 부분 작성되면 답변하기 누르기
         binding.answerAnswerIv.setOnClickListener {
             required()
         }
-
     }
 
     //카메라 앨범 이미지 가져오기
@@ -128,8 +154,6 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
                 Log.d("SEND/path", imagePath)
                 count++
                 Log.d("path/count", count.toString())
-//                images.add(imagePath)
-                Log.d("anan",  images.add(imagePath).toString())
             }
             Log.d("GETGET", photoList.toString())
             //이미지가 5개부터는 추가 불
@@ -140,27 +164,27 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
                 }
             }
 
-            //이미지 set되는 부분
-            if (imagePath != null) {
-                var fileName =
-                    SimpleDateFormat("yyyyMMddHHmmss").format(Date()) // 파일명이 겹치면 안되기 떄문에 시년월일분초 지정
-                storage.getReference().child("image").child(fileName)
-                    .putFile(imagePath.toUri())//어디에 업로드할지 지정
-                    .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
-                        taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
-                            var imageUrl = it.toString()
-                            var photo = Photo(imageUrl)
-                            firestore.collection("answer-images")
-                                .document().set(photo)
-                                .addOnSuccessListener {
-                                }
-                            Log.d("gege/imageUrl", imageUrl)
-                            Log.d("gege/photo", photo.toString())
-                            images.add(imageUrl)
+                //이미지 set되는 부분
+                if (imagePath != null) {
+                    var fileName =
+                        SimpleDateFormat("yyyyMMddHHmmss").format(Date()) // 파일명이 겹치면 안되기 떄문에 시년월일분초 지정
+                    storage.getReference().child("image").child(fileName)
+                        .putFile(imagePath.toUri())//어디에 업로드할지 지정
+                        .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
+                            taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
+                                var imageUrl = it.toString()
+                                var photo = Photo(imageUrl)
+                                firestore.collection("answer-images")
+                                    .document().set(photo)
+                                    .addOnSuccessListener {
+                                    }
+                                Log.d("gege/imageUrl", imageUrl)
+                                Log.d("gege/photo", photo.toString())
+                                images.add(imageUrl)
+                            }
                         }
-                    }
 
-            }
+                }
 
             //답변하기 리사이클러뷰
             photoAdapter = PhotoAdapter(this, photoList)
@@ -232,6 +256,7 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
         Log.d("ANSWER/API","Hello")
     }
 
+
     private fun required() {
 
         if (binding.answerExplanationEt.text.isEmpty()) {
@@ -241,7 +266,6 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
             return
         }
 
-        binding.answerAnswerIv.setImageResource(R.drawable.ic_click_answer)
 
         //승인 버튼 눌러야 api전송
         val builder = AlertDialog.Builder(this).create()

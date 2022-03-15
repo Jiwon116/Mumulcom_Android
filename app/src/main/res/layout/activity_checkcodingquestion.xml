@@ -46,7 +46,9 @@
                     android:src="@drawable/ic_question"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:clickable="false"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -74,7 +76,21 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        />
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/view_null"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="200dp"-->
+<!--                        android:background="@color/black"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        android:visibility="gone"-->
+<!--                        />-->
 
                     <ImageView
                         android:id="@+id/checkcodingquestion_Plus_Iv"
@@ -84,10 +100,10 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_image_plus"
                         app:layout_constraintEnd_toEndOf="@id/checkcodingquestion_Vp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="10dp"
+                        app:layout_constraintStart_toStartOf="@id/checkcodingquestion_Vp"
+                        app:layout_constraintTop_toTopOf="@id/checkcodingquestion_Vp"
                         app:layout_constraintBottom_toBottomOf="@id/checkcodingquestion_Vp"
-                        android:visibility="visible"
+                        android:visibility="invisible"
                         />
 
                     <ImageView
@@ -166,7 +182,8 @@
                     android:background="@drawable/bg_category_outline"
                     android:popupBackground="@drawable/bg_category_outline"
                     android:layout_gravity="start"
-                    tools:listitem="@layout/item_big_category"/>
+                    tools:listitem="@layout/item_big_category"
+                    />
 
                 <Spinner
                     android:id="@+id/checkcodingquestion_small_category_sp"
@@ -175,7 +192,8 @@
                     android:layout_marginStart="15dp"
                     android:background="@drawable/bg_category_outline"
                     android:popupBackground="@drawable/bg_category_outline"
-                    tools:listitem="@layout/item_small_category"/>
+                    tools:listitem="@layout/item_small_category"
+                    />
 
             </LinearLayout>
 

@@ -1,6 +1,7 @@
 package com.example.mumulcom
 
 
+import android.util.Log
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -16,15 +17,16 @@ class UploadCommentService {
         this.uploadCommentView = uploadCommentView
     }
 
-    fun getUploadComment(jwt:String,replyRequest: HashMap<String,RequestBody>,body: MultipartBody.Part){
+    fun getUploadComment(jwt:String,commentSend: CommentSend,body: MultipartBody.Part?){
         val uploadCommentService = getRetrofit().create(QuestionRetrofitInterface::class.java)
 
         uploadCommentView.onGetUploadCommentLoading()
 
-        uploadCommentService.getUploadComment(jwt,replyRequest,body)
+        uploadCommentService.getUploadComment(jwt,commentSend,body)
             .enqueue(object : retrofit2.Callback<UploadCommentResponse>{
                 override fun onResponse(call: Call<UploadCommentResponse>, response: Response<UploadCommentResponse>) {
 
+                    Log.d("banana",response.body().toString())
                     val resp = response.body()!!
 
                     when(resp.code){

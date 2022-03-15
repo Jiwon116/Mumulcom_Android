@@ -98,12 +98,13 @@ interface QuestionRetrofitInterface {
 //    ):Call<MadeConceptQuestionResponse>
 
 
-    @Multipart
+     @Multipart
     @POST("/replies/reply") // 답변에 댓글달때 호출
     fun getUploadComment(
         @Header("X-ACCESS-TOKEN")  X_ACCESS_TOKEN : String,
-        @Part data : HashMap<String,RequestBody>, // 나머지 정보
-        @Part images : MultipartBody.Part? // 이미지
+        @Part("PostReReplReq") PostReReplReq : CommentSend,
+        @Part images : MultipartBody.Part?
+
     ):Call<UploadCommentResponse>
 
 

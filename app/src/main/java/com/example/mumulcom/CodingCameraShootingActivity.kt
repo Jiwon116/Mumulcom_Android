@@ -1,13 +1,13 @@
 package com.example.mumulcom
 
 import android.Manifest
+import android.R.attr
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.icu.text.SimpleDateFormat
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -15,7 +15,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,28 +22,15 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.example.mumulcom.databinding.ActivityCodingcamerashootingBinding
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.util.*
 
 
 class CodingCameraShootingActivity: AppCompatActivity() {
 
     lateinit var binding: ActivityCodingcamerashootingBinding
-
-    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>//이동(카메라,앨범)
-
-    //파이어스토리지
-    val IMAGE_PICK=1111
-    var selectImage:Uri?=null
-    lateinit var storage:FirebaseStorage
-    lateinit var firestore:FirebaseFirestore
-    var photoList = arrayListOf<Photo>()
-    var reference: StorageReference? = null
-
 
     //이미지 전송
     val CAMERA: Int = 100
@@ -54,16 +40,6 @@ class CodingCameraShootingActivity: AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("SimpleDateFormat")
     var imageDate: SimpleDateFormat = SimpleDateFormat("yyyyMMdd_HHmmss")
-    lateinit var photoAdapter:PhotoAdapter//리사이클러뷰
-    var imgFrom // 이미지 어디서 가져왔는지 (카메라 or 갤러리)
-            = 0
-
-
-    //권한
-    val FLAG_PERM_STORAGE = 99
-    val STORAGE_PERMISSION = arrayOf(
-        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-        android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +51,7 @@ class CodingCameraShootingActivity: AppCompatActivity() {
             onBackPressed()
             finish()
         }
+
 
 
         //        권한 체크
@@ -110,13 +87,6 @@ class CodingCameraShootingActivity: AppCompatActivity() {
                     e.printStackTrace()
                 }
                 if (imageFile != null) {
-//                    val imageUri = FileProvider.getUriForFile(
-//                        applicationContext,
-//                        "com.example.mumulcom",
-//                        imageFile
-//                    )
-//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-//                    startActivityForResult(intent, CAMERA) // final int CAMERA = 100;
                     val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                     val imageUri = FileProvider.getUriForFile(
                         this,
@@ -126,8 +96,6 @@ class CodingCameraShootingActivity: AppCompatActivity() {
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
                     startActivityForResult(takePictureIntent, CAMERA)
                 }
-//                imagePath= imageFile.toString()
-//                Log.d("file", imagePath)
             }
             binding.camerashootingCheckIb.visibility=View.VISIBLE
             binding.camerashootingturnIb.visibility=View.VISIBLE
@@ -157,7 +125,6 @@ class CodingCameraShootingActivity: AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) { // 결과가 있을 경우
             var bitmap: Bitmap? = null
-            var mImageBitmap: Bitmap? = null
             when (requestCode) {
                 GALLERY -> {
                     if (requestCode == GALLERY) { // 갤러리 선택한 경우
@@ -177,9 +144,8 @@ class CodingCameraShootingActivity: AppCompatActivity() {
                     val options = BitmapFactory.Options()
                     options.inSampleSize = 2 // 이미지 축소 정도. 원 크기에서 1/inSampleSize 로 축소됨
                     bitmap = BitmapFactory.decodeFile(imagePath, options)
+//                    imagePath= bitmap.toString()
                     binding.ivPre.visibility = View.VISIBLE
-//                    imagePath= Uri.parse(imagePath).toString()
-//                    Log.d("imagepath", imagePath)
                 }
             }
 //            binding.ivPre.setImageBitmap(bitmap)
@@ -197,6 +163,7 @@ class CodingCameraShootingActivity: AppCompatActivity() {
                 }
             }
 
+
             //이미지가 null값이 아니어야 체크버튼 클릭 가능
             if(imagePath!="") {
                 binding.ivPre.visibility=View.VISIBLE
@@ -204,7 +171,8 @@ class CodingCameraShootingActivity: AppCompatActivity() {
                     intent.putExtra("path", imagePath)
                     setResult(RESULT_OK, intent);
                     finish()
-                    Log.d("PUT/path", imagePath)
+                    Log.d("PUT/path", imagePath.toString())
+
                 }
             }
 

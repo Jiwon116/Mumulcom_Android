@@ -131,4 +131,9 @@ class ProfileFragment : Fragment(), ProfileView {
         val customDialog = WithdrawDialog()
         customDialog.show(childFragmentManager, "Withdraw Dialog")
     }
+
+    override fun onResume() {
+        super.onResume()
+        getProfile()
+    }
 }

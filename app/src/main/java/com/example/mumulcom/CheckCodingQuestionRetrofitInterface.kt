@@ -8,12 +8,13 @@ import retrofit2.http.*
 
 //인터페이스 생성
 interface CheckCodingQuestionRetrofitInterface {
-
-
+    @Multipart
     @POST("/questions/coding")
     fun checkCodingQuestion(
         @Header("X-ACCESS-TOKEN") jwt: String,
-        @Body checkCoding: CheckCoding
+//        @Part("CodeQuestionReq") CodeQuestionReq: CheckCoding,
+//        @Part images: ArrayList<MultipartBody.Part?>?
+        @Body checkCoding: CheckCoding,
     ): Call<CheckCodingQuestionResponse>
 }
 

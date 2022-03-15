@@ -1,6 +1,7 @@
 package com.example.mumulcom
 
 import android.util.Log
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,12 +13,12 @@ class CheckCodingQuestionService{
         this.checkCodingQuestionView=checkCodingQuestionView
     }
 
-    fun checkCodingQuestion(jwt: String, checkCoding: CheckCoding){
+    fun checkCodingQuestion(jwt: String, checkcoding: CheckCoding){
         val checkCodingQuestionService= getRetrofit().create(CheckCodingQuestionRetrofitInterface::class.java)
 
         checkCodingQuestionView.onCheckCodingQuestionLoading()
 
-        checkCodingQuestionService.checkCodingQuestion(jwt, checkCoding).enqueue(object : Callback<CheckCodingQuestionResponse>{
+        checkCodingQuestionService.checkCodingQuestion(jwt, checkcoding).enqueue(object : Callback<CheckCodingQuestionResponse>{
             override fun onResponse(
                 call: Call<CheckCodingQuestionResponse>,
                 response: Response<CheckCodingQuestionResponse>

@@ -48,11 +48,9 @@ private lateinit var binding : ActivityQuestionDetailBinding
 
     private  var pathList: ArrayList<Bitmap> = ArrayList()
 
-
-    private var selectedUri : Uri? =null // 댓글에 대한 첨부 이미지 변수
     lateinit var file : File
 
-    private lateinit var mediaPath : String
+
     private lateinit var resultLauncher : ActivityResultLauncher<Intent>
 
     private lateinit var repliesForQuestionAdapter: RepliesForQuestionAdapter
@@ -63,14 +61,13 @@ private lateinit var binding : ActivityQuestionDetailBinding
         setContentView(binding.root)
 
 
-//        Toast.makeText(this,"QuestionDetailActivity onCreate",Toast.LENGTH_SHORT).show()
-
+        // QuestionBoardActivity 에서 넘어온 값 setting
         val intent = intent
         bigCategoryName = intent.getStringExtra("bigCategoryName")!!
         questionIdx = intent.getLongExtra("questionIdx",0) // 받아온 질문 고유번호 -> api 호출시 넘김
         type = intent.getIntExtra("type",0) // 1: 코딩질문, 2: 개념질문
         binding.categoryNameTv.text = bigCategoryName
-        Log.d("type확인 ",type.toString())
+
 
 //        when(type){
 //            1-> getDetailCodingQuestion() // 코딩 질문
@@ -126,7 +123,6 @@ private lateinit var binding : ActivityQuestionDetailBinding
 //                val intent = result.data
 //
 //                selectedUri = intent?.data
-
                 result.data?.data?.let{ uri->
                     pathList.clear()
                     val inputStream = uri.let{
@@ -139,8 +135,9 @@ private lateinit var binding : ActivityQuestionDetailBinding
                     pathList.add(bitmap)
                 }
 
-                if(selectedUri!=null){ // 사진을 제대로 가져옴.
-
+                if(result.data?.data!=null){ // 사진을 제대로 가져옴.
+                    Toast.makeText(this ,"사진을 가져왔습니다.",Toast.LENGTH_SHORT).show()
+                    Log.d("imagee",result!!.data?.data.toString())
                 }else{
                     Toast.makeText(this ,"사진을 가져오지 못했습니다.",Toast.LENGTH_SHORT).show()
                 }
@@ -150,11 +147,8 @@ private lateinit var binding : ActivityQuestionDetailBinding
     }// end of onCreate
 
 
-
     override fun onStart() {
         super.onStart()
-//        Toast.makeText(this,"QuestionDetailActivity onStart",Toast.LENGTH_SHORT).show()
-        // todo api 호출을 여기서 하는걸로 바꾸기
         when(type){
             1-> getDetailCodingQuestion() // 코딩 질문
             2-> getDetailConceptQuestion() // 개념질문
@@ -285,13 +279,12 @@ private lateinit var binding : ActivityQuestionDetailBinding
         initRecyclerView()
 
 
+        Glide.with(this).load(result[0].profileImgUrl).into(binding.profileIv) // 프로필 이미지
         binding.nickNameTv.text = result[0].nickname // 닉네임
         binding.createdAtTv.text = result[0].createdAt // 작성날짜
         binding.questionIv.setImageResource(R.drawable.ic_concept_question_check_img) // 코딩 이미지로바꿈
-        Glide.with(this).load(result[0].profileImgUrl).into(binding.profileIv) // 프로필 이미지
         binding.titleTv.text = result[0].title // 제목
         binding.bigCategoryTv.text = "#"+result[0].bigCategoryName // 상위 카테고리
-
         if(result[0].smallCategoryName!=null){
             binding.smallCategoryTv.text = "#"+result[0].smallCategoryName // 하위 카테고리
         }
@@ -300,37 +293,34 @@ private lateinit var binding : ActivityQuestionDetailBinding
         //  이미지 있으면 그 수만큼 viewpager 어댑터에 넘기고 없으면 이미지 보여주는 부분 gone 처리
         if(result[0].questionImgUrls.size == 0){
             binding.pictureLinearLayout.visibility = View.GONE
-            Log.d("이미지test","사진 viewpager gone")
         }else{
             val imageViewPagerAdapter = ImageViewPagerAdapter(this)
             imageViewPagerAdapter.addQuestions(result[0].questionImgUrls!!)
             binding.viewPager.adapter = imageViewPagerAdapter
             binding.indicator.setViewPager(binding.viewPager)
 
-
-
         }
-        images = result[0].questionImgUrls
+//        images = result[0].questionImgUrls
 
         if(result[0].userIdx== getUserIdx(this)){ // 내 글을 스크랩 불가
-            binding.clickScrapIv.isClickable = false
+            //binding.clickScrapIv.isClickable = false  // 못누름
+            binding.clickScrapIv.visibility = View.INVISIBLE  // 이미지 안보임.
         }
 
-        binding.currentErrorTv.text = "질문 내용 : "+result[0].content // 질문 내용
+        binding.currentErrorTv.text = "내용 : "+result[0].content // 질문 내용
         binding.codingSkillConstraintLayout.visibility = View.GONE
 
-        content = result[0].content
+        // content = result[0].content
 
-        if(result[0].isLiked =="Y"){
+        if(result[0].isLiked =="Y"){ // 이미 좋아요를 했을때
             isLiked = true
             binding.clickLikeIv.setImageResource(R.drawable.ic_liked)
         }
 
-        if(result[0].isScraped=="Y"){
+        if(result[0].isScraped=="Y"){ // 이미 스크랩을 했을때
             isScrap = true
             binding.clickScrapIv.setImageResource(R.drawable.ic_scrap)
         }
-
 
 
         if(result[0].userIdx == getUserIdx(this)){
@@ -346,7 +336,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
     }
 
     override fun onGetLikeCountConceptQuestion(result: ArrayList<DetailConceptQuestion>) {
-        binding.likeCountTv.text = result[0].likeCount.toString() // 좋아요 수
+        binding.likeCountTv.text = result[0].likeCount.toString() // 좋아요 수만 업댓
     }
 
 
@@ -394,7 +384,6 @@ private lateinit var binding : ActivityQuestionDetailBinding
 
         if(result[0].questionImgUrls.size == 0){
             binding.pictureLinearLayout.visibility = View.GONE
-            Log.d("이미지test","사진 viewpager gone")
         }else{
             val imageViewPagerAdapter = ImageViewPagerAdapter(this)
             imageViewPagerAdapter.addQuestions(result[0].questionImgUrls!!)
@@ -406,22 +395,23 @@ private lateinit var binding : ActivityQuestionDetailBinding
 
         }
 
-        images = result[0].questionImgUrls
+       // images = result[0].questionImgUrls
 
 
-        binding.currentErrorTv.text = "질문 내용 : "+ result[0].currentError // 질문 내용
+        binding.currentErrorTv.text = "내용 : "+ result[0].currentError // 질문 내용
 
 
 
-        if(result[0].codeQuestionUrl!=""){ // 오류 코드 첨부
+        if(result[0].codeQuestionUrl==""||result[0].codeQuestionUrl==null){ // 오류 코드 첨부
+            binding.myErrorCodeLayout.visibility = View.GONE
+
+        }else{
             binding.myErrorCodeLayout.visibility = View.VISIBLE
             binding.myErrorCodeTv.text = result[0].codeQuestionUrl
-        }else{
-            binding.myErrorCodeLayout.visibility = View.GONE
         }
 
 
-        if(result[0].myCodingSkill == ""){ // 내 코딩 실력
+        if(result[0].myCodingSkill == ""||result[0].myCodingSkill==null){ // 내 코딩 실력
             binding.codingSkillConstraintLayout.visibility = View.GONE
         }else{
             binding.codingSkillConstraintLayout.visibility = View.VISIBLE
@@ -432,7 +422,8 @@ private lateinit var binding : ActivityQuestionDetailBinding
         Log.d("코딩질문 idx",result[0].questionIdx.toString())
 
         if(result[0].userIdx== getUserIdx(this)){ // 내 글을 스크랩 불가
-            binding.clickScrapIv.isClickable = false
+            //binding.clickScrapIv.isClickable = false  // 못누름
+            binding.clickScrapIv.visibility = View.INVISIBLE  // 이미지 안보임.
         }
 
 
@@ -453,7 +444,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
         binding.likeCountTv.text = result[0].likeCount.toString() // 좋아요 수
 
 
-        content = result[0].currentError
+    //    content = result[0].currentError
 
     }
 
@@ -480,6 +471,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
 
     override fun onGetRepliesSuccess(result: ArrayList<Reply>) {
         repliesForQuestionAdapter.addQuestions(result)
+
         repliesForQuestionAdapter.setRepliesClickListener(object : RepliesForQuestionAdapter.RepliesItemClickListener{
             override fun onRemoveAnswerButton(isClicked: Boolean) { // 답변하기 버튼 제거
                 if(isClicked){
@@ -495,6 +487,21 @@ private lateinit var binding : ActivityQuestionDetailBinding
 
             override fun getImageFile(): Bitmap { // 게시 버튼 누르면 bitmap 이미지 전달.
                 return pathList[0]
+            }
+
+            override fun goBackCommentActivity(_replyIdx: Long, profileImage: String, nickname: String, createdAt: String, replyUrl: String?, content: String, replyImgUrl: ArrayList<String>
+            ) {
+                val intent = Intent(this@QuestionDetailActivity,CommentActivity::class.java)
+                intent.putExtra("replyIdx",_replyIdx)
+                intent.putExtra("profileImage",profileImage) // 프로필 이미지
+                intent.putExtra("nickname",nickname) // 닉네임
+                intent.putExtra("createdAt",createdAt) // 작성 날짜
+                intent.putExtra("content",content) // 내용
+                intent.putExtra("replyUrl",replyUrl) // 참고 url
+                intent.putStringArrayListExtra("replyImgResult",replyImgUrl) // 답변 이미지
+                Log.d("replyImageResult",replyImgUrl.toString())
+                startActivity(intent)
+
             }
         })
 

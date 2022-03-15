@@ -266,6 +266,8 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
                 finish()
             }
         } else {
+            binding.signupTypingDoneNoSelectIv.visibility = View.VISIBLE
+            binding.signupTypingDoneSelectIv.visibility = View.GONE
             // 버튼 선택 불가능
             binding.signupTypingDoneNoSelectIv.setOnClickListener {
                 if (!validCurrentNickname) {

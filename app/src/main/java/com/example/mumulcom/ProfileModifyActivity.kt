@@ -472,7 +472,8 @@ class ProfileModifyActivity : AppCompatActivity(), View.OnClickListener, SignupN
             Log.d("profileImgUrl", profile.profileImgUrl)
         }
 
-        startMainActivity()
+        // 메인 액티비티로 넘어가기
+        // startProfileActivity()
         finish()
     }
 
