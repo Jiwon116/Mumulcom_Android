@@ -1,6 +1,10 @@
 package com.example.mumulcom
 
 import android.util.Log
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,12 +16,22 @@ class CheckConceptQuestionService{
         this.checkConceptQuestionView=checkConceptQuestionView
     }
 
-    fun checkConceptQuestion(jwt: String, checkConcept: CheckConcept){
+    fun checkConceptQuestion(jwt: String, images: List<MultipartBody.Part?>?, checkConcept: CheckConcept){
+//        fun checkConceptQuestion(jwt: String, images: List<MultipartBody.Part?>?, userIdx: Long, bigCategoryIdx: Long, smallCategoryIdx: Long?, title: String, content:String){
         val checkConceptQuestionService= getRetrofit().create(CheckConceptQuestionRetrofitInterface::class.java)
+
+//        val jsonObject = JSONObject("{\"userIdx\":${userIdx},\"bigCategoryIdx\":${bigCategoryIdx}, \"smallCategoryIdx\":${smallCategoryIdx},\"title\":\"${title}\",\"content\":\"${content}\"}").toString()
+//        val conceptQueReq = jsonObject.toRequestBody("application/json".toMediaTypeOrNull())
+//        Log.d("json/jsonObject", jsonObject)
+//        Log.d("json/jsonBody", conceptQueReq.toString())
 
         checkConceptQuestionView.onCheckConceptQuestionLoading()
 
-        checkConceptQuestionService.checkConceptQuestion(jwt, checkConcept).enqueue(object : Callback<CheckConceptQuestionResponse>{
+        checkConceptQuestionService.checkConceptQuestion(jwt, if (images==null){
+            null
+        }else{
+            images
+        }, checkConcept).enqueue(object : Callback<CheckConceptQuestionResponse>{
             override fun onResponse(
                 call: Call<CheckConceptQuestionResponse>,
                 response: Response<CheckConceptQuestionResponse>

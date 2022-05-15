@@ -15,7 +15,7 @@ import com.example.mumulcom.databinding.ItemSliderBinding
 class AnswerQuestionVPAdater(val context: Context):RecyclerView.Adapter<AnswerQuestionVPAdater.PagerViewHolder>() {
 
 
-    private val imgUrlList = ArrayList<String>()
+    private val imgUrlList = ArrayList<String?>()
 
 
     inner class PagerViewHolder(val binding: ItemSliderBinding): RecyclerView.ViewHolder(binding.root){
@@ -35,7 +35,7 @@ class AnswerQuestionVPAdater(val context: Context):RecyclerView.Adapter<AnswerQu
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
         Log.d("answer/이미지test","어댑터로 이미지 들어옴 "+imgUrlList[position])
-        holder.bind(imgUrlList[position])
+        holder.bind(imgUrlList[position]!!)
 
         holder.binding.imageSlider.setOnClickListener {
             // 각 이미지를 클릭했을때  해당 이미지를 새 창에 띄워서 확대/축소 기능
@@ -51,7 +51,7 @@ class AnswerQuestionVPAdater(val context: Context):RecyclerView.Adapter<AnswerQu
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addQuestions(imgUrl:ArrayList<String>){
+    fun addQuestions(imgUrl: java.util.ArrayList<String>){
         this.imgUrlList.clear()
         this.imgUrlList.addAll(imgUrl)
 

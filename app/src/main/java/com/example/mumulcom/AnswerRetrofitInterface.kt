@@ -1,17 +1,17 @@
 package com.example.mumulcom
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 //인터페이스 생성
 interface AnswerRetrofitInterface {
-
-
+    @Multipart
     @POST("/replies")
     fun answer(
         @Header("X-ACCESS-TOKEN") jwt: String,
-        @Body answer: Answer
+        @Part images: List<MultipartBody.Part?>?,
+        @Part ("postReplyReq") postReplyReq: Answer
     ): Call<AnswerResponse>
 }

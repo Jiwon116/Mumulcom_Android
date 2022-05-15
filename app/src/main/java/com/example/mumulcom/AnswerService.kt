@@ -1,6 +1,11 @@
 package com.example.mumulcom
 
 import android.util.Log
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,12 +17,22 @@ class AnswerService{
         this.answerView=answerView
     }
 
-    fun answer(jwt: String, answer: Answer){
+
+    fun answer(jwt: String, images: List<MultipartBody.Part?>?, answer: Answer){
         val answerService= getRetrofit().create(AnswerRetrofitInterface::class.java)
+
+        val body = "".toRequestBody(MultipartBody.FORM)
+        val emptyPart = MultipartBody.Part.createFormData("images","",body)
+        val emptyList = arrayListOf<MultipartBody.Part>()
+        emptyList.add(emptyPart)
 
         answerView.onAnswerLoading()
 
-        answerService.answer(jwt, answer).enqueue(object : Callback<AnswerResponse>{
+        answerService.answer(jwt, if (images==null){
+                                                   emptyList
+                                                   }else{
+                                                        images
+                                                        }, answer).enqueue(object : Callback<AnswerResponse>{
             override fun onResponse(
                 call: Call<AnswerResponse>,
                 response: Response<AnswerResponse>

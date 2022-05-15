@@ -114,3 +114,17 @@ fun getProfileImgUrl(context: Context): String {
 
     return spf.getString("profileImgUrl", "")!!
 }
+
+fun saveAnnounceIdx(context: Context, announceIdx: Long) {
+    val spf = context.getSharedPreferences("announce", AppCompatActivity.MODE_PRIVATE)
+    val editor = spf.edit()
+
+    editor.putLong("announceIdx", announceIdx)
+    editor.apply()
+}
+
+fun getAnnounceIdx(context: Context): Long {
+    val spf = context.getSharedPreferences("announce", AppCompatActivity.MODE_PRIVATE)
+
+    return spf.getLong("announceIdx", 0)
+}

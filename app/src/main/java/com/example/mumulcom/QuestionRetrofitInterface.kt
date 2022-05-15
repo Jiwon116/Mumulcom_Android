@@ -101,9 +101,9 @@ interface QuestionRetrofitInterface {
      @Multipart
     @POST("/replies/reply") // 답변에 댓글달때 호출
     fun getUploadComment(
-        @Header("X-ACCESS-TOKEN")  X_ACCESS_TOKEN : String,
-        @Part("PostReReplReq") PostReReplReq : CommentSend,
-        @Part images : MultipartBody.Part?
+         @Header("X-ACCESS-TOKEN") X_ACCESS_TOKEN: String,
+         @Part("PostReReplReq") PostReReplReq: CommentSend,
+         @Part images: MultipartBody.Part?
 
     ):Call<UploadCommentResponse>
 

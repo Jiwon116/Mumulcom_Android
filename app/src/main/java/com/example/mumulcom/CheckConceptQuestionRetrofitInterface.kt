@@ -8,12 +8,12 @@ import retrofit2.http.*
 
 //인터페이스 생성
 interface CheckConceptQuestionRetrofitInterface {
-
-
+    @Multipart
     @POST("/questions/concept")
     fun checkConceptQuestion(
         @Header("X-ACCESS-TOKEN") jwt: String,
-        @Body checkConcept: CheckConcept
+        @Part images: List<MultipartBody.Part?>?,
+        @Part ("conceptQueReq") conceptQueReq: CheckConcept,
     ): Call<CheckConceptQuestionResponse>
 }
 

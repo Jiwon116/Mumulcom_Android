@@ -42,13 +42,15 @@ private lateinit var binding : ActivityQuestionDetailBinding
     private var isScrap = false // 질문에 대한 scrap 변수
     private  var isAdopted : String = "N"
     private  var isWriter : Boolean = false
-    private lateinit var images : ArrayList<String>
+    private  var images : ArrayList<String> = ArrayList<String>()
     private var myCodingSkill : String? = null
     private var content : String? = null
 
     private  var pathList: ArrayList<Bitmap> = ArrayList()
 
     lateinit var file : File
+
+    private var isFirst : Boolean = true
 
 
     private lateinit var resultLauncher : ActivityResultLauncher<Intent>
@@ -85,7 +87,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
         binding.refreshLayout.setOnRefreshListener {
             //  서버에서 데이터 reload
             getRepliesForQuestion() // 질문에 대한 답변 받아오는 함수
-            initRecyclerView()
+    //        initRecyclerView()
 
             when(type){ // 내용 업데이트
                 1-> getDetailCodingQuestion() // 코딩 질문
@@ -110,8 +112,11 @@ private lateinit var binding : ActivityQuestionDetailBinding
             val intent = Intent(this,AnswerActivity::class.java)
             intent.putExtra("questionIdx",questionIdx) //  type : Long
             intent.putStringArrayListExtra("images",images)  //type : arrayList<string>
+            Log.d("checkimage",images.toString())
             intent.putExtra("myCodingSkill",myCodingSkill)
-            intent.putExtra("content",content)
+            intent.putExtra("content",title)
+            Log.d("aaa",myCodingSkill.toString())
+            Log.d("aaa",title.toString())
             startActivity(intent)
         }
 
@@ -298,6 +303,8 @@ private lateinit var binding : ActivityQuestionDetailBinding
             imageViewPagerAdapter.addQuestions(result[0].questionImgUrls!!)
             binding.viewPager.adapter = imageViewPagerAdapter
             binding.indicator.setViewPager(binding.viewPager)
+            images.addAll(result[0].questionImgUrls)
+            Log.d("checkimage--",images.toString())
 
         }
 //        images = result[0].questionImgUrls
@@ -310,7 +317,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
         binding.currentErrorTv.text = "내용 : "+result[0].content // 질문 내용
         binding.codingSkillConstraintLayout.visibility = View.GONE
 
-        // content = result[0].content
+         content = result[0].content
 
         if(result[0].isLiked =="Y"){ // 이미 좋아요를 했을때
             isLiked = true
@@ -379,6 +386,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
             binding.smallCategoryTv.text = "#"+result[0].smallCategoryName // 하위 카테고리
         }
 
+        title=result[0].title
         //  이미지 있으면 그 수만큼 viewpager 어댑터에 넘기고 없으면 이미지 보여주는 부분 gone 처리
         Log.d("이미지test",result[0].questionImgUrls.toString())
 
@@ -390,17 +398,15 @@ private lateinit var binding : ActivityQuestionDetailBinding
             binding.viewPager.adapter = imageViewPagerAdapter
             binding.indicator.setViewPager(binding.viewPager)
 
-
             Log.d("이미지test","어댑터로 넘김")
-
+            images.addAll(result[0].questionImgUrls)
+            Log.d("checkimage--",images.toString())
         }
 
-       // images = result[0].questionImgUrls
+        // images = result[0].questionImgUrls
 
 
         binding.currentErrorTv.text = "내용 : "+ result[0].currentError // 질문 내용
-
-
 
         if(result[0].codeQuestionUrl==""||result[0].codeQuestionUrl==null){ // 오류 코드 첨부
             binding.myErrorCodeLayout.visibility = View.GONE
@@ -409,7 +415,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
             binding.myErrorCodeLayout.visibility = View.VISIBLE
             binding.myErrorCodeTv.text = result[0].codeQuestionUrl
         }
-
+        Log.d("co", result[0].codeQuestionUrl.toString())
 
         if(result[0].myCodingSkill == ""||result[0].myCodingSkill==null){ // 내 코딩 실력
             binding.codingSkillConstraintLayout.visibility = View.GONE
@@ -444,7 +450,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
         binding.likeCountTv.text = result[0].likeCount.toString() // 좋아요 수
 
 
-    //    content = result[0].currentError
+        content = result[0].currentError
 
     }
 
@@ -470,7 +476,10 @@ private lateinit var binding : ActivityQuestionDetailBinding
     }
 
     override fun onGetRepliesSuccess(result: ArrayList<Reply>) {
+
         repliesForQuestionAdapter.addQuestions(result)
+     //   repliesForQuestionAdapter.replaceItem(result)
+
 
         repliesForQuestionAdapter.setRepliesClickListener(object : RepliesForQuestionAdapter.RepliesItemClickListener{
             override fun onRemoveAnswerButton(isClicked: Boolean) { // 답변하기 버튼 제거
@@ -481,12 +490,11 @@ private lateinit var binding : ActivityQuestionDetailBinding
                 }
             }
 
-            override fun onAccessAlbum(){ // 사진 추가 버튼 누르면 앨범 실행
-                getPhoto()
-            }
+            override fun setIsLike() {
+                // 답변 데이터 갱신
+                getRepliesForQuestion() // 질문에 대한 답변 받아오는 함수
+                initRecyclerView()
 
-            override fun getImageFile(): Bitmap { // 게시 버튼 누르면 bitmap 이미지 전달.
-                return pathList[0]
             }
 
             override fun goBackCommentActivity(_replyIdx: Long, profileImage: String, nickname: String, createdAt: String, replyUrl: String?, content: String, replyImgUrl: ArrayList<String>
@@ -505,7 +513,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
             }
         })
 
-
+        isFirst =false
     }
     private fun getPhoto(){
         when{

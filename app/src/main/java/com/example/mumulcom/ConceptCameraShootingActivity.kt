@@ -4,11 +4,9 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.icu.text.SimpleDateFormat
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -16,19 +14,15 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.example.mumulcom.databinding.ActivityConceptcamerashootingBinding
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
-import java.io.InputStream
 import java.util.*
 
 
@@ -36,30 +30,14 @@ class ConceptCameraShootingActivity: AppCompatActivity() {
 
     lateinit var binding: ActivityConceptcamerashootingBinding
 
-    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>//이동(카메라,앨범)
-
-    //파이어스토리지
-    val IMAGE_PICK=1111
-    var selectImage:Uri?=null
-    lateinit var storage:FirebaseStorage
-    lateinit var firestore:FirebaseFirestore
-    var photoList = arrayListOf<Photo>()
-
     //이미지 전송
     val CAMERA: Int = 100
-    val CHECK:Int=1000
     val GALLERY: Int = 101 // 갤러리 선택 시 인텐트로 보내는 값
     var imagePath = ""
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("SimpleDateFormat")
     var imageDate: SimpleDateFormat = SimpleDateFormat("yyyyMMdd_HHmmss")
-    lateinit var photoAdapter:PhotoAdapter//리사이클러뷰
-
-    //권한
-    val FLAG_PERM_STORAGE = 99
-    val STORAGE_PERMISSION = arrayOf(
-        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-        android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    var path: Bitmap? = null
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -145,16 +123,26 @@ class ConceptCameraShootingActivity: AppCompatActivity() {
             when (requestCode) {
                 GALLERY -> {
                     if (requestCode == GALLERY) { // 갤러리 선택한 경우
-//				1) data의 주소 사용하는 방법
+//          1) data의 주소 사용하는 방법
                         imagePath =
                             data?.dataString!! // "content://media/external/images/media/7215"
-
+                        data?.data?.let{ // 결과가 제대로 들어왔을때 (이미지 주소를 잘 가져왔을때) 실행
+                                uri->
+                            path = null // 앨범에서 가져올때마다 초기화
+                            val inputStream = uri.let{
+                                contentResolver.openInputStream(
+                                    it
+                                )
+                            }
+                            bitmap = BitmapFactory.decodeStream(inputStream)
+                        }
                     }
                     if (imagePath.length > 0) {
                         Glide.with(this)
-                            .load(imagePath)
+                            .load(bitmap)
                             .into(binding.ivPre)
                         binding.ivPre.visibility = View.VISIBLE
+                        Log.d("gallery /ppp", bitmap.toString())
                     }
                 }
                 CAMERA -> {
@@ -179,25 +167,23 @@ class ConceptCameraShootingActivity: AppCompatActivity() {
                 }
             }
 
-            //이미지가 null값이 아니어야 체크버튼 클릭 가능
+            //이미지가 null값이 아니어야 체크버튼 클릭 가능(사진 다른 액티비티로 전송)
             if(imagePath!="") {
                 binding.ivPre.visibility=View.VISIBLE
                 binding.conceptcamerashootingCheckIb.setOnClickListener {
-                    intent.putExtra("path", imagePath)
+                    val uploadBitmap = Bitmap.createScaledBitmap(bitmap!!,500,400,true)
+                    val stream = ByteArrayOutputStream()
+                    uploadBitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+                    val byteArray = stream.toByteArray()
+                    intent.putExtra("path", byteArray)
+                    intent.putExtra("imagepath", imagePath)
                     setResult(RESULT_OK, intent);
                     finish()
-                    Log.d("PUT/path", imagePath)
+                    Log.d("PUT/path", byteArray.toString())
+
                 }
             }
 
-//            //삭제버튼
-//            binding.camerashootingturnIb.setOnClickListener {
-//                imagePath=""
-//                binding.ivPre.visibility=View.INVISIBLE
-//                binding.camerashootingCheckIb.setOnClickListener {
-//                    Toast.makeText(this, "이미지를 넣어주세요", Toast.LENGTH_SHORT).show()
-//                }
-//            }
         }
     }
 
@@ -212,12 +198,6 @@ class ConceptCameraShootingActivity: AppCompatActivity() {
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val file = File.createTempFile(fileName, ".jpg", storageDir) // 이미지 파일 생성
         imagePath = file.absolutePath // 파일 절대경로 저장하기, String
-        imagePath=file.path
-        Log.d("file//",file.path)
-        imagePath= file.toUri().toString()
-        Log.d("file//",file.toUri().toString())
-        imagePath= file.toURI().toString()
-        Log.d("file//",file.toURI().toString())
         return file
     }
 }

@@ -2,15 +2,12 @@ package com.example.mumulcom
 
 import com.google.gson.annotations.SerializedName
 
-// 코딩 질문하기
 data class CheckCoding(
-    @SerializedName("images") val images: ArrayList<String>?,//이미지 우선 List<multiplefile>
-    @SerializedName("userIdx") var userIdx: Long, //유저
-    @SerializedName("currentError") var currentError: String, // 현재 막힌 부분
-    @SerializedName("myCodingSkill") var myCodingSkill: String?, // 현재 나의 코딩 실력
-    @SerializedName("bigCategoryIdx") val bigCategoryIdx: Long, // 상위 카테고리 (앱,웹,서버,기타)
-    @SerializedName("smallCategoryIdx") val smallCategoryIdx: Long?, // 하위 카테고리 (안드로이드,ios,html,css,.....)
-    @SerializedName("title") val title: String,// 질문 제목
-    @SerializedName("codeQuestionUrl") var codeQuestionUrl:String?, //참고코드
-////이미지는 보류
+    @SerializedName("userIdx") val userIdx:Long, // 댓글 작성자 고유 번호
+    @SerializedName("currentError") val currentError:String, // 댓글 작성자 닉네임
+    @SerializedName("myCodingSkill") val myCodingSkill:String?, // 댓글 작성자 닉네임
+    @SerializedName("bigCategoryIdx") val bigCategoryIdx:Long, // 댓글 고유 번호
+    @SerializedName("smallCategoryIdx") val smallCategoryIdx:Long?, // 댓글 고유 번호
+    @SerializedName("title") val title:String, // 댓글 내용
+    @SerializedName("codeQuestionUrl") val codeQuestionUrl:String?  // 댓글 첨부 이미지 (null 가능)
 )

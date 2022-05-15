@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -20,13 +19,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.viewpager2.widget.ViewPager2
 import com.example.mumulcom.databinding.ActivityAnswerBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.util.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 
 class AnswerActivity:AppCompatActivity(), AnswerView {
@@ -35,19 +35,16 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
     private lateinit var storage: FirebaseStorage
     private lateinit var firestore: FirebaseFirestore //파이어스토리지
     lateinit var photoAdapter:PhotoAdapter//리사이클러뷰
-    private var images = arrayListOf<String>()
     var photoList = arrayListOf<Photo>()
-    var answerList = arrayListOf<Album>()//답변하기에 떠있는 질문창
     private var jwt: String = ""
     private var userIdx: Long = 1
-    private lateinit var title: String
     private var questionIdx: Long=0
     private lateinit var replyUrl: String
     private lateinit var content:String
     lateinit var answerQuestionVPAdater: AnswerQuestionVPAdater
     lateinit var activityResultLauncher: ActivityResultLauncher<Intent>//이동(카메라 앨범)
     var count=0//이미지 수
-
+    private var images = arrayListOf<MultipartBody.Part?>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -147,15 +144,24 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK) {
-            var imagePath = data?.getStringExtra("path")!!
+            var stringpath = data?.getStringExtra("imagepath")!!
+            val imagePath = data?.getByteArrayExtra("path")!!
 
             photoList.apply {
-                add(Photo(imagePath))
-                Log.d("SEND/path", imagePath)
+                add( Photo(stringpath))
+                Log.d("SEND/path", stringpath)
                 count++
                 Log.d("path/count", count.toString())
             }
             Log.d("GETGET", photoList.toString())
+
+            if (imagePath!=null) {
+                val sendImage = imagePath.toRequestBody("image/*".toMediaTypeOrNull())
+                val multibody: MultipartBody.Part=MultipartBody.Part.createFormData("images", "image.jpeg", sendImage)
+                images.add(multibody)
+            }
+            Log.d("path/multi", images.toString())
+
             //이미지가 5개부터는 추가 불
             if (count>=5){
                 //추가버튼
@@ -164,27 +170,27 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
                 }
             }
 
-                //이미지 set되는 부분
-                if (imagePath != null) {
-                    var fileName =
-                        SimpleDateFormat("yyyyMMddHHmmss").format(Date()) // 파일명이 겹치면 안되기 떄문에 시년월일분초 지정
-                    storage.getReference().child("image").child(fileName)
-                        .putFile(imagePath.toUri())//어디에 업로드할지 지정
-                        .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
-                            taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
-                                var imageUrl = it.toString()
-                                var photo = Photo(imageUrl)
-                                firestore.collection("answer-images")
-                                    .document().set(photo)
-                                    .addOnSuccessListener {
-                                    }
-                                Log.d("gege/imageUrl", imageUrl)
-                                Log.d("gege/photo", photo.toString())
-                                images.add(imageUrl)
-                            }
-                        }
-
-                }
+//                //이미지 set되는 부분
+//                if (imagePath != null) {
+//                    var fileName =
+//                        SimpleDateFormat("yyyyMMddHHmmss").format(Date()) // 파일명이 겹치면 안되기 떄문에 시년월일분초 지정
+//                    storage.getReference().child("image").child(fileName)
+//                        .putFile(path.toUri())//어디에 업로드할지 지정
+//                        .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
+//                            taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
+//                                var imageUrl = it.toString()
+//                                var photo = Photo(imageUrl)
+//                                firestore.collection("answer-images")
+//                                    .document().set(photo)
+//                                    .addOnSuccessListener {
+//                                    }
+//                                Log.d("gege/imageUrl", imageUrl)
+//                                Log.d("gege/photo", photo.toString())
+//                                images.add(imageUrl)
+//                            }
+//                        }
+//
+//                }
 
             //답변하기 리사이클러뷰
             photoAdapter = PhotoAdapter(this, photoList)
@@ -202,6 +208,7 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
         val secondIntent = intent
         val message = secondIntent.getStringExtra("content")
         questionTV.setText("질문: "+ message)
+        Log.d("get/content", message.toString())
 
         //현재코딩실력 내용
         val myCodingSkill=binding.answerCodingLevelContentTv
@@ -213,7 +220,7 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
             binding.answerLevelLinearLayout.visibility=View.VISIBLE
 
         }
-        Log.d("get/level", levelmessage.toString())
+        Log.d("get/myCodingSkilll", levelmessage.toString())
         if (levelmessage==null) {
             binding.answerLevelLinearLayout.visibility=View.GONE
 
@@ -243,16 +250,30 @@ class AnswerActivity:AppCompatActivity(), AnswerView {
         Log.d("answer/content : ", content)
         Log.d("answer/images", images.toString())
 
-        return Answer(questionIdx, userIdx, replyUrl, content, images)
+        return Answer(questionIdx, userIdx, replyUrl, content)
     }
 
     //api서버 전송
     private fun answerif(){
+        questionIdx= intent.getLongExtra("questionIdx",questionIdx)
+        replyUrl=binding.answerAnswerCodeEt.text.toString()
+        content=binding.answerExplanationEt.text.toString()
+
+        Log.d("answer/questionIdx : ", questionIdx.toString())
+        Log.d("answer/userIdx : ", userIdx.toString())
+        Log.d("answer/replyUrl : ", replyUrl)
+        Log.d("answer/content : ", content)
+        Log.d("answer/images", images.toString())
+
         val answerService=AnswerService()
 
         answerService.setanswerView(this)
 
-        answerService.answer(getJwt(this), getAnswer())
+        if (images.toString().length>2) {
+            answerService.answer(getJwt(this), images, Answer(questionIdx, userIdx, replyUrl, content))
+        }else{
+            answerService.answer(getJwt(this), null,Answer(questionIdx, userIdx, replyUrl, content))
+        }
         Log.d("ANSWER/API","Hello")
     }
 

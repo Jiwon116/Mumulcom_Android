@@ -53,18 +53,19 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
             <LinearLayout
                 android:id="@+id/checkcodingquestion_picture_ly"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/checkcodingquestion_top_ly">
 
+
+
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/vp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" >
 
@@ -75,7 +76,6 @@
                         android:background="@drawable/bg_viewpager"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
 
                         />
@@ -96,14 +96,13 @@
                         android:id="@+id/checkcodingquestion_Plus_Iv"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@null"
                         android:scaleType="fitXY"
-                        android:src="@drawable/ic_image_plus"
-                        app:layout_constraintEnd_toEndOf="@id/checkcodingquestion_Vp"
-                        app:layout_constraintStart_toStartOf="@id/checkcodingquestion_Vp"
-                        app:layout_constraintTop_toTopOf="@id/checkcodingquestion_Vp"
+                       app:layout_constraintTop_toTopOf="@id/checkcodingquestion_Vp"
                         app:layout_constraintBottom_toBottomOf="@id/checkcodingquestion_Vp"
-                        android:visibility="invisible"
+                        app:layout_constraintStart_toStartOf="@id/checkcodingquestion_Vp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:src="@drawable/ic_image_plus"
+                        android:visibility="visible"
                         />
 
                     <ImageView
@@ -121,14 +120,14 @@
                         />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <me.relex.circleindicator.CircleIndicator3
-                    android:id="@+id/checkcoding_indicator"
-                    app:ci_drawable="@drawable/indicator_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" />
+                    <me.relex.circleindicator.CircleIndicator3
+                        android:id="@+id/checkcoding_indicator"
+                        app:ci_drawable="@drawable/indicator_background"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp" />
+
 
             </LinearLayout>
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/checkcodingquestion_category_ly"

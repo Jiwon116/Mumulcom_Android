@@ -2,6 +2,7 @@ package com.example.mumulcom
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ class ProfileFragment : Fragment(), ProfileView {
     private var profileImgUrl: String = ""  // 유저 프로필 이미지
 
 
+    @SuppressLint("InflateParams")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,6 +48,23 @@ class ProfileFragment : Fragment(), ProfileView {
         // 회원탈퇴
         binding.profileWithdrawArrowIv.setOnClickListener {
             withdrawDialogPopup()   // 확인창 띄우기
+        }
+
+        // 공지사항
+        binding.profileSetting1ArrowIv.setOnClickListener {
+            startActivity(Intent(requireContext(), AnnounceActivity::class.java))
+        }
+
+        // 문의하기
+        binding.profileSetting4ArrowIv.setOnClickListener {
+            var intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://forms.gle/wmBgRkTjkffJAWyo7"))
+            startActivity(intent)
+        }
+
+        // 버전 안내
+        binding.profileSetting5ArrowIv.setOnClickListener {
+            val bottomDialogFragment = BottomDialogFragment()
+            bottomDialogFragment.show(childFragmentManager, BottomDialogFragment.TAG)
         }
 
         return binding.root

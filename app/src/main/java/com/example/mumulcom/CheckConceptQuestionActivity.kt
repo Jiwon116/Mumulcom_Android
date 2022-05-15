@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -22,20 +22,21 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.viewpager2.widget.ViewPager2
 import com.example.mumulcom.databinding.ActivityCheckconceptquestionBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.util.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 
 // CheckConcetpuestionView
-class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView {
+class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView, PhotoClickLister {
 
     lateinit var binding: ActivityCheckconceptquestionBinding
 
-    private var images = arrayListOf<String>()
+    private var images = arrayListOf<MultipartBody.Part?>()
     var photoList = arrayListOf<Photo>()
     private var jwt: String = ""
     private var userIdx: Long = 0
@@ -58,6 +59,12 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
     private lateinit var smallCategoryAdapter: ArrayAdapter<String>
 
     var count=0//이미지수
+
+    // bitmap 변수
+    private  var path : Bitmap? = null
+    // multipart 관련 변수
+    private  var multibody : MultipartBody.Part? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -83,14 +90,7 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             }
 
-
-        //편집버튼 누르면 이미지 편집
-//        binding.checkconceptquestionEditIv.setOnClickListener {
-//            val intent =
-//                Intent(this, ConceptCameraShootingActivity::class.java)
-//            activityResultLauncher.launch(intent)
-//            finish()
-//        }
+        photoList.add(Photo())
 
         //자동으로 완료버튼 채워지기
         binding.checkconceptquestionTitleTextEt.addTextChangedListener(object : TextWatcher {
@@ -166,7 +166,8 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
 
     }
 
-    private fun getConcept(): CheckConcept {  // view에서 받은 값들
+    //qpi 서버
+    private fun checkconceptif(){
 
         title=binding.checkconceptquestionTitleTextEt.text.toString()
         bigCategoryIdx=binding.checkconceptquestionBigCategorySp.selectedItemPosition.toLong()+1
@@ -203,16 +204,26 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
         Log.d("content : ", content)
         Log.d("bigCategoryIdx : ", bigCategoryIdx.toString())
         Log.d("smallCategoryIdx :", smallCategoryIdx.toString())
-        return CheckConcept(images, userIdx, bigCategoryIdx, smallCategoryIdx, title, content)
-    }
-
-    //qpi 서버
-    private fun checkconceptif(){
         val checkConceptQuestionService=CheckConceptQuestionService()
 
         checkConceptQuestionService.setcheckconceptquestionView(this)
 
-        checkConceptQuestionService.checkConceptQuestion(getJwt(this), getConcept())
+        if (images.toString().length>2) {//이미지가 있으면
+            checkConceptQuestionService.checkConceptQuestion(
+                getJwt(this),
+                images, CheckConcept(userIdx,
+                bigCategoryIdx,
+                smallCategoryIdx,
+                title,
+                content)
+            )
+
+        }else{//이미지가 없으면
+            checkConceptQuestionService.checkConceptQuestion(getJwt(this),null,
+                CheckConcept(userIdx, bigCategoryIdx, smallCategoryIdx, title, content))
+
+        }
+
         Log.d("CHECKCONCEPT/API","Hello")
     }
 
@@ -284,37 +295,24 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK) {
-            var imagePath = data?.getStringExtra("path")!!
+            var imagePath = data?.getByteArrayExtra("path")!!
+            var stringpath = data?.getStringExtra("imagepath")!!
 
             photoList.apply {
-                add(Photo(imagePath))
-                Log.d("SEND/path", imagePath)
+                add(0, Photo(stringpath))
+                Log.d("SEND/path", stringpath)
                 count++
                 Log.d("path/count", count.toString())
             }
             Log.d("GETGET", photoList.toString())
 
-                //set되는 부분
-                if (imagePath != null) {
-                    var fileName =
-                        SimpleDateFormat("yyyyMMddHHmmss").format(Date()) // 파일명이 겹치면 안되기 떄문에 시년월일분초 지정
-                    storage.getReference().child("image").child(fileName)
-                        .putFile(imagePath.toUri())//어디에 업로드할지 지정
-                        .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
-                            taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
-                                var imageUrl = it.toString()
-                                var photo = Photo(imageUrl)
-                                firestore.collection("concept-images")
-                                    .document().set(photo)
-                                    .addOnSuccessListener {
-                                    }
-                                Log.d("gege/imageUrl", imageUrl)
-                                Log.d("gege/photo", photo.toString())
-                                images.add(imageUrl)
-                            }
-                        }
-
-                }
+            if (imagePath!=null) {
+                val sendImage = imagePath.toRequestBody("image/*".toMediaTypeOrNull())
+                val multibody: MultipartBody.Part=MultipartBody.Part.createFormData("images", "image.jpeg", sendImage)
+                images.add(multibody)
+            }
+            Log.d("path/multi", images.toString())
+            binding.checkconceptquestionPlusIv.visibility=View.GONE
 
 //이미지가 5개부터는 추가 불가
             if (count>=5){
@@ -324,10 +322,11 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
                 }
             }
             // 뷰페이저 어댑터 생성
-            viewPagerAdapter = ViewPagerAdapter(this, photoList)
+            viewPagerAdapter = ViewPagerAdapter(this, photoList, this)
             binding.checkconceptquestionVp.adapter = viewPagerAdapter
             binding.checkconceptquestionVp.orientation = ViewPager2.ORIENTATION_HORIZONTAL
             binding.checkconceptIndicator.setViewPager(binding.checkconceptquestionVp)
+            binding.checkconceptIndicator.createIndicators(count, 0)
         }
 
     }
@@ -525,6 +524,12 @@ class CheckConceptQuestionActivity:AppCompatActivity(), CheckConceptQuestionView
         Toast.makeText(this, "성공", Toast.LENGTH_SHORT).show()
 
         finish()
+    }
+
+    override fun onPhotoClicked(photo: Photo) {
+        val intent =
+            Intent(this, ConceptCameraShootingActivity::class.java)
+        activityResultLauncher.launch(intent)
     }
 
 

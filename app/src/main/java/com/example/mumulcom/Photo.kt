@@ -1,6 +1,8 @@
 //Photo.kt
 package com.example.mumulcom // 패키지명
 
+import android.graphics.Bitmap
+import android.os.Parcelable
 import java.util.*
 
 class Photo(

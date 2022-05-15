@@ -85,8 +85,8 @@
                         android:src="@drawable/ic_image_plus"
                         app:layout_constraintBottom_toBottomOf="@id/checkconceptquestion_Vp"
                         app:layout_constraintEnd_toEndOf="@id/checkconceptquestion_Vp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginEnd="10dp"
+                        app:layout_constraintStart_toStartOf="@id/checkconceptquestion_Vp"
+                        app:layout_constraintTop_toTopOf="@id/checkconceptquestion_Vp"
                         android:visibility="visible"
                         />
 

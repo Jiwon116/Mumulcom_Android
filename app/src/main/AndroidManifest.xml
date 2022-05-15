@@ -46,6 +46,8 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".SignUpCategoryActivity" />
         <activity android:name=".ProfileModifyActivity" />
+        <activity android:name=".AnnounceActivity" />
+        <activity android:name=".AnnounceDetailActivity" />
         <activity android:name=".SearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
