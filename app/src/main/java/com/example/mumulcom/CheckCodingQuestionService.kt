@@ -30,13 +30,13 @@ class CheckCodingQuestionService{
 //        Log.d("json/jsonBody", codeQuestionReq.toString())
 
         checkCodingQuestionView.onCheckCodingQuestionLoading()
-        
+
         checkCodingQuestionService.checkCodingQuestion(
             jwt, if (images==null){
                 null
             }else{
                 images
-                 }, checkCoding).enqueue(object : Callback<CheckCodingQuestionResponse> {
+            }, checkCoding).enqueue(object : Callback<CheckCodingQuestionResponse> {
             override fun onResponse(call: Call<CheckCodingQuestionResponse>, response: Response<CheckCodingQuestionResponse>) {
                 Log.d("CHECKCODING/API-RESPONSE", response.toString())
                 Log.d("co/API-RESPONSE", checkCoding.toString())
@@ -62,4 +62,3 @@ class CheckCodingQuestionService{
     }
 
 }
-

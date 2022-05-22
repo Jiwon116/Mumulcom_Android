@@ -14,7 +14,7 @@ interface CheckCodingQuestionRetrofitInterface {
         @Header("X-ACCESS-TOKEN") X_ACCESS_TOKEN: String,
         @Part images: List<MultipartBody.Part?>?,
         @Part ("codeQuestionReq") codeQuestionReq: CheckCoding,
-        ): Call<CheckCodingQuestionResponse>
+    ): Call<CheckCodingQuestionResponse>
 }
 
 

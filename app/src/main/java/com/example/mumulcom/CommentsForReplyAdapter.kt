@@ -16,6 +16,18 @@ class CommentsForReplyAdapter(val context: Context): RecyclerView.Adapter<Commen
     private val commentList = ArrayList<Comment>()
 
 
+    // 클릭 인터페이스 정의
+    interface CommentsItemClickListener{
+        fun goReportActivity(reportUserId:Long)
+    }
+
+    private lateinit var commentsItemClickListener: CommentsItemClickListener
+
+    fun setCommentsClickListener(commentsItemClickListener:CommentsItemClickListener){
+        this.commentsItemClickListener=commentsItemClickListener
+    }
+
+
     @SuppressLint("NotifyDataSetChanged")
     fun addComments(comments:ArrayList<Comment> ){
         this.commentList.clear()
@@ -58,6 +70,10 @@ class CommentsForReplyAdapter(val context: Context): RecyclerView.Adapter<Commen
                 binding.replyImgIv.visibility = View.GONE
             }
 
+            //TODO 프로필 사진과 닉네임을 눌렀을때도 이동하도록 변경
+            binding.profileIv.setOnClickListener {
+                commentsItemClickListener.goReportActivity(comment.userIdx)
+            }
         }
 
     }

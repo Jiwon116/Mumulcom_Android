@@ -262,6 +262,13 @@ class CommentActivity : AppCompatActivity() ,CommentsForReplyView, UploadComment
     override fun onGetCommentsSuccess(result: ArrayList<Comment>) {
         Log.d("답변에 대한 댓글 가져오기/API","성공")
         commentsForReplyAdapter.addComments(result)
+        commentsForReplyAdapter.setCommentsClickListener(object : CommentsForReplyAdapter.CommentsItemClickListener {
+            override fun goReportActivity(reportUserId: Long) {
+                val reportDialogFragment = ReportDialogFragment(reportUserId)
+                reportDialogFragment.show(supportFragmentManager,ReportDialogFragment.TAG)
+            }
+
+        })
     }
 
     override fun onGetCommentsFailure(code: Int, message: String) {

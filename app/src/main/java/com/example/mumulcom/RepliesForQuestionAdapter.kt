@@ -52,6 +52,8 @@ class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer
         fun setIsLike()
         // ----------------------------
         fun goBackCommentActivity(_replyIdx:Long,profileImage:String,nickname:String,createdAt:String,replyUrl:String?,content:String,replyImgUrl:ArrayList<String>)
+
+        fun goReportActivity(profileId:Long) // 사용자 프로필로 가기
     }
 
 
@@ -261,6 +263,13 @@ class RepliesForQuestionAdapter(val context: Context,var adopt:String,var writer
 
 
 
+            }
+
+            // 답변한 사용자의 프로필 사진 누를때
+            //TODO 프로필 사진과 닉네임을 눌렀을때도 이동하도록 변경
+            binding.profileIv.setOnClickListener {
+                var userIdx:Long = reply.userIdx
+                repliesItemClickListener.goReportActivity(userIdx)
             }
 
 

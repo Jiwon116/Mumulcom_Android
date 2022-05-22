@@ -16,6 +16,8 @@ import android.provider.MediaStore
 import android.util.Base64.DEFAULT
 import android.util.Base64.encodeToString
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -150,6 +152,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
             }else return@registerForActivityResult
         }
     }// end of onCreate
+
 
 
     override fun onStart() {
@@ -499,6 +502,7 @@ private lateinit var binding : ActivityQuestionDetailBinding
 
             override fun goBackCommentActivity(_replyIdx: Long, profileImage: String, nickname: String, createdAt: String, replyUrl: String?, content: String, replyImgUrl: ArrayList<String>
             ) {
+                Log.d("abctest1:",_replyIdx.toString())
                 val intent = Intent(this@QuestionDetailActivity,CommentActivity::class.java)
                 intent.putExtra("replyIdx",_replyIdx)
                 intent.putExtra("profileImage",profileImage) // 프로필 이미지
@@ -510,6 +514,15 @@ private lateinit var binding : ActivityQuestionDetailBinding
                 Log.d("replyImageResult",replyImgUrl.toString())
                 startActivity(intent)
 
+            }
+
+            override fun goReportActivity(profileId: Long) {
+//                val intent=Intent(this@QuestionDetailActivity,ProfileActivity::class.java)
+//                intent.putExtra("profileIdx",profileId)
+//                startActivity(intent)
+                Log.d("abctest1:",profileId.toString())
+                val reportDialogFragment = ReportDialogFragment(profileId)
+                reportDialogFragment.show(supportFragmentManager,ReportDialogFragment.TAG)
             }
         })
 

@@ -20,9 +20,17 @@
         android:theme="@style/Theme.BottomNaviTemplate"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ImageActivity"
+            android:name=".ReportContentActivity"
             android:exported="false" />
-        <!-- 스플래쉬 화면 -->
+        <activity
+            android:name=".ReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ImageActivity"
+            android:exported="false" /> <!-- 스플래쉬 화면 -->
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
@@ -34,8 +42,7 @@
         </activity>
         <activity
             android:name=".CommentActivity"
-            android:exported="true" >
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".QuestionBoardActivity"
             android:exported="false" />
@@ -58,9 +65,7 @@
         <activity android:name=".CheckCodingQuestionActivity" />
         <activity android:name=".CheckConceptQuestionActivity" />
         <activity android:name=".CodingCameraShootingActivity" />
-        <activity android:name=".ConceptCameraShootingActivity" />
-
-        <!-- 카카오 로그인 -->
+        <activity android:name=".ConceptCameraShootingActivity" /> <!-- 카카오 로그인 -->
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -73,9 +78,7 @@
                     android:host="oauth"
                     android:scheme="kakao0b9d6f7c3471d52a8c2d761dda556e34" />
             </intent-filter>
-        </activity>
-
-        <!-- 갤러리 이미지 주고받기 -->
+        </activity> <!-- 갤러리 이미지 주고받기 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.mumulcom.fileprovider"
@@ -84,9 +87,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
-        </provider>
-
-        <!-- 파이어베이스 메세지 서비스 -->
+        </provider> <!-- 파이어베이스 메세지 서비스 -->
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

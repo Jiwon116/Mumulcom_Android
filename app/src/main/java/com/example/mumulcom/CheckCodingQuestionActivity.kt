@@ -227,20 +227,20 @@ class CheckCodingQuestionActivity:AppCompatActivity(), CheckCodingQuestionView, 
 
 
         if (images.toString().length>2) {//이미지가 있으면
-                checkCodingQuestionService.checkCodingQuestion(
-                    getJwt(this),
-                    images, CheckCoding(userIdx,
-                        currentError,
-                        myCodingSkill,
-                        bigCategoryIdx,
-                        smallCategoryIdx,
-                        title,
-                        codeQuestionUrl)
-                )
+            checkCodingQuestionService.checkCodingQuestion(
+                getJwt(this),
+                images, CheckCoding(userIdx,
+                    currentError,
+                    myCodingSkill,
+                    bigCategoryIdx,
+                    smallCategoryIdx,
+                    title,
+                    codeQuestionUrl)
+            )
 
         }else{//이미지가 없으면
             checkCodingQuestionService.checkCodingQuestion(getJwt(this),null,
-               CheckCoding(userIdx, currentError, myCodingSkill, bigCategoryIdx, smallCategoryIdx, title, codeQuestionUrl))
+                CheckCoding(userIdx, currentError, myCodingSkill, bigCategoryIdx, smallCategoryIdx, title, codeQuestionUrl))
 
         }
 
@@ -562,4 +562,3 @@ class CheckCodingQuestionActivity:AppCompatActivity(), CheckCodingQuestionView, 
     }
 
 }
-
