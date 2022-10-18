@@ -55,6 +55,11 @@ class ProfileFragment : Fragment(), ProfileView {
             startActivity(Intent(requireContext(), AnnounceActivity::class.java))
         }
 
+        // 개인정보 보호정책
+        binding.profileSetting2ArrowIv.setOnClickListener {
+            startActivity(Intent(requireContext(), PrivacyActivity::class.java))
+        }
+
         // 문의하기
         binding.profileSetting4ArrowIv.setOnClickListener {
             var intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://forms.gle/wmBgRkTjkffJAWyo7"))
