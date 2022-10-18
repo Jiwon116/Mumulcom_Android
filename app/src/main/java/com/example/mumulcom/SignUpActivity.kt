@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mumulcom.databinding.ActivitySignupBinding
 import com.kakao.sdk.user.UserApiClient
@@ -62,7 +63,7 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
                 // 텍스트가 바뀌었다는건 다시 중복 검사를 해야함
                 validNickname = false
                 changeButton()
-                checkNickname() // 닉네임 유효성 검사 함수
+                checkNickname() // 닉네임 유효성 검사
                 nickname = p0.toString()
 
                 // edittext 배경도 회색으로 다시 변경
@@ -72,15 +73,19 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
 
         // 닉네임 중복 검사 (중복확인버튼)
         binding.signupDuplicateCheckBt.setOnClickListener {
-            // 중복 확인
-            getNicknameCheck()
-            // 키보드 사라지기
-            CloseKeyboard()
+            if (validCurrentNickname) { // 닉네임 유효할때만 중복 검사
+                // 중복 확인
+                getNicknameCheck()
+                // 키보드 사라지기
+                closeKeyboard()
+            } else {
+                Toast.makeText(this, "닉네임을 확인해주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // 화면 배경 누르면 키보드 사라지기
         binding.signupLy.setOnClickListener {
-            CloseKeyboard()
+            closeKeyboard()
         }
     }
 
@@ -94,7 +99,7 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
                 email = kakaoUser.kakaoAccount?.email.toString()
                 name = kakaoUser.kakaoAccount?.profile?.nickname.toString()
 
-                Log.i(TAG, "사용자 정보 요청 성공 - 이메일: $email 이름: $name")
+                Log.d(TAG, "사용자 정보 요청 성공 - 이메일: $email 이름: $name")
             }
         }
     }
@@ -151,7 +156,7 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
                     // 소속을 선택하면 group 변수에 사용자 소속 저장하기
                     group = binding.signupGroupSp.getItemAtPosition(position).toString()
                     validGroup = true
-                    Log.i(TAG, "소속 확인: $group validGroup: $validGroup")
+                    Log.d(TAG, "소속 확인: $group validGroup: $validGroup")
                     changeButton()
                 }
             }
@@ -162,7 +167,7 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
 
     // 닉네임 유효성 검사 함수
     fun checkNickname(): Boolean {
-        var n = binding.signupNicknameEt.text.toString().trim() // 공백제거
+        val n = binding.signupNicknameEt.text.toString().trim() // 공백제거
         val p = Pattern.matches(nicknameValidation, n) // 패턴 맞는지 확인
         return if (p) {
             // 닉네임 형태가 패턴에 적합할 경우
@@ -175,7 +180,6 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
             binding.signupNicknameDuplicateValidTv.visibility = View.GONE
             binding.signupNicknameDuplicateErrorTv.visibility = View.GONE
             validCurrentNickname = true
-            changeButton()
             true
         } else {
             // 닉네임 형태가 패턴에 적합하지 않을 경우
@@ -188,7 +192,6 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
             binding.signupNicknameDuplicateValidTv.visibility = View.GONE
             binding.signupNicknameDuplicateErrorTv.visibility = View.GONE
             validCurrentNickname = false
-            changeButton()
             false
         }
     }
@@ -205,12 +208,10 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
     }
 
     override fun getNicknameCheckSuccess(result: Boolean) {
-        // result = ture -> 사용하는 사람이 있음
-        // result = false -> 사용 가능
-        if (result) { // 닉네임 사용 불가능
+        if (result) { // 사용하는 사람 있음 = 닉네임 사용 불가능
             validNickname = !result // validNickname = false
 
-            Log.i(TAG, "닉네임 중복")
+            Log.d(TAG, "닉네임 중복")
 
             // 중복된 닉네임입니다 출력
             binding.signupNicknameDuplicateErrorTv.visibility = View.VISIBLE
@@ -225,7 +226,7 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
         } else {    // 닉네임 사용 가능
             validNickname = !result // validNickname = true
 
-            Log.i(TAG, "닉네임: $nickname validNickname: $validNickname")
+            Log.d(TAG, "닉네임: $nickname validNickname: $validNickname")
 
             // 사용 가능한 닉네임입니다 출력
             binding.signupNicknameDuplicateValidTv.visibility = View.VISIBLE
@@ -251,8 +252,10 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
     fun changeButton() {
         if (validCurrentNickname && validNickname && validGroup) {
             // 버튼 선택 가능
-            binding.signupTypingDoneNoSelectIv.setImageResource(R.drawable.ic_typing_done_select)
-            binding.signupTypingDoneNoSelectIv.setOnClickListener {
+            binding.signupTypingDoneNoSelectIv.visibility = View.GONE
+            binding.signupTypingDoneSelectIv.visibility = View.VISIBLE
+
+            binding.signupTypingDoneSelectIv.setOnClickListener {
                 // intent로 사용자 정보 (email, name, nickname, group) 넘겨주기
                 val intent = Intent(this, SignUpCategoryActivity::class.java)
                 intent.putExtra("email", email)
@@ -263,13 +266,23 @@ class SignUpActivity : AppCompatActivity(), SignupNicknameView {
                 finish()
             }
         } else {
+            binding.signupTypingDoneNoSelectIv.visibility = View.VISIBLE
+            binding.signupTypingDoneSelectIv.visibility = View.GONE
             // 버튼 선택 불가능
-            binding.signupTypingDoneNoSelectIv.setImageResource(R.drawable.ic_typing_done_no_select)
+            binding.signupTypingDoneNoSelectIv.setOnClickListener {
+                if (!validCurrentNickname) {
+                    Toast.makeText(this, "닉네임을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                } else if (!validNickname) {
+                    Toast.makeText(this, "닉네임 중복 검사를 해주세요.", Toast.LENGTH_SHORT).show()
+                } else if (!validGroup) {
+                    Toast.makeText(this, "소속을 선택해주세요.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
-    fun CloseKeyboard() {
-        var view = this.currentFocus
+    private fun closeKeyboard() {
+        val view = this.currentFocus
 
         if(view != null) {
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

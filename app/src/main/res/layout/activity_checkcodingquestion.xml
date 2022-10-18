@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:id="@+id/codingBack"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
@@ -20,18 +21,19 @@
             android:paddingEnd="20dp"
             android:paddingBottom="25dp">
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/checkcodingquestion_top_ly"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="25dp"
+                android:layout_marginTop="25dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent" >
 
                 <ImageView
                     android:id="@+id/checkcodingquestion_BackIv"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_back_black"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +46,9 @@
                     android:src="@drawable/ic_question"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:clickable="false"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -55,11 +59,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/checkcodingquestion_top_ly">
 
+
+
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/vp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" >
 
@@ -70,26 +76,56 @@
                         android:background="@drawable/bg_viewpager"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        />
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/view_null"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="200dp"-->
+<!--                        android:background="@color/black"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        android:visibility="gone"-->
+<!--                        />-->
 
                     <ImageView
-                        android:id="@+id/checkcodingquestion_PlusIv"
+                        android:id="@+id/checkcodingquestion_Plus_Iv"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:scaleType="fitXY"
+                       app:layout_constraintTop_toTopOf="@id/checkcodingquestion_Vp"
+                        app:layout_constraintBottom_toBottomOf="@id/checkcodingquestion_Vp"
+                        app:layout_constraintStart_toStartOf="@id/checkcodingquestion_Vp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         android:src="@drawable/ic_image_plus"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
+                        android:visibility="visible"
+                        />
 
+                    <ImageView
+                        android:id="@+id/checkcodingquestion_Edit_Iv"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@null"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_edit"
+                        app:layout_constraintTop_toTopOf="@id/checkcodingquestion_Vp"
+                        app:layout_constraintEnd_toEndOf="@id/checkcodingquestion_Vp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="invisible"
+                        />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <me.relex.circleindicator.CircleIndicator3
-                    android:id="@+id/checkcoding_indicator"
-                    app:ci_drawable="@drawable/indicator_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" />
+                    <me.relex.circleindicator.CircleIndicator3
+                        android:id="@+id/checkcoding_indicator"
+                        app:ci_drawable="@drawable/indicator_background"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp" />
+
 
             </LinearLayout>
 
@@ -130,7 +166,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             <LinearLayout
                 android:id="@+id/checkcodingquestion_spinner_ly"
                 android:layout_width="wrap_content"
@@ -146,7 +181,8 @@
                     android:background="@drawable/bg_category_outline"
                     android:popupBackground="@drawable/bg_category_outline"
                     android:layout_gravity="start"
-                    tools:listitem="@layout/item_big_category"/>
+                    tools:listitem="@layout/item_big_category"
+                    />
 
                 <Spinner
                     android:id="@+id/checkcodingquestion_small_category_sp"
@@ -155,9 +191,11 @@
                     android:layout_marginStart="15dp"
                     android:background="@drawable/bg_category_outline"
                     android:popupBackground="@drawable/bg_category_outline"
-                    tools:listitem="@layout/item_small_category"/>
+                    tools:listitem="@layout/item_small_category"
+                    />
 
             </LinearLayout>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/checkcodingquestion_title_ly"
@@ -216,39 +254,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/checkcodingquestion_title_ly" />
 
-            <TextView
-                android:id="@+id/checkcodingquestion_ErrorCodeTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="25dp"
-                android:text="오류 코드 첨부"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/checkcodingquestion_TitleTextEt" />
-
-            <EditText
-                android:id="@+id/checkcodingquestion_ErrorCodeTextEt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:paddingVertical="5dp"
-                android:paddingHorizontal="15dp"
-                android:background="@drawable/basic_outline_black"
-                android:hint="복사본이나 깃허브 링크를 올려주세요."
-                android:inputType="textMultiLine"
-                android:minHeight="48sp"
-                android:maxHeight="80sp"
-                android:maxLines="10"
-                android:scrollbars="vertical"
-                android:textColor="@color/black"
-                android:textColorHint="@color/home_gray_text_color"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/checkcodingquestion_ErrorCodeTv" />
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/checkcodingquestion_currentError_ly"
                 android:layout_width="wrap_content"
@@ -257,7 +262,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="25dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/checkcodingquestion_ErrorCodeTextEt">
+                app:layout_constraintTop_toBottomOf="@id/checkcodingquestion_TitleTextEt">
 
                 <TextView
                     android:id="@+id/checkcodingquestion_StopPartTv"
@@ -307,6 +312,39 @@
                 app:layout_constraintTop_toBottomOf="@id/checkcodingquestion_currentError_ly" />
 
             <TextView
+                android:id="@+id/checkcodingquestion_ErrorCodeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="25dp"
+                android:text="오류 코드 첨부"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/checkcodingquestion_StopPartTextEt" />
+
+            <EditText
+                android:id="@+id/checkcodingquestion_ErrorCodeTextEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingVertical="5dp"
+                android:paddingHorizontal="15dp"
+                android:background="@drawable/basic_outline_black"
+                android:hint="복사본이나 깃허브 링크를 올려주세요."
+                android:inputType="textMultiLine"
+                android:minHeight="48sp"
+                android:maxHeight="80sp"
+                android:maxLines="10"
+                android:scrollbars="vertical"
+                android:textColor="@color/black"
+                android:textColorHint="@color/home_gray_text_color"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/checkcodingquestion_ErrorCodeTv" />
+
+            <TextView
                 android:id="@+id/checkcodingquestion_CodingLevelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -317,7 +355,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/checkcodingquestion_StopPartTextEt" />
+                app:layout_constraintTop_toBottomOf="@id/checkcodingquestion_ErrorCodeTextEt" />
 
             <EditText
                 android:id="@+id/checkcodingquestion_CodingLevelTextEt"

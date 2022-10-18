@@ -13,17 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mumulcom.databinding.ActivitySearchBinding
 import kotlin.collections.ArrayList
 
-// TODO 처음 리사이클러뷰 (initRecyclerView) 살짝 로딩있음 -> 성능 개선 방법 찾기
 class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConceptQuestionView {
     lateinit var binding: ActivitySearchBinding
 
-    private var keyword: String? = null
+    private var query: String? = null
 
-    private var matchedCodingQuestion: ArrayList<CodingQuestion> = arrayListOf()    // keyword와 일치하는 데이터
     private lateinit var codingQuestionAdapter: CodingQuestionAdapter
+    private var matchedCodingQuestion: ArrayList<CodingQuestion> = arrayListOf()    // keyword와 일치하는 데이터
 
-    private var matchedConceptQuestion: ArrayList<ConceptQuestion> = arrayListOf()  // keyword와 일치하는 데이터
     private lateinit var conceptQuestionAdapter: ConceptQuestionAdapter
+    private var matchedConceptQuestion: ArrayList<ConceptQuestion> = arrayListOf()  // keyword와 일치하는 데이터
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,17 +31,21 @@ class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConc
         setContentView(binding.root)
 
         // default값은 코딩 질문
-        initCodingRecyclerView()
+        initCodingRecyclerView(query)
         codingPerformSearch()
 
-        binding.searchRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+        binding.searchRadioGroup.setOnCheckedChangeListener { group, checkedId, ->
             when(checkedId) {
                 R.id.search_coding_btn -> {
-                    initCodingRecyclerView()
+                    query = binding.searchView.query.toString()
+                    Log.d("검색어", query.toString())
+                    initCodingRecyclerView(query)
                     codingPerformSearch()
                 }
                 R.id.search_concept_btn -> {
-                    initConceptRecyclerView()
+                    query = binding.searchView.query.toString()
+                    Log.d("검색어", query.toString())
+                    initConceptRecyclerView(query)
                     conceptPerformSearch()
                 }
             }
@@ -50,7 +53,7 @@ class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConc
 
         // 화면 배경 누르면 키보드 사라지기
         binding.searchLy.setOnClickListener {
-            CloseKeyboard()
+            closeKeyboard()
         }
 
         // 뒤로가기 버튼 누르기
@@ -62,8 +65,8 @@ class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConc
     }
 
     // 키보드 사라지는 함수
-    fun CloseKeyboard() {
-        var view = this.currentFocus
+    fun closeKeyboard() {
+        val view = this.currentFocus
 
         if(view != null) {
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -72,9 +75,9 @@ class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConc
     }
 
     // 리사이클러뷰에 코딩 질문 데이터와 어댑터 적용
-    private fun initCodingRecyclerView() {
+    private fun initCodingRecyclerView(query: String?) {
         // 처음에는 검색 키워드 값 null
-        getCodingQuestions(keyword)
+        getCodingQuestions(query)
         codingQuestionAdapter = CodingQuestionAdapter(this)
         codingQuestionAdapter.setCodingQuestionClickListener(object: CodingQuestionAdapter.CodingQuestionClickListener{
             override fun onItemClick(codingQuestion: CodingQuestion) {
@@ -83,6 +86,10 @@ class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConc
         })
         binding.searchQueryResultRv.adapter = codingQuestionAdapter
         binding.searchQueryResultRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+
+        binding.searchQueryResultRv.apply {
+            codingQuestionAdapter.addCodingQuestions(matchedCodingQuestion)
+        }
     }
 
     private fun startCodingQuestionDetailActivity(codingQuestion: CodingQuestion){
@@ -94,9 +101,9 @@ class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConc
     }
 
     // 리사이클러뷰에 개념 질문 데이터와 어댑터 적용
-    private fun initConceptRecyclerView() {
+    private fun initConceptRecyclerView(query: String?) {
         // 처음에는 검색 키워드 값 null
-        getConceptQuestions(keyword)
+        getConceptQuestions(query)
         conceptQuestionAdapter = ConceptQuestionAdapter(this)
         conceptQuestionAdapter.setConceptQuestionClickListener(object: ConceptQuestionAdapter.ConceptQuestionClickListener{
             override fun onItemClick(conceptQuestion: ConceptQuestion) {
@@ -105,6 +112,10 @@ class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConc
         })
         binding.searchQueryResultRv.adapter = conceptQuestionAdapter
         binding.searchQueryResultRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+
+        binding.searchQueryResultRv.apply {
+            conceptQuestionAdapter.addConceptQuestions(matchedConceptQuestion)
+        }
     }
 
     private fun startConceptQuestionDetailActivity(conceptQuestion: ConceptQuestion){
@@ -119,9 +130,8 @@ class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConc
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(keyword: String?): Boolean {   // 검색 버튼 클릭했을 때
                 // 자판에 있는 검색 버튼을 클릭했을때만 toast 나오게 하고 싶음
-                getCodingQuestions(keyword)
-                updateCodingRecyclerView()
-                CloseKeyboard()
+                initCodingRecyclerView(keyword)
+                closeKeyboard()
                 return true
             }
 
@@ -135,9 +145,8 @@ class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConc
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(keyword: String?): Boolean {   // 검색 버튼 클릭했을 때
                 // 자판에 있는 검색 버튼을 클릭했을때만 toast 나오게 하고 싶음
-                getConceptQuestions(keyword)
-                updateConceptRecyclerView()
-                CloseKeyboard()
+                initConceptRecyclerView(keyword)
+                closeKeyboard()
                 return true
             }
 
@@ -145,22 +154,6 @@ class SearchActivity : AppCompatActivity(), SearchCodingQuestionView, SearchConc
                 return false
             }
         })
-    }
-
-    private fun updateCodingRecyclerView() {
-        binding.searchQueryResultRv.apply {
-            codingQuestionAdapter.addCodingQuestions(matchedCodingQuestion)
-            //codingQuestionAdapter.codingQuestionList = matchedCodingQuestion
-            //codingQuestionAdapter.notifyDataSetChanged()
-        }
-    }
-
-    private fun updateConceptRecyclerView() {
-        binding.searchQueryResultRv.apply {
-            conceptQuestionAdapter.addConceptQuestions(matchedConceptQuestion)
-            //conceptQuestionAdapter.conceptQuestionList = matchedConceptQuestion
-            //conceptQuestionAdapter.notifyDataSetChanged()
-        }
     }
 
     private fun getCodingQuestions(keyword: String?){

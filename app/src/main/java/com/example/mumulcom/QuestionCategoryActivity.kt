@@ -47,6 +47,7 @@ class QuestionCategoryActivity : AppCompatActivity() {
             setSelectCompletion()
             binding.questioncategorySelectCompletionIv.setOnClickListener {
                 startActivity(Intent(this, CheckCodingQuestionActivity::class.java))
+                finish()
             }
         }
 
@@ -60,6 +61,7 @@ class QuestionCategoryActivity : AppCompatActivity() {
             setSelectCompletion()
             binding.questioncategorySelectCompletionIv.setOnClickListener {
                 startActivity(Intent(this, CheckConceptQuestionActivity::class.java))
+                finish()
             }
         }
 
@@ -68,9 +70,6 @@ class QuestionCategoryActivity : AppCompatActivity() {
     fun setSelectCompletion(){
         if(isSelect){
             binding.questioncategorySelectCompletionIv.setImageResource(R.drawable.ic_select_complete)
-//            binding.questioncategorySelectCompletionIb.setOnClickListener {
-//                startActivity(Intent(this, CheckCodingQuestionActivity::class.java))
-//            }
         }else{
             binding.questioncategorySelectCompletionIv.setImageResource(R.drawable.ic_bf_selectcompletion)
         }

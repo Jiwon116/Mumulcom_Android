@@ -17,6 +17,7 @@
     <color name="selected">#FFBD80</color>
     <color name="checked">#FF8F8F</color>
     <color name="tab">#00C6AE</color>
+    <color name="comment">#FF8514</color>
 
     <!-- 캐릭터 배경 색 -->
     <color name="character1">#FF89BB</color>

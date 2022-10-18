@@ -4,14 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    tools:context=".QuestionBoardActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".QuestionBoardActivity">
+        android:orientation="vertical">
 
         <!-- 상단 tool bar 역할 -->
         <RelativeLayout
@@ -29,8 +28,8 @@
 
             <ImageView
                 android:id="@+id/backIv"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/ic_back_black" />
 
             <TextView
@@ -40,7 +39,8 @@
                 android:layout_centerInParent="true"
                 android:text="안드로이드"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/searchIv"
@@ -163,22 +163,24 @@
 
     </LinearLayout>
 
+    <!-- 질문하기 플로팅 버튼 -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/questionFloatingButton"
-        android:text="질문하기"
-        android:layout_gravity="bottom|center"
-        android:textColor="@color/white"
-        android:backgroundTint="#FFBD80"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
+        android:layout_margin="20dp"
+        android:layout_gravity="bottom|center"
+        android:backgroundTint="@color/selected"
+        android:text="질문하기"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_question_face"
+        app:iconSize="25dp"
+        app:iconTint="@color/comment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:iconTint="#FF8514"
-        app:iconSize="25dp"
-        app:icon="@drawable/ic_question_face"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="20dp"
-        android:layout_marginBottom="10dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

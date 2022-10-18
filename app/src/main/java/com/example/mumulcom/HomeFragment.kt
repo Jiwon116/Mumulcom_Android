@@ -285,7 +285,7 @@ class HomeFragment : Fragment(), RecentQuestionView {
             val intent = Intent(context,QuestionBoardActivity::class.java)
             intent.putExtra("category","기타")
             intent.putExtra("bigCategoryIdx",5)
-//            intent.putExtra("smallCategoryIdx",1)
+            intent.putExtra("smallCategoryIdx",0)
             startActivity(intent)
         }
 

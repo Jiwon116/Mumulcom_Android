@@ -6,11 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mumulcom.QuestionAdapter
-import com.example.mumulcom.Question
 import com.example.mumulcom.databinding.ActivityQuestionBoardBinding
-import com.example.mumulcom.CategoryQuestionService
-import com.example.mumulcom.CategoryQuestionView
 
 // 카테고리별 질문 목록
 class QuestionBoardActivity : AppCompatActivity(), CategoryQuestionView {
@@ -63,8 +59,7 @@ class QuestionBoardActivity : AppCompatActivity(), CategoryQuestionView {
 
         // 새로고침
         binding.refreshLayout.setOnRefreshListener {
-            // todo 서버에서 데이터 reload
-
+            //  서버에서 데이터 reload
             getCategoryQuestions()
             initRecyclerView()
 
@@ -73,7 +68,6 @@ class QuestionBoardActivity : AppCompatActivity(), CategoryQuestionView {
 
 
         Log.d("lifecycle","QuestionBoardActivity onCreate")
-
 
         binding.searchIv.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
@@ -91,28 +85,7 @@ class QuestionBoardActivity : AppCompatActivity(), CategoryQuestionView {
     }
 
 
-//    override fun onResume() {
-//        super.onResume()
-//        Log.d("lifecycle","QuestionBoardActivity onResume")
-//    }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        Log.d("lifecycle","QuestionBoardActivity onPause")
-//
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        Log.d("lifecycle","QuestionBoardActivity onStop")
-//
-//    }
-//
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        Log.d("lifecycle","QuestionBoardActivity onDestroy")
-//
-//    }
+
 
     private fun initRecyclerView(){
         // recyclerView <-> adapter 연결
@@ -128,7 +101,7 @@ class QuestionBoardActivity : AppCompatActivity(), CategoryQuestionView {
 
     }
     private fun startQuestionDetailActivity(question: Question){
-        val intent = Intent(this,QuestionDetailActivity::class.java)
+        val intent = Intent(this, QuestionDetailActivity::class.java)
         intent.putExtra("bigCategoryName",question.bigCategoryName) // 상위 카테고리명 넘김
         intent.putExtra("questionIdx",question.questionIdx) // 질문 고유 번호 넘김
         intent.putExtra("type",type) // 코딩질문 or 개념질문
@@ -242,7 +215,7 @@ class QuestionBoardActivity : AppCompatActivity(), CategoryQuestionView {
         }
 
         binding.questionFloatingButton.setOnClickListener {
-            startActivity(Intent(this,QuestionCategoryActivity::class.java))
+            startActivity(Intent(this, QuestionCategoryActivity::class.java))
         }
     }
 

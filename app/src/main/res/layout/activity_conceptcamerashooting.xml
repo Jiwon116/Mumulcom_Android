@@ -6,19 +6,20 @@
     android:background="#E5E5E5">
 
     <FrameLayout
-        android:id="@+id/main_frm"
+        android:id="@+id/concept_camera_shooting_fy"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/conceptcamerashooting_bnv"
         app:layout_constraintTop_toTopOf="parent"
         />
+
     <ImageView
         android:id="@+id/iv_pre"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/conceptcamerashootingCameraIv"
+        app:layout_constraintBottom_toTopOf="@+id/conceptcamerashootingGalleryIv"
         app:layout_constraintTop_toBottomOf="@+id/conceptcamerashootingBackIb"
         android:layout_marginBottom="10dp"
         android:background="#E5E5E5"/>
@@ -26,24 +27,23 @@
 
     <ImageButton
         android:id="@+id/conceptcamerashootingCameraIv"
-        android:layout_width="185px"
-        android:layout_height="185px"
+        android:layout_width="195px"
+        android:layout_height="195px"
         android:src="@drawable/ic_cameraa"
         android:scaleType="fitXY"
-        android:layout_marginTop="1398px"
         app:layout_constraintBottom_toTopOf="@id/conceptcamerashooting_bnv"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="70dp"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="#E5E5E5"/>
 
     <ImageButton
         android:id="@+id/conceptcamerashootingGalleryIv"
-        android:layout_width="84px"
-        android:layout_height="84px"
+        android:layout_width="175px"
+        android:layout_height="175px"
         android:src="@drawable/ic_gallery"
         android:scaleType="fitXY"
-        android:layout_marginTop="20dp"
         app:layout_constraintTop_toTopOf="@id/conceptcamerashootingCameraIv"
         app:layout_constraintEnd_toStartOf="@id/conceptcamerashootingCameraIv"
         android:layout_marginEnd="30dp"
@@ -68,7 +68,8 @@
         android:layout_width="match_parent"
         android:layout_height="236.76px"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/white"/>
+        android:background="@color/white"
+        android:visibility="invisible"/>
 
     <ImageButton
         android:id="@+id/conceptcamerashootingCheckIb"
@@ -80,7 +81,8 @@
         app:layout_constraintTop_toTopOf="@id/conceptcamerashooting_bnv"
         app:layout_constraintBottom_toBottomOf="@id/conceptcamerashooting_bnv"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"/>
 
     <ImageButton
         android:id="@+id/conceptcamerashootingturnIb"
@@ -92,7 +94,8 @@
         app:layout_constraintTop_toTopOf="@id/conceptcamerashooting_bnv"
         app:layout_constraintBottom_toBottomOf="@id/conceptcamerashooting_bnv"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="20dp"/>
+        android:layout_marginEnd="20dp"
+        android:visibility="invisible"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

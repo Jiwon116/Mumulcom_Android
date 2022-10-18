@@ -1,79 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:padding="20dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/question_list_background"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginEnd="20dp">
+    android:layout_marginEnd="20dp"
+    android:padding="20dp"
+    android:background="@drawable/question_list_background">
+
     <LinearLayout
         android:id="@+id/itemLl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:id="@+id/itemIconIv"
-            android:layout_width="83.56px"
-            android:layout_height="83.56px"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:src="@drawable/ic_profile"/>
+            tools:src="@drawable/ic_profile"/>
+
         <TextView
             android:id="@+id/itemNameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/itemIconIv"
-            android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
-            android:textColor="@color/home_gray_text_color"
+            tools:text="이휘정"
             android:textStyle="bold"
-            android:text="이휘정" />
+            android:textColor="@color/home_gray_text_color"  />
+
         <TextView
             android:id="@+id/itemDateTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/itemIconIv"
-            android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
-            android:textColor="@color/home_gray_text_color"
+            tools:text="12/30,20"
             android:textStyle="bold"
-            android:text="12/30,20"/>
+            android:textColor="@color/home_gray_text_color" />
+
     </LinearLayout>
+
+
+
     <LinearLayout
-        android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         app:layout_constraintTop_toTopOf="@id/itemLl"
         app:layout_constraintBottom_toBottomOf="@+id/itemLl"
         app:layout_constraintEnd_toEndOf="parent">
+
         <ImageView
+            android:id="@+id/itemCommentIv"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:src="@drawable/ic_message"/>
+
         <TextView
-            android:layout_marginStart="7dp"
             android:id="@+id/itemCommentTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3"/>
+            android:layout_marginStart="7dp"
+            tools:text="3"
+            android:textSize="16sp"
+            android:textColor="@color/black"/>
+
         <ImageView
             android:id="@+id/itemLikeIv"
-            android:layout_marginStart="10dp"
             android:layout_width="15dp"
             android:layout_height="15dp"
+            android:layout_marginStart="10dp"
             android:src="@drawable/ic_like"/>
+
         <TextView
             android:id="@+id/itemLikeTv"
-            android:layout_marginStart="7dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10"/>
-
-
-
-
+            android:layout_marginStart="7dp"
+            tools:text="10"
+            android:textSize="16sp"
+            android:textColor="@color/black"/>
     </LinearLayout>
 
 
@@ -81,38 +93,39 @@
         android:id="@+id/itemTitleTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemLl"
         android:layout_marginTop="10dp"
-        android:lines="1"
-        android:text="함수 호출 부분을 모르겠는데 이게 왜 ㅇㄹㅇㄴㄹ
-ㅇㄹㄴㅇㄹㅇㄹㅇㄴㄹㅇㄹㅇㄹㅇㄹ"
+        tools:text="함수 호출 부분을 모르겠어요"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/black"
-        android:ellipsize="end"/>
+        android:lines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemLl"/>
+
 
     <LinearLayout
         android:id="@+id/itemTagLl"
-        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemTitleTv">
         <TextView
             android:id="@+id/itemBigCategoryTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            tools:text="#서버"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/home_gray_text_color"/>
+
         <TextView
-            android:layout_marginLeft="5dp"
             android:id="@+id/itemSmallCategoryTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:layout_marginStart="5dp"
+            tools:text="#SPRING"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/home_gray_text_color"/>

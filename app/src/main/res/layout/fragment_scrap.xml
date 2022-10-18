@@ -40,26 +40,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scrap_radio_group">
 
         <Spinner
             android:id="@+id/scrap_big_category_sp"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginStart="20dp"
+            android:gravity="center"
             android:background="@drawable/bg_category_outline"
             android:popupBackground="@drawable/bg_category_outline"
-            android:layout_gravity="start"
+            android:minWidth="100dp"
             tools:listitem="@layout/item_big_category"/>
 
         <Spinner
             android:id="@+id/scrap_small_category_sp"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginStart="15dp"
+            android:gravity="center"
             android:background="@drawable/bg_category_outline"
             android:popupBackground="@drawable/bg_category_outline"
+            android:minWidth="100dp"
             tools:listitem="@layout/item_small_category"/>
 
     </LinearLayout>

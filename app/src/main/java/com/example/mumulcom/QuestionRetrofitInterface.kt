@@ -1,5 +1,7 @@
 package com.example.mumulcom
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -45,8 +47,66 @@ interface QuestionRetrofitInterface {
     @POST("/likes/questions/creation") // 해당 질문을 좋아요 했을때 호출 (api 27)
     fun getLikeQuestion(
         @Header("X-ACCESS-TOKEN") X_ACCESS_TOKEN : String,
-        @Body questionIdx : Long,  // 질문 고유 번호 (좋아요를 누른 질문 번호)
-        @Body userIdx : Long   // 유저 고유 번호 (좋아요를 한 유저 번호)
+        @Body likeSend : LikeSend
     ):Call<LikeQuestionResponse>
+
+    @POST("/scraps/creation") // 해당 질문을 스크랩 했을때 호출 (api 26)
+    fun getScrapQuestion(
+        @Header("X-ACCESS-TOKEN")  X_ACCESS_TOKEN : String,
+        @Body scrapSend : LikeSend
+    ):Call<ScrapQuestionResponse>
+
+    @POST("/likes/replies/creation") // 해당 질문의 답변을 좋아요 했을때 호출 (api 28)
+    fun getLikeReply(
+        @Header("X-ACCESS-TOKEN")  X_ACCESS_TOKEN : String,
+        @Body data : LikeReplySend
+    ):Call<LikeReplyResponse>
+
+    @GET("/replies/rereply/{replyIdx}")
+    fun getCommentsForReply(
+        @Path("replyIdx") replyIdx : Long
+    ):Call<CommentsForReplyResponse>
+
+//
+//    @POST("/replies/reply") // 답변에 댓글달때 호출
+//    fun getUploadComment(
+//        @Header("X-ACCESS-TOKEN")  X_ACCESS_TOKEN : String,
+//        @Body commentSend : CommentSend
+//    ):Call<UploadCommentResponse>
+
+    @PATCH("/replies/adoption/{userIdx}/{replyIdx}") // 답변을 채택할때 호출
+    fun getAdoptReply(
+        @Header("X-ACCESS-TOKEN")  X_ACCESS_TOKEN : String,
+        @Path("userIdx") userIdx : Long,
+        @Path("replyIdx") replyIdx: Long
+    ):Call<AdoptReplyResponse>
+
+
+
+//    @Multipart
+//    @POST("/questions/concept") // 코딩 질문 하기
+//    fun getMadeConceptQuestion(
+//     @Header("X-ACCESS-TOKEN") jwt : String,
+//     @Part file : MultipartBody.Part,
+//     @Part userIdx : MultipartBody.Part,
+//     @Part currentError : MultipartBody.Part,
+//     @Part myCodingSkill : MultipartBody.Part?,
+//     @Part bigCategoryIdx : MultipartBody.Part,
+//     @Part smallCategoryIdx : MultipartBody.Part?,
+//     @Part title : MultipartBody.Part,
+//     @Part codeQuestionUrl : MultipartBody.Part?,
+//    ):Call<MadeConceptQuestionResponse>
+
+
+     @Multipart
+    @POST("/replies/reply") // 답변에 댓글달때 호출
+    fun getUploadComment(
+         @Header("X-ACCESS-TOKEN") X_ACCESS_TOKEN: String,
+         @Part("PostReReplReq") PostReReplReq: CommentSend,
+         @Part images: MultipartBody.Part?
+
+    ):Call<UploadCommentResponse>
+
+
 
 }

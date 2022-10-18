@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mumulcom.databinding.FragmentAlarmBinding
 
-// TODO 알림 클릭 시 해당 질문으로 넘어가기.. 클릭 이벤트 오류
 class AlarmFragment : Fragment(), AlarmView {
     lateinit var binding: FragmentAlarmBinding
 
@@ -21,7 +20,7 @@ class AlarmFragment : Fragment(), AlarmView {
     private val consolidatedList = mutableListOf<AlarmListItem>()
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAlarmBinding.inflate(inflater, container, false)
 
         jwt = context?.let { getJwt(it) }.toString()
@@ -29,16 +28,13 @@ class AlarmFragment : Fragment(), AlarmView {
 
         binding.alarmItemListRv.setHasFixedSize(true)
 
+        initRecyclerview()
+
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        getAlarm(jwt, userIdx)
-        initRecyclerview()
-    }
-
     private fun initRecyclerview(){
+        getAlarm(jwt, userIdx)
         alarmAdapter = AlarmAdapter(consolidatedList, context)
         alarmAdapter.setAlarmClickListener(object: AlarmAdapter.AlarmClickListener {
             override fun onItemClick(alarm: AlarmGeneralItem) {

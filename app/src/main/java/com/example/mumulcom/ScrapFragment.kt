@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -196,7 +197,7 @@ class ScrapFragment : Fragment(), ScrapCodingView, ScrapConceptView {
         // 스피너 초기값을 마지막 아이템으로 설정
         binding.scrapBigCategorySp.setSelection(bigCategoryAdapter.count)
 
-        // droplist를 스피너와 간격을 두고 나오게 함 -> 아이템 크기 = 125px
+        // droplist를 스피너와 간격을 두고 나오게 함
         binding.scrapBigCategorySp.dropDownVerticalOffset = dipToPixels(45f).toInt()
     }
 
@@ -380,7 +381,7 @@ class ScrapFragment : Fragment(), ScrapCodingView, ScrapConceptView {
         // 스피너 초기값을 마지막 아이템으로 설정
         binding.scrapSmallCategorySp.setSelection(smallCategoryAdapter.count)
 
-        // droplist를 스피너와 간격을 두고 나오게 함 -> 아이템 크기 = 125px
+        // droplist를 스피너와 간격을 두고 나오게 함
         binding.scrapSmallCategorySp.dropDownVerticalOffset = dipToPixels(45f).toInt()
     }
 
@@ -449,7 +450,7 @@ class ScrapFragment : Fragment(), ScrapCodingView, ScrapConceptView {
     override fun onGetScrapCodingSuccess(result: ArrayList<Question>?) {
         binding.scrapLoadingPb.visibility = View.GONE
         Log.d("Scrap/Coding/API","성공")
-        if (result != null) { // 해당 카테고리에 대한 질문이 있을때 어댑터에 추가
+        if (result != null) { // 해당 카테고리에 대한 스크랩이 있을때 어댑터에 추가
             scrapAdapter.addScrap(result)
         }
     }
@@ -476,7 +477,7 @@ class ScrapFragment : Fragment(), ScrapCodingView, ScrapConceptView {
     override fun onGetScrapConceptSuccess(result: ArrayList<Question>?) {
         binding.scrapLoadingPb.visibility = View.GONE
         Log.d("Scrap/Concept/API","성공")
-        if (result != null) { // 해당 카테고리에 대한 질문이 있을때 어댑터에 추가
+        if (result != null) { // 해당 카테고리에 대한 스크랩이 있을때 어댑터에 추가
             scrapConceptAdapter.addScrap(result)
         }
     }

@@ -3,6 +3,7 @@ package com.example.mumulcom
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -59,14 +60,17 @@ class ConceptQuestionAdapter(var context: Context)
             binding.searchItemDateTv.text = conceptQuestion.createdAt
             binding.searchItemTitleTv.text = conceptQuestion.title
             binding.searchItemContentTv.text = conceptQuestion.content
-            if(conceptQuestion.bigCategoryName!=null){
-                binding.searchItemTag2Tv.text = "#" + conceptQuestion.bigCategoryName
-            }
-            if(conceptQuestion.smallCategoryName!=null){
-                binding.searchItemTag2Tv.text = "#" + conceptQuestion.smallCategoryName
-            }
+
             binding.searchItemCommentTv.text = conceptQuestion.replyCount.toString()
             binding.searchItemLikeTv.text = conceptQuestion.likeCount.toString()
+
+            binding.searchItemTag1Tv.text = "#" + conceptQuestion.bigCategoryName
+            if(conceptQuestion.smallCategoryName!=null){
+                binding.searchItemTag2Tv.text = "#" + conceptQuestion.smallCategoryName
+            } else {
+                binding.searchItemTag2Tv.visibility = View.GONE
+            }
+
         }
 
     }

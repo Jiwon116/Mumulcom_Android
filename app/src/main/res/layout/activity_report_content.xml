@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ReportContentActivity">
+    <LinearLayout
+        android:id="@+id/toolbarLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <!-- 상단 tool bar 역할 -->
+    <RelativeLayout
+        android:id="@+id/actionbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="25dp"
+        android:paddingBottom="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/backIv"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:src="@drawable/ic_back_black" />
+
+        <TextView
+            android:id="@+id/categoryNameTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="신고 내용"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </RelativeLayout>
+    <View
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/home_gray_text_color"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+        <EditText
+            android:id="@+id/reportContentEt"
+            android:padding="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_report_content"
+            android:hint="신고 내용을 작성해 주세요"
+            android:gravity="top"
+            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sendReportBtn"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="관리자에게 보내기"/>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

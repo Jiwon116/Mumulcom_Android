@@ -12,36 +12,43 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause.*
 import com.kakao.sdk.user.UserApiClient
 
-// TODO 회원가입 안하고 넘어가면 -> 다시 앱 실행시켰을때 카카오 로그인 안되게 (메인 화면으로 안넘어가게 하기)
-
 class LoginActivity : AppCompatActivity() {
     lateinit var binding: ActivityLoginBinding
+
+    private var jwt: String = ""    // jwt
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        jwt = getJwt(this)
 
         // 로그인 정보 확인
         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
             if (error != null) {
-                // 새롭게 로그인 필요
-                // Toast.makeText(this, "새로운 로그인 필요", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "로그인 필요")
             }
-            else if (tokenInfo != null) {
-                // 서버에 사용자가 이미 존재하면 = 카카오 로그인이 이미 되어있으면
-                Log.d(TAG, "기존 로그인 유지 성공")
+            else if (tokenInfo != null) {   // 카카오 로그인이 이미 되어있으면
+                Log.d(TAG, "로그인 유지 성공")
 
-                // 메인 액티비티로 사용자 정보 전달하기
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-                finish()
+                if (jwt.isEmpty()) { // jwt 값이 없음 -> 카카오 로그인만 하고 추가정보가 없거나, 서버에 사용자 정보가 없음
+                    // 추가정보 받기
+                    val intent = Intent(this, SignUpActivity::class.java)
+                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                    finish()
+                } else {    // jwt 값이 있으면 -> 서버에도 사용자 정보 있음
+                    // 메인 액티비티로 이동
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                    finish()
+                }
+
             }
         }
 
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-            if (error != null) {
+            if (error != null) {    // 로그인 할 때 발생하는 에러
                 when {
                     error.toString() == AccessDenied.toString() -> {
                         Toast.makeText(this, "접근이 거부 됨(동의 취소)", Toast.LENGTH_SHORT).show()
@@ -73,13 +80,22 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             else if (token != null) {
-                // 처음 로그인에 성공하면
+                // 로그인에 성공하면
                 Log.d(TAG, "카카오톡 계정 연결 성공")
 
-                // 추가 정보 입력 (사인 업 액티비티) 으로 넘어가기
-                val intent = Intent(this, SignUpActivity::class.java)
-                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-                finish()
+                if (jwt.isEmpty()) {
+                    // 처음 카카오 로그인을 하면
+                    // 추가 정보 입력 (사인 업 액티비티) 으로 넘어가기
+                    val intent = Intent(this, SignUpActivity::class.java)
+                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                    finish()
+                } else {
+                    // 로그아웃 해서 카톡 로그인을 다시 연결하는 경우에는
+                    // 서버에 이미 사용자 정보가 있기 때문에 추가 정보 입력으로 넘어가지 않음
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                    finish()
+                }
             }
         }
 
@@ -92,5 +108,10 @@ class LoginActivity : AppCompatActivity() {
                 UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
             }
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

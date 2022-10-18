@@ -15,7 +15,9 @@ class DetailConceptQuestion ( // 12개
     @SerializedName("content") var content: String, // 질문 내용
     @SerializedName("bigCategoryName") var bigCategoryName: String, // 상위 카테고리
     @SerializedName("smallCategoryName") var smallCategoryName: String?, // 하위 카테고리, null 가능
-    @SerializedName("likeCount") var likeCount: Int,    // 질문 좋아요 개수
+    @SerializedName("like") var likeCount: Int,    // 질문 좋아요 개수
     @SerializedName("replyCount") var replyCount: Int,  // 질문 답변 개수
-    @SerializedName("isLiked") var isLiked: String  // 좋아요 여부
+    @SerializedName("isLiked") var isLiked: String,  // 좋아요 여부
+    @SerializedName("isScraped") var isScraped: String , // 스크랩 여부
+    @SerializedName("isAdopted") var isAdopted: String,  // 이 질문에 답변에 채택이 됬는지 여부
 )

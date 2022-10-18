@@ -2,10 +2,8 @@ package com.example.mumulcom
 
 import com.google.gson.annotations.SerializedName
 
-// 회원 조회 & 수정
+// 회원 조회
 data class Profile(
-    @SerializedName("jwt") var jwt: String,    // jwt
-    @SerializedName("userIdx") var userIdx: Long,  // 유저 식별 번호
     @SerializedName("email") var email: String,  // 유저 이메일
     @SerializedName("name") var name: String,   // 유저 이름
     @SerializedName("nickname") var nickname: String, // 유저 닉네임

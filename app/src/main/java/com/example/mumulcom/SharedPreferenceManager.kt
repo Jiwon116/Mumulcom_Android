@@ -114,3 +114,31 @@ fun getProfileImgUrl(context: Context): String {
 
     return spf.getString("profileImgUrl", "")!!
 }
+
+fun saveFcmToken(context: Context, fcmToken: String) {
+    val spf = context.getSharedPreferences("fcmToken", AppCompatActivity.MODE_PRIVATE)
+    val editor = spf.edit()
+
+    editor.putString("fcmToken", fcmToken)
+    editor.apply()
+}
+
+fun getFcmToken(context: Context): String {
+    val spf = context.getSharedPreferences("fcmToken", AppCompatActivity.MODE_PRIVATE)
+
+    return spf.getString("fcmToken", "")!!
+}
+
+fun saveAnnounceIdx(context: Context, announceIdx: Long) {
+    val spf = context.getSharedPreferences("announce", AppCompatActivity.MODE_PRIVATE)
+    val editor = spf.edit()
+
+    editor.putLong("announceIdx", announceIdx)
+    editor.apply()
+}
+
+fun getAnnounceIdx(context: Context): Long {
+    val spf = context.getSharedPreferences("announce", AppCompatActivity.MODE_PRIVATE)
+
+    return spf.getLong("announceIdx", 0)
+}

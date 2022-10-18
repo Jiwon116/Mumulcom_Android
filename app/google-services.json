@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "272610257403",
+    "project_id": "mumulcom-c0e9c",
+    "storage_bucket": "mumulcom-c0e9c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272610257403:android:4745cadb8525c12517435e",
+        "android_client_info": {
+          "package_name": "com.example.mumulcom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272610257403-b5noghqus7drfoo4dmccqc6lbkacokl0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM2dx1Zl9VvgBTUoUxR2O_J7Yv52Yd8ps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272610257403-b5noghqus7drfoo4dmccqc6lbkacokl0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
